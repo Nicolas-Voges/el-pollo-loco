@@ -81,13 +81,11 @@ class Endboss extends MovableObject {
                 this.moveRight();
                 this.otherDirection = true;
             }
-
             if (this.directionX === 'Left') {
                 this.moveLeft();
                 this.otherDirection = false;
             }
         }, 1000 / 60);
-
         this.registerInterval(intervalEndbossMove, 'moves');
     }
 }

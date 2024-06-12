@@ -44,7 +44,7 @@ class MovableObject extends DrawableObject {
                 this.isMovingLeft = true;
                 this.isMovingRight = false;
                 x = this.x;
-            } else if (this.x === x){
+            } else if (this.x === x) {
                 this.isMovingLeft = false;
                 this.isMovingRight = false;
             }
@@ -66,14 +66,18 @@ class MovableObject extends DrawableObject {
 
     moveRight() {
         if (!this.hitReactionRuns) {
-            this.directionX = 'Right';
+            if (!this instanceof Endboss) {
+                this.directionX = 'Right';
+            }
             this.x += this.speed;
         }
     }
 
     moveLeft() {
         if (!this.hitReactionRuns) {
-            this.directionX = 'Left';
+            if (!this instanceof Endboss) {
+                this.directionX = 'Left';
+            }
             this.x -= this.speed;
         }
     }

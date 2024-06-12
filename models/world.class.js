@@ -75,7 +75,7 @@ class World {
                 this.bossCamera();
             }
             if (this.endbossAnimationHasRun) {
-                this.bossFight();
+                // this.bossFight();
             }
         }, 10);
         this.intervals.push(intervalWorldRun);
@@ -110,6 +110,7 @@ class World {
                 if (this.earthquakeDone) {
                     this.endboss.alertDone = false;
                     this.endboss.isAlert = true;
+                    this.earthquakeDone = false;
                 }
 
                 // starte alert erneut.
@@ -121,7 +122,6 @@ class World {
     checkForEndbossAnimation() {
         if (this.character.x > 3800 && !this.endbossAnimationRuns && !this.endbossAnimationHasRun) {
             this.endbossAnimationRuns = true;
-            // this.endbossAnimationHasRun = true;
             this.runEndbossAnimation();
         }
     }
@@ -153,7 +153,7 @@ class World {
         }, 20);
     }
 
-    bossAlertAnimation(animatinCount = 0, cameraOut = false) {
+    bossAlertAnimation(animatinCount = 0, cameraOut = false, attack = false) {
         this.clearEnemies();
         this.endboss.deleteIntervals('animations');
         let alertAnimation = setInterval(() => {
@@ -177,13 +177,22 @@ class World {
                     }, 1000 / 60);
                     this.cameraOutAnimation();
                 } else {
-                    this.bossAttackAnimation();
+                    if (attack) {
+                        this.bossAttack();
+                    } else {
+                        this.bossAttackAnimation();
+                    }
                 }
             }
         }, 1000 / 8);
     }
 
     clearEnemies() {
+        this.level.enemies.forEach(enemie => {
+            if (!enemie instanceof Endboss) {
+                enemie.deleteAllIntervals();
+            }
+        });
         this.level.enemies.splice(0, this.level.enemies.length - 1);
     }
 
@@ -219,7 +228,7 @@ class World {
             }
         }, 10);
         let attack = setInterval(() => {
-            if (this.endboss.currentImage < this.endboss.IMAGES_ALERT.length - 1) {
+            if (this.endboss.currentImage < this.endboss.IMAGES_ATTACK.length - 1) {
                 this.endboss.playAnimation(this.endboss.IMAGES_ATTACK);
             } else {
                 clearInterval(attack);
@@ -262,9 +271,9 @@ class World {
             if (yMax <= 0) {
                 clearInterval(earthquake);
                 this.ctx.translate(0, translate);
-                if (!end) {
+                if (!end && !attack) {
                     this.character.applyGravity();
-                    this.bossAlertAnimation(1);
+                    this.bossAlertAnimation(1, true);
                 } else if (attack) {
                     this.earthquakeDone = true;
                     this.bossAlertAnimation(1, true);
@@ -288,7 +297,9 @@ class World {
             }
         }, 1000 / 60);
     }
+
     cameraIsMoving = false;
+
     bossCamera() {
         if (this.endboss.x > this.character.x + 200) {
             this.cameraIsMoving = false;
