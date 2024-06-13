@@ -19,6 +19,9 @@ class MovableObject extends DrawableObject {
     }
 
     applyGravity() {
+        // if (this instanceof Endboss) {
+        //     debugger;
+        // }
         let intervalMoveableObjectsGravity = setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;

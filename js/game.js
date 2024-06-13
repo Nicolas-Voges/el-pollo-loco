@@ -103,7 +103,6 @@ function startPauseGame() {
         start = true;
         init();
     } else {
-        console.log('Gibt noch keine Pausefunktion.');
         pause();
     }
 }

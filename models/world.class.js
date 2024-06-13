@@ -21,7 +21,8 @@ class World {
     bossCameraActiv = false;
     endbossAnimationHasRun = false;
     earthquakeDone = false;
-    isAttacking = false;
+    lastAttack = 0;
+    earthquakeSrarted = false;
 
     /**
      * Dramatischere Musik abspielen, sobald der Endboss in Erscheinung tritt und eine kleine Videosequenz, die damit anfängt,
@@ -82,36 +83,41 @@ class World {
         activeIntervals.push(intervalWorldRun);
     }
 
+    bossFightStarted = false;
+    bossFightDone = true;
     bossFight() {
-        let xBoss = this.endboss.x;
-        let xplayer = this.character.x;
-        this.endboss.isAlert = true;
+        let xPlayer = this.character.x;
+        if (!this.bossFightStarted && this.bossFightDone && new Date().getTime() - this.lastAttack > 2000) {
+            this.bossFightDone = false;
+            this.endboss.isAlert = true;
+            this.bossFightStarted = true;
+        }
         if (this.endboss.alertDone) {
             this.endboss.isAlert = false;
-            if (this.endboss.width + xBoss < xplayer - 200) {
+            if (this.endboss.width + this.endboss.x < xPlayer - 200 && !this.endboss.isAttacking) {
                 // gehe zum Charaker
                 this.endboss.directionX = 'Right';
-            } else if (this.endboss.leftSide() > this.character.rightSide() - 200) {
+                console.log(this.endboss.directionX + 'bei RIGHT');
+            } else if (this.endboss.x > xPlayer + this.character.width + 200 && !this.endboss.isAttacking) {
                 // gehe zum Charaker
                 this.endboss.directionX = 'Left';
+                console.log(this.endboss.directionX + 'bei LEFT');
             } else {
                 this.endboss.directionX = 'Stay';
+                console.log(this.endboss.directionX + 'bei STAY');
                 // attackiere
-                if (this.endboss.rightSide() < this.character.leftSide()) {
-                    if (!this.isAttacking) {
-                        this.bossAttack();
-                    }
-                } else if (this.endboss.leftSide() > this.character.rightSide()) {
-                    if (!this.isAttacking) {
-                        this.bossAttack(-1);
-                    }
-                }
-                // warte Erschütterung ab
-                if (this.earthquakeDone) {
+                if (!this.endboss.isAttacking && this.endboss.alertDone && !this.endboss.isAboveGround() && new Date().getTime() - this.lastAttack > 2000) {
                     this.endboss.alertDone = false;
-                    this.endboss.isAlert = true;
-                    this.earthquakeDone = false;
+                    this.bossAttack(xPlayer);
                 }
+
+
+                // warte Erschütterung ab
+                // if (this.earthquakeDone) {
+                //     this.endboss.alertDone = false;
+                //     this.endboss.isAlert = true;
+                //     this.earthquakeDone = false;
+                // }
 
                 // starte alert erneut.
 
@@ -153,9 +159,10 @@ class World {
         }, 20);
     }
 
-    bossAlertAnimation(animatinCount = 0, cameraOut = false, attack = false) {
+    bossAlertAnimation(animatinCount = 0, cameraOut = false) {
         this.clearEnemies();
         this.endboss.deleteIntervals('animations');
+        this.endboss.deleteIntervals('moves');
         let alertAnimation = setInterval(() => {
             if (this.endboss.currentImage < this.endboss.IMAGES_ALERT.length - 1 || animatinCount < 2) {
                 if (this.endboss.currentImage === this.endboss.IMAGES_ALERT.length - 1) {
@@ -171,17 +178,13 @@ class World {
                             this.endboss.moveLeft();
                         } else {
                             clearInterval(movingLeft);
-                            this.endboss.deleteIntervals('animations');
+                            // this.endboss.deleteIntervals('animations');
                             this.bossAttackAnimation(true);
                         }
                     }, 1000 / 60);
                     this.cameraOutAnimation();
                 } else {
-                    if (attack) {
-                        this.bossAttack();
-                    } else {
-                        this.bossAttackAnimation();
-                    }
+                    this.bossAttackAnimation();
                 }
             }
         }, 1000 / 8);
@@ -196,16 +199,30 @@ class World {
         this.level.enemies.splice(0, this.level.enemies.length - 1);
     }
 
-    bossAttack(bossLeft = 1) {
-        this.isAttacking = true;
-        let distance = this.character.x;
+    bossAttack(xPlayer) {
+        if (!this.endboss.isAttacking) {
+            this.endboss.isAttacking = true;
+            this.endboss.speedY = 22;
+            this.lastAttack = new Date().getTime();
+            this.earthquakeStarted = false;
+        }
         let jump = setInterval(() => {
-            if (this.endboss.isAboveGround() || this.endboss.x >= distance) {
-                this.endboss.x -= 4 * bossLeft;
+            if (this.endboss.width + this.endboss.x < (xPlayer + this.character.width / 2) && this.endboss.isAboveGround()) {
+                this.endboss.otherDirection = true;
+                this.endboss.x += 4;
+
+            } else if (this.endboss.x > (xPlayer + this.character.width / 2) && this.endboss.isAboveGround()) {
+
+                this.endboss.otherDirection = false;
+                this.endboss.x -= 4;
+
             } else {
                 clearInterval(jump);
-                this.isAttacking = false;
-                this.earthquakeAnimation(false, true);
+                // this.earthquakeAnimation(false, true);
+            }
+            if (!this.earthquakeStarted && this.endboss.speedY <= 0 && !this.endboss.isAboveGround() && this.earthquakeDone) {
+                this.earthquakeStarted = true;
+                // this.earthquakeAnimation(false, true);
             }
         }, 10);
     }
@@ -237,6 +254,9 @@ class World {
     }
 
     earthquakeAnimation(end = false, attack = false) {
+        if (attack) {
+            this.earthquakeDone = false;
+        }
         let yMax = 25;
         let y = 0;
         let quotient = 2;
@@ -271,12 +291,18 @@ class World {
             if (yMax <= 0) {
                 clearInterval(earthquake);
                 this.ctx.translate(0, translate);
+                this.earthquakeDone = true;
                 if (!end && !attack) {
                     this.character.applyGravity();
                     this.bossAlertAnimation(1, true);
                 } else if (attack) {
-                    this.earthquakeDone = true;
-                    this.bossAlertAnimation(1, true);
+                    // this.bossAlertAnimation(1, true);
+                    this.bossFightDone = true;
+                }
+                this.endboss.isAttacking = false;
+                if (end) {
+                this.endbossAnimationRuns = false;
+                    this.endbossAnimationHasRun = true;
                 }
             }
         }, 0.1);
@@ -288,12 +314,9 @@ class World {
                 this.camera_x += 4;
             } else {
                 clearInterval(camaraAnimate);
-                if (this.endboss.x <= 4000) {
-                    this.character.animate();
-                    this.bossCameraActiv = true;
-                    this.endbossAnimationHasRun = true;
-                    this.endbossAnimationRuns = false;
-                }
+                this.character.animate();
+                this.bossCameraActiv = true;
+                // this.endbossAnimationHasRun = true;
             }
         }, 1000 / 60);
     }
