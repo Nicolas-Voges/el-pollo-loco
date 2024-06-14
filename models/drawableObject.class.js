@@ -200,13 +200,4 @@ class DrawableObject {
     bottomSide(obj = this) {
         return obj.y + obj.height - obj.offsetBottom;
     }
-
-    isComingFromTop(obj) { // drawableObjects bekommen Variable collisionDetected, die true wird, wenn eine collision stattfindet. Sie bewirkt, dass die collision nicht erneut durchgeführt wird. Erst wenn die nächste Collision länger als 50 ms her ist, wird die neue collision gezählt.
-        if (this.leftSide(obj) > this.leftSide()) { // Linke Seite von Gegner größer als Charakter linke Seite.
-            console.log('is coming from top');
-            return this.bottomSide() - this.topSide(obj) < this.rightSide() - this.leftSide(obj) && this.speedY < 0; // Ist die Differenz zwischen Charakter Füßen und Gegner Kopf kleiner als die Differenz zwischen Charakter rechts und Gegener links.
-        } else {
-            return this.bottomSide() - this.topSide(obj) < this.rightSide(obj) - this.leftSide() && this.speedY < 0;
-        }
-    }
 }

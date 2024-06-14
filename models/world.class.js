@@ -78,7 +78,7 @@ class World {
             if (this.endbossAnimationHasRun) {
                 this.bossFight();
             }
-        }, 10);
+        }, 5);
         this.intervals.push(intervalWorldRun);
         activeIntervals.push(intervalWorldRun);
     }
@@ -373,18 +373,21 @@ class World {
             }
         }
     }
-
+    characterEnemyCollisiondetected = false;
+    collisionsReactionRuns = false;
     checkCollisions() {
         if (!this.endbossAnimationRuns) {
             this.level.enemies.forEach((enemy) => {
-                if (this.character.isColliding(enemy)) {
+                if (this.character.isColliding(enemy) && !this.characterEnemyCollisiondetected) {
+                    this.characterEnemyCollisiondetected = true;
                     if (!enemy.isDead() && !this.character.isComingFromTop(enemy)) { // Hier gucken, von wo der Enemy auf den Character trifft.
-                        if (!enemy.hasHurt) {
+                        if (!enemy.hasHurt && !this.collisionsReactionRuns) {
+                            this.collisionsReactionRuns = true;
                             enemy.hasHurt = true;
                             this.character.hit(enemy.energyAttack);
                             this.character.hitRreaction(100, 400);
                         }
-                    } else if (!enemy.hasHurt && this.character.isComingFromTop(enemy) && this.character.speedY < 0 && this.character.isJumping) {
+                    } else if (!enemy.hasHurt && this.character.isComingFromTop(enemy) && this.character.speedY < 0 && this.character.isJumping && !this.collisionsReactionRuns) {
                         if (enemy instanceof Endboss) { // Kollision nur einmal checken
                             enemy.hit(5);
                             if (!enemy.isDead()) {
@@ -402,6 +405,10 @@ class World {
                     console.log(this.character.energy);
                 } else {
                     enemy.hasHurt = false;
+                }
+                if (this.character.speedY > 0) {
+                    this.characterEnemyCollisiondetected = false;
+                    this.collisionsReactionRuns = false;
                 }
                 this.throwableObjects.forEach((bottle) => {
                     if (bottle.isColliding(enemy)) {

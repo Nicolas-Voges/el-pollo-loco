@@ -99,4 +99,11 @@ class MovableObject extends DrawableObject {
         let now = new Date().getTime();
         return now - this.jumpRate >= this.lastJump;
     }
+
+    isComingFromTop(obj) { // drawableObjects bekommen Variable collisionDetected, die true wird, wenn eine collision stattfindet. Sie bewirkt, dass die collision nicht erneut durchgeführt wird. Erst wenn die nächste Collision länger als 50 ms her ist, wird die neue collision gezählt.
+         // Linke Seite von Gegner größer als Charakter linke Seite.
+            console.log('is coming from top');
+            return this.isAboveGround() && this.speedY < 0; // Ist die Differenz zwischen Charakter Füßen und Gegner Kopf kleiner als die Differenz zwischen Charakter rechts und Gegener links.
+        
+    }
 }
