@@ -88,7 +88,7 @@ class World {
     bossFight() {
         this.endboss.animate();
         let xPlayer = this.character.x;
-        if (!this.bossFightStarted && this.bossFightDone && new Date().getTime() - this.lastAttack > 2000) {
+        if (!this.bossFightStarted && this.bossFightDone && new Date().getTime() - this.lastAttack > 1000) {
             this.bossFightDone = false;
             this.endboss.isAlert = true;
             this.bossFightStarted = true;
