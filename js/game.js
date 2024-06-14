@@ -102,7 +102,7 @@ function startPauseGame() {
     if (!start) {
         start = true;
         init();
-    } else {
+    } else if (!world.endbossAnimationRuns) {
         pause();
     }
 }
@@ -116,6 +116,9 @@ function pause() {
         });
         world.character.animate();
         world.character.applyGravity();
+        if (world.endbossAnimationHasRun) {
+            world.endboss.applyGravity();
+        }
         isPause = false;
     } else {
         world.level.enemies.forEach((enemy) => {

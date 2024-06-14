@@ -199,6 +199,7 @@ class World {
         });
         this.level.enemies.splice(0, this.level.enemies.length - 1);
     }
+    bossAttackAnimationRuns = false;
     attackJumpStarted = false;
     bossAttack() {
         if (!this.endboss.isAttacking) {
@@ -232,6 +233,21 @@ class World {
                 // this.earthquakeAnimation(false, true);
             }
         }, 10);
+
+        this.endboss.deleteIntervals('animations');
+        this.endboss.deleteIntervals('moves');
+        if (!this.bossAttackAnimationRuns) {
+            let attack = setInterval(() => {
+                this.bossAttackAnimationRuns = true;
+                if (this.endboss.currentImage < this.endboss.IMAGES_ATTACK.length - 1 && this.attackJumpStarted) {
+                    this.endboss.playAnimation(this.endboss.IMAGES_ATTACK);
+                    console.log(this.endboss.currentImage + ' + ' + attack);
+                } else if (this.attackJumpStarted && !this.endboss.isAboveGround()) {
+                    clearInterval(attack);
+                    this.bossAttackAnimationRuns = false;
+                }
+            }, 90);
+        }
     }
 
     bossAttackAnimation(end = false) {
