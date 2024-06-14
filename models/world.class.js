@@ -76,7 +76,7 @@ class World {
                 this.bossCamera();
             }
             if (this.endbossAnimationHasRun) {
-                // this.bossFight();
+                this.bossFight();
             }
         }, 10);
         this.intervals.push(intervalWorldRun);
@@ -86,6 +86,7 @@ class World {
     bossFightStarted = false;
     bossFightDone = true;
     bossFight() {
+        this.endboss.animate();
         let xPlayer = this.character.x;
         if (!this.bossFightStarted && this.bossFightDone && new Date().getTime() - this.lastAttack > 2000) {
             this.bossFightDone = false;
@@ -108,7 +109,7 @@ class World {
                 // attackiere
                 if (!this.endboss.isAttacking && this.endboss.alertDone && !this.endboss.isAboveGround() && new Date().getTime() - this.lastAttack > 2000) {
                     this.endboss.alertDone = false;
-                    this.bossAttack(xPlayer);
+                    this.bossAttack();
                 }
 
 
@@ -198,28 +199,34 @@ class World {
         });
         this.level.enemies.splice(0, this.level.enemies.length - 1);
     }
-
-    bossAttack(xPlayer) {
+    attackJumpStarted = false;
+    bossAttack() {
         if (!this.endboss.isAttacking) {
             this.endboss.isAttacking = true;
             this.endboss.speedY = 22;
             this.lastAttack = new Date().getTime();
             this.earthquakeStarted = false;
         }
+        let xPlayer = this.character.x;
         let jump = setInterval(() => {
-            if (this.endboss.width + this.endboss.x < (xPlayer + this.character.width / 2) && this.endboss.isAboveGround()) {
-                this.endboss.otherDirection = true;
-                this.endboss.x += 4;
+            if (this.endboss.isAboveGround()) {
+                this.attackJumpStarted = true;
+                if ((this.endboss.width / 2) + this.endboss.x < xPlayer + (this.character.width / 2) - 4) {
+                    this.endboss.otherDirection = true;
+                    this.endboss.x += 4;
 
-            } else if (this.endboss.x > (xPlayer + this.character.width / 2) && this.endboss.isAboveGround()) {
+                } else if ((this.endboss.width / 2) + this.endboss.x > xPlayer + (this.character.width / 2) + 4) {
 
-                this.endboss.otherDirection = false;
-                this.endboss.x -= 4;
-
-            } else {
+                    this.endboss.otherDirection = false;
+                    this.endboss.x -= 4;
+                }
+            } else if (this.attackJumpStarted) {
                 clearInterval(jump);
-                // this.earthquakeAnimation(false, true);
+                this.attackJumpStarted = false;
+                this.earthquakeAnimation(false, true);
             }
+
+
             if (!this.earthquakeStarted && this.endboss.speedY <= 0 && !this.endboss.isAboveGround() && this.earthquakeDone) {
                 this.earthquakeStarted = true;
                 // this.earthquakeAnimation(false, true);
@@ -236,6 +243,8 @@ class World {
         this.endboss.speedY = 22;
         this.endboss.currentImage = 0;
         let animatingCharacter = false;
+        this.endboss.deleteIntervals('animations');
+        this.endboss.deleteIntervals('moves');
         let jump = setInterval(() => {
             if (this.endboss.isAboveGround() || this.endboss.x >= distance) {
                 this.endboss.x -= 4;
@@ -247,8 +256,10 @@ class World {
         let attack = setInterval(() => {
             if (this.endboss.currentImage < this.endboss.IMAGES_ATTACK.length - 1) {
                 this.endboss.playAnimation(this.endboss.IMAGES_ATTACK);
+                console.log(this.endboss.currentImage + ' + ' + attack);
             } else {
                 clearInterval(attack);
+                // this.endboss.animate();
             }
         }, 100);
     }
@@ -298,10 +309,11 @@ class World {
                 } else if (attack) {
                     // this.bossAlertAnimation(1, true);
                     this.bossFightDone = true;
+                    this.bossFightStarted = false;
                 }
                 this.endboss.isAttacking = false;
                 if (end) {
-                this.endbossAnimationRuns = false;
+                    this.endbossAnimationRuns = false;
                     this.endbossAnimationHasRun = true;
                 }
             }

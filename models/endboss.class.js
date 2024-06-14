@@ -65,29 +65,33 @@ class Endboss extends MovableObject {
     }
 
     animate() {
-        let intervalEndbossAnimate = setInterval(() => {
-            if (this.isDead()) {
-                this.playAnimation(this.IMAGES_DEAD);
-            } else if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-            } else if (this.isAlert) {
-                this.playAnimation(this.IMAGES_ALERT);
-            } else {
-                this.playAnimation(this.IMAGES_WALKING);
-            }
-        }, 200);
-        this.registerInterval(intervalEndbossAnimate, 'animations');
+        if (this.intervals.animations.length === 0) {
+            let intervalEndbossAnimate = setInterval(() => {
+                if (this.isDead()) {
+                    this.playAnimation(this.IMAGES_DEAD);
+                } else if (this.isHurt()) {
+                    this.playAnimation(this.IMAGES_HURT);
+                } else if (this.isAlert) {
+                    this.playAnimation(this.IMAGES_ALERT);
+                } else {
+                    this.playAnimation(this.IMAGES_WALKING);
+                }
+            }, 200);
+            this.registerInterval(intervalEndbossAnimate, 'animations');
+        }
 
-        let intervalEndbossMove = setInterval(() => {
-            if (this.directionX === 'Right') {
-                this.moveRight();
-                this.otherDirection = true;
-            }
-            if (this.directionX === 'Left') {
-                this.moveLeft();
-                this.otherDirection = false;
-            }
-        }, 1000 / 60);
-        this.registerInterval(intervalEndbossMove, 'moves');
+        if (this.intervals.moves.length === 0) {
+            let intervalEndbossMove = setInterval(() => {
+                if (this.directionX === 'Right') {
+                    this.moveRight();
+                    this.otherDirection = true;
+                }
+                if (this.directionX === 'Left') {
+                    this.moveLeft();
+                    this.otherDirection = false;
+                }
+            }, 1000 / 60);
+            this.registerInterval(intervalEndbossMove, 'moves');
+        }
     }
 }
