@@ -381,7 +381,7 @@ class World {
     checkCollisions() {
         if (!this.endbossAnimationRuns) {
             this.level.enemies.forEach((enemy) => {
-                if (this.character.isColliding(enemy) && !this.characterEnemyCollisiondetected) {
+                if (this.character.isColliding(enemy) && !this.characterEnemyCollisiondetected && !enemy.isDead()) {
                     this.characterEnemyCollisiondetected = true;
                     this.lastCollision = new Date().getTime();
                     if (!enemy.isDead() && !this.character.isComingFromTop(enemy)) { // Hier gucken, von wo der Enemy auf den Character trifft.
@@ -421,6 +421,8 @@ class World {
                 if (new Date().getTime() - this.lastCollision > 100) {
                     this.characterEnemyCollisiondetected = false;
                     this.collisionsReactionRuns = false;
+                    this.level.enemies.forEach(enemy => enemy.hasHurt = false);
+                    enemy.hasHurt = false;
                 }
                 this.throwableObjects.forEach((bottle) => {
                     if (bottle.isColliding(enemy)) {
