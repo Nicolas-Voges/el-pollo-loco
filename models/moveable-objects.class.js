@@ -14,14 +14,19 @@ class MovableObject extends DrawableObject {
     isMovingRight = false;
     isMovingLeft = false;
 
+    /**
+     * This first called function goes to the constuctor function in DrawableObject class.
+     */
     constructor() {
         super();
     }
 
+    /**
+     * This function applies gravity to this object by decracing its speedY value if this object
+     * is above its ground or its speedY value is positive.
+     * Else this function sets this y position to its ground, ist speedY value to 0 and isJumping to false.
+     */
     applyGravity() {
-        // if (this instanceof Endboss) {
-        //     debugger;
-        // }
         let intervalMoveableObjectsGravity = setInterval(() => {
             if (this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
@@ -35,6 +40,10 @@ class MovableObject extends DrawableObject {
         this.registerInterval(intervalMoveableObjectsGravity, 'gravities');
     }
 
+    /**
+     * This function checks in an intervall of 20ms if this x position changed and sets
+     * the values isMovingRight and isMovingLeft to false or true.
+     */
     isMoving() {
         let x = this.x
         setInterval(() => {
@@ -54,19 +63,30 @@ class MovableObject extends DrawableObject {
         }, 20);
     }
 
+    /**
+     * This function checks if this object is above its ground.
+     * 
+     * @returns {boolean} true if this y position is lower as its ground position or if this
+     * object is instance of ThrowableObject class.
+     */
     isAboveGround() {
-        if (this instanceof ThrowableObject) {
-            return true;
-        } else {
-            return this.y < this.ground;
-        }
+        return this.y < this.ground || this instanceof ThrowableObject;
     }
 
+    /**
+     * This function checks if this object is hurt.
+     * 
+     * @returns {boolean} true if last time something hit this object is longer ago than 500ms.
+     */
     isHurt() {
         let timePassed = new Date().getTime() - this.lastHit;
         return timePassed < 500;
     }
 
+    /**
+     * This function moves this object left by adding the value of its speed to its x position.
+     * This function also sets this direktionX to 'Right' if this is not instance of endboss class.
+     */
     moveRight() {
         if (!this.hitReactionRuns) {
             if (!this instanceof Endboss) {
@@ -76,6 +96,10 @@ class MovableObject extends DrawableObject {
         }
     }
 
+    /**
+     * This function moves this object left by adding the negative value of its speed to its x position.
+     * This function also sets this direktionX to 'Left' if this is not instance of endboss class.
+     */
     moveLeft() {
         if (!this.hitReactionRuns) {
             if (!this instanceof Endboss) {
@@ -85,6 +109,11 @@ class MovableObject extends DrawableObject {
         }
     }
 
+    /**
+     * This function makes this object to jump by adding a positive value to this speedY.
+     * Also it resets the current image value for animation, updates the last jump time and
+     * sets value is Jumping to true.
+     */
     jump() {
         if (this.jumpCooledDown()) {
             this.isJumping = true;
@@ -95,15 +124,25 @@ class MovableObject extends DrawableObject {
         }
     }
 
+    /**
+     * This function checks if the jump cooled down.
+     * 
+     * @returns {boolean} true if last time value the user jumped is greater or equal to
+     * the time value of now minus jump rate.
+     */
     jumpCooledDown() {
         let now = new Date().getTime();
         return now - this.jumpRate >= this.lastJump;
     }
 
-    isComingFromTop(obj) { // drawableObjects bekommen Variable collisionDetected, die true wird, wenn eine collision stattfindet. Sie bewirkt, dass die collision nicht erneut durchgeführt wird. Erst wenn die nächste Collision länger als 50 ms her ist, wird die neue collision gezählt.
-         // Linke Seite von Gegner größer als Charakter linke Seite.
-            console.log('is coming from top' + this.bottomSide() + ' ' + obj.topSide() + ' ' + (this.bottomSide() - obj.topSide()));
-            return  this.rightSide() - obj.leftSide() > this.bottomSide() - obj.topSide(); // Ist die Differenz zwischen Charakter Füßen und Gegner Kopf kleiner als die Differenz zwischen Charakter rechts und Gegener links.
-        //this.isAboveGround()  && obj.speedY > this.speedY && this.bottomSide() - obj.topSide() < 20 &&
+    /**
+     * This function checks if this object is coming from top in relation to the colliding object.
+     * 
+     * @param {Object} obj 
+     * @returns {boolean} ture if the differnce between this object bottom side and the colliding objects
+     * top side is lower than the difference between this object right Side and the colliding objects left side.
+     */
+    isComingFromTop(obj) {
+        return this.rightSide() - obj.leftSide() > this.bottomSide() - obj.topSide();
     }
 }

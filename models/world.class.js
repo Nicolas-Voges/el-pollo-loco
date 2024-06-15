@@ -24,6 +24,16 @@ class World {
     lastAttack = 0;
     earthquakeSrarted = false;
 
+    bossFightStarted = false;
+    bossFightDone = true;
+
+    bossAttackAnimationRuns = false;
+    attackJumpStarted = false;
+
+    lastCollision = 0;
+    characterEnemyCollisiondetected = false;
+    collisionsReactionRuns = false;
+
     /**
      * Dramatischere Musik abspielen, sobald der Endboss in Erscheinung tritt und eine kleine Videosequenz, die damit anfängt,
      * das Pepe ein fragendes "Hö?" von sich gibt und der Charakter stehen bleibt und der User nicht mehr steuern kann, außer springen.
@@ -83,8 +93,7 @@ class World {
         activeIntervals.push(intervalWorldRun);
     }
 
-    bossFightStarted = false;
-    bossFightDone = true;
+
     bossFight() {
         this.endboss.animate();
         let xPlayer = this.character.x;
@@ -98,14 +107,14 @@ class World {
             if (this.endboss.width + this.endboss.x < xPlayer - 200 && !this.endboss.isAttacking) {
                 // gehe zum Charaker
                 this.endboss.directionX = 'Right';
-                console.log(this.endboss.directionX + 'bei RIGHT');
+                // console.log(this.endboss.directionX + 'bei RIGHT');
             } else if (this.endboss.x > xPlayer + this.character.width + 200 && !this.endboss.isAttacking) {
                 // gehe zum Charaker
                 this.endboss.directionX = 'Left';
-                console.log(this.endboss.directionX + 'bei LEFT');
+                // console.log(this.endboss.directionX + 'bei LEFT');
             } else {
                 this.endboss.directionX = 'Stay';
-                console.log(this.endboss.directionX + 'bei STAY');
+                // console.log(this.endboss.directionX + 'bei STAY');
                 // attackiere
                 if (!this.endboss.isAttacking && this.endboss.alertDone && !this.endboss.isAboveGround() && new Date().getTime() - this.lastAttack > 2000) {
                     this.endboss.alertDone = false;
@@ -199,8 +208,7 @@ class World {
         });
         this.level.enemies.splice(0, this.level.enemies.length - 1);
     }
-    bossAttackAnimationRuns = false;
-    attackJumpStarted = false;
+
     bossAttack() {
         if (!this.endboss.isAttacking) {
             this.endboss.isAttacking = true;
@@ -241,7 +249,7 @@ class World {
                 this.bossAttackAnimationRuns = true;
                 if (this.endboss.currentImage < this.endboss.IMAGES_ATTACK.length - 1 && this.attackJumpStarted) {
                     this.endboss.playAnimation(this.endboss.IMAGES_ATTACK);
-                    console.log(this.endboss.currentImage + ' + ' + attack);
+                    // console.log(this.endboss.currentImage + ' + ' + attack);
                 } else if (this.attackJumpStarted && !this.endboss.isAboveGround()) {
                     clearInterval(attack);
                     this.bossAttackAnimationRuns = false;
@@ -272,7 +280,7 @@ class World {
         let attack = setInterval(() => {
             if (this.endboss.currentImage < this.endboss.IMAGES_ATTACK.length - 1) {
                 this.endboss.playAnimation(this.endboss.IMAGES_ATTACK);
-                console.log(this.endboss.currentImage + ' + ' + attack);
+                // console.log(this.endboss.currentImage + ' + ' + attack);
             } else {
                 clearInterval(attack);
                 // this.endboss.animate();
@@ -295,7 +303,7 @@ class World {
                 this.ctx.translate(0, 3 / (quotient / 10));
                 translate -= 3 / (quotient / 10);
                 quotient *= quotient;
-                console.log(translate);
+                // console.log(translate);
                 if (y == yMax) {
                     moveUp = false;
                     y = 0;
@@ -307,7 +315,7 @@ class World {
                 this.ctx.translate(0, -3.3 / (quotient / 10));
                 translate += 3.3 / (quotient / 10);
                 quotient *= quotient;
-                console.log(translate);
+                // console.log(translate);
                 if (y == yMax) {
                     moveUp = true;
                     y = 0;
@@ -352,31 +360,32 @@ class World {
     cameraIsMoving = false;
 
     bossCamera() {
-        if (this.endboss.x > this.character.x + 200) {
-            this.cameraIsMoving = false;
-            if (this.cameraToCharacter > 100) {
-                this.cameraToCharacter -= 2;
-            }
-        } else if (this.endboss.x < this.character.x - 140 - this.endboss.width) {
-            if (this.cameraToCharacter < 600) {
-                this.cameraIsMoving = true;
-                this.cameraToCharacter += 2;
-            }
-        } else {
-            this.cameraIsMoving = false;
-            if (this.cameraToCharacter > 328 && this.cameraToCharacter < 332) {
-                this.cameraToCharacter = 330;
-            } else if (this.cameraToCharacter > 330) {
-                this.cameraToCharacter -= 2;
-            } else if (this.cameraToCharacter < 330) {
-                this.cameraToCharacter += 2;
-            }
-        }
+        // this.camera_x = -3728; // <-- nicht zur Funktion zugehörig
+        // if (this.endboss.x > this.character.x + 200) {
+        //     if (this.cameraToCharacter > 100) {
+        //         this.cameraIsMoving = true;
+        //         this.cameraToCharacter -= 2;
+        //     } else {
+        //         this.cameraIsMoving = false;
+        //     }
+        // } else if (this.endboss.x < this.character.x - 140 - this.endboss.width) {
+        //     if (this.cameraToCharacter < 600) {
+        //         this.cameraIsMoving = true;
+        //         this.cameraToCharacter += 2;
+        //     } else {
+        //         this.cameraIsMoving = false;
+        //     }
+        // } else {
+        //     this.cameraIsMoving = false;
+        //     if (this.cameraToCharacter > 328 && this.cameraToCharacter < 332) {
+        //         this.cameraToCharacter = 330;
+        //     } else if (this.cameraToCharacter > 330) {
+        //         this.cameraToCharacter -= 2;
+        //     } else if (this.cameraToCharacter < 330) {
+        //         this.cameraToCharacter += 2;
+        //     }
+        // }
     }
-    lastCollision = 0;
-    characterEnemyCollisiondetected = false;
-    collisionsReactionRuns = false;
-    logged = false;
 
     checkCollisions() {
         if (!this.endbossAnimationRuns) {
@@ -409,14 +418,6 @@ class World {
                     // console.log(this.character.energy);
                 } else {
                     enemy.hasHurt = false;
-                }
-                if (!this.logged && !this.character.isAboveGround() && this.lastCollision > 0) {
-                    this.logged = true
-                    
-                    console.log(new Date().getTime() - this.lastCollision);
-                }
-                if (this.character.speedY > 0) {
-                    this.logged = false;
                 }
                 if (new Date().getTime() - this.lastCollision > 100) {
                     this.characterEnemyCollisiondetected = false;
@@ -511,9 +512,9 @@ class World {
             if (!this.cameraIsMoving) {
                 this.level.cloudObjects.forEach((cloud) => {
                     if (this.character.isMovingLeft) {
-                        cloud.speed = 1;
+                        cloud.speed = 0.5;
                     } else if (this.character.isMovingRight) {
-                        cloud.speed = -1;
+                        cloud.speed = -0.5;
                     }
                     else {
                         cloud.speed = 0.03;
@@ -521,7 +522,14 @@ class World {
                 });
             } else {
                 this.level.cloudObjects.forEach((cloud) => {
-                    cloud.speed = 0.03;
+                    if (this.character.isMovingLeft) {
+                        cloud.speed = 1;
+                    } else if (this.character.isMovingRight) {
+                        cloud.speed = -1;
+                    }
+                    else {
+                        cloud.speed = 0.03;
+                    }
                 });
                 // clearInterval(cloudPosition);
             }

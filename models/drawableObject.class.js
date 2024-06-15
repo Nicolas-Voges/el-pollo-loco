@@ -144,7 +144,7 @@ class DrawableObject {
     }
 
     hit(energyAttack) {
-        console.log('TREFFER!');
+        // console.log('TREFFER!');
         if (this instanceof Chick) {
             this.sound_chickHit.play();
         }
