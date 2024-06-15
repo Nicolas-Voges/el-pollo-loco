@@ -26,7 +26,7 @@ class DrawableObject {
     sound_chickenHit = new Audio('audio/chicken-hit.mp3');
     sound_bossHit = new Audio('audio/boss-hit.mp3');
     collisionDetected = false;
-    lastCollision = 0;
+    // lastCollision = 0;
     hasHurt = false;
     isAlert = false;
 

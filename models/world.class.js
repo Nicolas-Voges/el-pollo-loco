@@ -373,13 +373,17 @@ class World {
             }
         }
     }
+    lastCollision = 0;
     characterEnemyCollisiondetected = false;
     collisionsReactionRuns = false;
+    logged = false;
+
     checkCollisions() {
         if (!this.endbossAnimationRuns) {
             this.level.enemies.forEach((enemy) => {
                 if (this.character.isColliding(enemy) && !this.characterEnemyCollisiondetected) {
                     this.characterEnemyCollisiondetected = true;
+                    this.lastCollision = new Date().getTime();
                     if (!enemy.isDead() && !this.character.isComingFromTop(enemy)) { // Hier gucken, von wo der Enemy auf den Character trifft.
                         if (!enemy.hasHurt && !this.collisionsReactionRuns) {
                             this.collisionsReactionRuns = true;
@@ -402,11 +406,19 @@ class World {
                             enemy.energy = 0;
                         }
                     }
-                    console.log(this.character.energy);
+                    // console.log(this.character.energy);
                 } else {
                     enemy.hasHurt = false;
                 }
+                if (!this.logged && !this.character.isAboveGround() && this.lastCollision > 0) {
+                    this.logged = true
+                    
+                    console.log(new Date().getTime() - this.lastCollision);
+                }
                 if (this.character.speedY > 0) {
+                    this.logged = false;
+                }
+                if (new Date().getTime() - this.lastCollision > 100) {
                     this.characterEnemyCollisiondetected = false;
                     this.collisionsReactionRuns = false;
                 }
