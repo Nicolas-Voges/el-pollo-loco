@@ -114,7 +114,7 @@ class World {
                 } else {
                     enemy.hasHurt = false;
                 }
-                if (new Date().getTime() - this.lastCollision > 100) {
+                if (new Date().getTime() - this.lastCollision > 500) {
                     this.characterEnemyCollisiondetected = false;
                     this.collisionsReactionRuns = false;
                     this.level.enemies.forEach(enemy => enemy.hasHurt = false);

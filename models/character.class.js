@@ -102,7 +102,6 @@ class Character extends MovableObject {
         try {
             var isPlaying = this.walking_sound.currentTime > 0 && !this.walking_sound.paused && !this.walking_sound.ended
                 && this.walking_sound.readyState > this.walking_sound.HAVE_CURRENT_DATA;
-
             if (!isPlaying) {
                 await this.walking_sound.play();
             } else {
@@ -171,58 +170,134 @@ class Character extends MovableObject {
         this.registerInterval(intervalCharacterAnimate, 'animations');
     }
 
+    /**
+     * This function plays the hurt sound.
+     */
     async playHurtSound() {
         await this.sound_hurt.play();
     }
 
+    /**
+     * This function checks if a hit reaction already runs. If not this function starts the hit reaction.
+     * 
+     * @param {number} distance 
+     * @param {number} braceUpTime 
+     */
     hitRreaction(distance, braceUpTime) {
         let xStart = this.x;
         if (!this.hitReactionRuns) {
             this.hitReactionRuns = true;
-
-            let id = setInterval(() => {
-                if (this.x > 50 && this.x > xStart - distance && !this.reachedLevelEnd) {
-                    this.x -= 5;
-                } else if (this.reachedLevelEnd && xStart <= 4005) {
-                    if (this.x < xStart + distance) {
-                        this.x += 5;
-                        if (this.x > 4318) {
-                            this.x = 4318;
-                            clearInterval(id);
-                            setTimeout(() => {
-                                this.hitReactionRuns = false;
-                            }, braceUpTime);
-                        }
-                    } else {
-                        clearInterval(id);
-                        setTimeout(() => {
-                            this.hitReactionRuns = false;
-                        }, braceUpTime);
-                    }
-                } else if (this.reachedLevelEnd && xStart > 4005) {
-                    if (this.x > xStart - distance) {
-                        this.hitReactionRuns = true;
-                        this.x -= 5;
-                        if (this.x > 4318) {
-                            this.x = 4318;
-                            clearInterval(id);
-                            setTimeout(() => {
-                                this.hitReactionRuns = false;
-                            }, braceUpTime);
-                        }
-                    } else {
-                        clearInterval(id);
-                        setTimeout(() => {
-                            this.hitReactionRuns = false;
-                        }, braceUpTime);
-                    }
-                } else {
-                    clearInterval(id);
-                    setTimeout(() => {
-                        this.hitReactionRuns = false;
-                    }, braceUpTime);
-                }
-            }, 10);
+            this.runHitReaction(distance, braceUpTime, xStart);
         }
+    }
+
+    /**
+     * This function runs the hit reaction in an interval.
+     * 
+     * @param {number} distance 
+     * @param {number} braceUpTime 
+     * @param {number} xStart 
+     */
+    runHitReaction(distance, braceUpTime, xStart) {
+        let id = setInterval(() => {
+            if (!this.reachedLevelEnd && this.notReachedLevelStart() && this.notReachedDistance(xStart, distance)) {
+                this.x -= 5;
+            } else if (this.reachedLevelEnd && this.onLeftScreenSide(xStart)) {
+                this.endbossHitReactionLeft(xStart, distance, id, braceUpTime);
+            } else if (this.reachedLevelEnd && !this.onLeftScreenSide(xStart)) {
+                this.endbossHitReactionRight(xStart, distance, id, braceUpTime)
+            } else {
+                this.hitRreactionEnd(id, braceUpTime);
+            }
+        }, 10);
+    }
+
+    /**
+     * This function checks if xStart is lower or equal to screen middle and
+     * 
+     * @param {number} xStart 
+     * @returns {boolean} true if thats the case.
+     */
+    onLeftScreenSide(xStart) {
+        return xStart <= 4005
+    }
+
+    /**
+     * This function checks if character position is greater than level start and
+     * 
+     * @returns {boolean} true if thats the case.
+     */
+    notReachedLevelStart() {
+        return this.x > this.world.level.level_start_x;
+    }
+
+    /**
+     * This function checks if character reached distance and
+     * 
+     * @param {number} xStart 
+     * @param {number} distance 
+     * @returns {boolean true if thats the case.}
+     */
+    notReachedDistance(xStart, distance) {
+        return this.x > xStart - distance;
+    }
+
+    /**
+     * This function checks if character reached distance and increaces characters x value if thats not the case.
+     * If character reached screen end this function sets characters x value to screen end on the right.
+     * If character reached distance, after a time out it calls function to ending hit reaction.
+     * 
+     * @param {number} xStart 
+     * @param {number} distance 
+     * @param {number} id 
+     * @param {number} braceUpTime 
+     */
+    endbossHitReactionLeft(xStart, distance, id, braceUpTime) {
+        if (this.x < xStart + distance) {
+            this.x += 5;
+            if (this.x > 4318) {
+                this.x = 4318;
+                this.hitRreactionEnd(id, braceUpTime);
+            }
+        } else {
+            this.hitRreactionEnd(id, braceUpTime);
+        }
+    }
+
+    /**
+     * This function checks if character reached distance and decreaces characters x value if thats not the case.
+     * If character reached screen end this function sets characters x value to screen end on the left.
+     * If character reached distance, after a time out it calls function to ending hit reaction.
+     * 
+     * @param {number} xStart 
+     * @param {number} distance 
+     * @param {number} id 
+     * @param {number} braceUpTime 
+     */
+    endbossHitReactionRight(xStart, distance, id, braceUpTime) {
+        if (this.x > xStart - distance) {
+            this.hitReactionRuns = true;
+            this.x -= 5;
+            if (this.x < 3696) {
+                this.x = 3696;
+                this.hitRreactionEnd(id, braceUpTime);
+            }
+        } else {
+            this.hitRreactionEnd(id, braceUpTime);
+        }
+    }
+
+    /**
+     * This function clears the interval of the function to run the hit reaction and after a time out
+     * it sets hitReactionRuns to false.
+     * 
+     * @param {number} id 
+     * @param {number} braceUpTime 
+     */
+    hitRreactionEnd(id, braceUpTime) {
+        clearInterval(id);
+        setTimeout(() => {
+            this.hitReactionRuns = false;
+        }, braceUpTime);
     }
 }

@@ -2,6 +2,7 @@ class Level {
     enemies;
     cloudObjects;
     backgroundObjects;
+    level_start_x = 50;
     level_end_x = 4310;
     collectableObjects;
 
