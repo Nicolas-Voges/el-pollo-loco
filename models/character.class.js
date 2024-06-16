@@ -113,6 +113,8 @@ class Character extends MovableObject {
         }
     }
 
+    reachedLevelEnd = false;
+
     async animate() {
         let intervalCharacterMove = setInterval(() => {
             this.walking_sound.pause();
@@ -125,7 +127,7 @@ class Character extends MovableObject {
                 }
             }
 
-            if ((this.world.keyboard.A || this.world.keyboard.LEFT) && this.x > 50) {
+            if ((this.world.keyboard.A || this.world.keyboard.LEFT) && ((this.x > 50 && !this.reachedLevelEnd) || (this.x > 3700 && this.reachedLevelEnd))) {
                 this.moveLeft();
                 this.otherDirection = true;
                 if (!this.isAboveGround()) {
@@ -136,8 +138,11 @@ class Character extends MovableObject {
             if ((this.world.keyboard.W || this.world.keyboard.SPACE || this.world.keyboard.UP) && this.y >= 280) {
                 this.jump();
             }
+            if (this.x >= 3696) {
+                this.reachedLevelEnd = true;
+            }
 
-            if (this.x < this.world.level.level_end_x) {
+            if (this.x < this.world.level.level_end_x - 500 && !this.reachedLevelEnd) {
                 this.world.camera_x = -this.x;
             }
         }, 1000 / 60);
@@ -172,16 +177,52 @@ class Character extends MovableObject {
 
     hitRreaction(distance, braceUpTime) {
         let xStart = this.x;
-        let id = setInterval(() => {
-            if (this.x > 50 && this.x > xStart - distance) {
-                this.hitReactionRuns = true;
-                this.x -= 5;
-            } else {
-                clearInterval(id);
-                setTimeout(() => {
-                    this.hitReactionRuns = false;
-                }, braceUpTime);
-            }
-        }, 10);
+        if (!this.hitReactionRuns) {
+            this.hitReactionRuns = true;
+
+            let id = setInterval(() => {
+                if (this.x > 50 && this.x > xStart - distance && !this.reachedLevelEnd) {
+                    this.x -= 5;
+                } else if (this.reachedLevelEnd && xStart <= 4005) {
+                    if (this.x < xStart + distance) {
+                        this.x += 5;
+                        if (this.x > 4318) {
+                            this.x = 4318;
+                            clearInterval(id);
+                            setTimeout(() => {
+                                this.hitReactionRuns = false;
+                            }, braceUpTime);
+                        }
+                    } else {
+                        clearInterval(id);
+                        setTimeout(() => {
+                            this.hitReactionRuns = false;
+                        }, braceUpTime);
+                    }
+                } else if (this.reachedLevelEnd && xStart > 4005) {
+                    if (this.x > xStart - distance) {
+                        this.hitReactionRuns = true;
+                        this.x -= 5;
+                        if (this.x > 4318) {
+                            this.x = 4318;
+                            clearInterval(id);
+                            setTimeout(() => {
+                                this.hitReactionRuns = false;
+                            }, braceUpTime);
+                        }
+                    } else {
+                        clearInterval(id);
+                        setTimeout(() => {
+                            this.hitReactionRuns = false;
+                        }, braceUpTime);
+                    }
+                } else {
+                    clearInterval(id);
+                    setTimeout(() => {
+                        this.hitReactionRuns = false;
+                    }, braceUpTime);
+                }
+            }, 10);
+        }
     }
 }

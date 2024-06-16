@@ -34,6 +34,8 @@ class World {
     characterEnemyCollisiondetected = false;
     collisionsReactionRuns = false;
 
+    cameraIsMoving = false;
+
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -68,49 +70,12 @@ class World {
             this.checkThrowableObjects();
             this.checkForDeadEnemies();
             checkForEndbossAnimation();
-            if (this.bossCameraActiv) {
-                this.bossCamera();
-            }
             if (this.endbossAnimationHasRun) {
                 bossFight();
             }
         }, 5);
         this.intervals.push(intervalWorldRun);
         activeIntervals.push(intervalWorldRun);
-    }
-
-
-    
-
-
-    cameraIsMoving = false;
-
-    bossCamera() {
-        // this.camera_x = -3728; // <-- nicht zur Funktion zugehörig
-        // if (this.endboss.x > this.character.x + 200) {
-        //     if (this.cameraToCharacter > 100) {
-        //         this.cameraIsMoving = true;
-        //         this.cameraToCharacter -= 2;
-        //     } else {
-        //         this.cameraIsMoving = false;
-        //     }
-        // } else if (this.endboss.x < this.character.x - 140 - this.endboss.width) {
-        //     if (this.cameraToCharacter < 600) {
-        //         this.cameraIsMoving = true;
-        //         this.cameraToCharacter += 2;
-        //     } else {
-        //         this.cameraIsMoving = false;
-        //     }
-        // } else {
-        //     this.cameraIsMoving = false;
-        //     if (this.cameraToCharacter > 328 && this.cameraToCharacter < 332) {
-        //         this.cameraToCharacter = 330;
-        //     } else if (this.cameraToCharacter > 330) {
-        //         this.cameraToCharacter -= 2;
-        //     } else if (this.cameraToCharacter < 330) {
-        //         this.cameraToCharacter += 2;
-        //     }
-        // }
     }
 
     checkCollisions() {
@@ -124,7 +89,11 @@ class World {
                             this.collisionsReactionRuns = true;
                             enemy.hasHurt = true;
                             this.character.hit(enemy.energyAttack);
-                            this.character.hitRreaction(100, 400);
+                            if (enemy instanceof Endboss) {
+                                this.character.hitRreaction(220, 400);                                
+                            } else {                                
+                                this.character.hitRreaction(100, 400);
+                            }
                         }
                     } else if (!enemy.hasHurt && this.character.isComingFromTop(enemy) && this.character.speedY < 0 && this.character.isJumping && !this.collisionsReactionRuns) {
                         if (enemy instanceof Endboss) { // Kollision nur einmal checken
@@ -224,9 +193,9 @@ class World {
         let backgroundPosition = setInterval(() => {
             // if (!this.endbossAnimationHasRun) {
             this.level.backgroundObjects.forEach((bgr) => {
-                if (this.character.isMovingLeft) {
+                if (this.character.isMovingLeft && this.character.x < 3690) {
                     bgr.moveLeft();
-                } else if (this.character.isMovingRight) {
+                } else if (this.character.isMovingRight && this.character.x < 3690) {
                     bgr.moveRight();
                 }
             });
@@ -237,10 +206,10 @@ class World {
         let cloudPosition = setInterval(() => {
             if (!this.cameraIsMoving) {
                 this.level.cloudObjects.forEach((cloud) => {
-                    if (this.character.isMovingLeft) {
-                        cloud.speed = 0.5;
-                    } else if (this.character.isMovingRight) {
-                        cloud.speed = -0.5;
+                    if (this.character.isMovingLeft && this.character.x < 3696) {
+                        cloud.speed = 1;
+                    } else if (this.character.isMovingRight && this.character.x < 3696) {
+                        cloud.speed = -1;
                     }
                     else {
                         cloud.speed = 0.03;
@@ -261,32 +230,47 @@ class World {
             }
         }, 20);
     }
-
+    
+    /**
+     * 
+     */
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x + this.cameraToCharacter, 0);
-        this.addObjectsToMap(this.level.backgroundObjects);
-        this.addObjectsToMap(this.level.cloudObjects);
-        this.addObjectsToMap(this.level.collectableObjects);
-        this.addToMap(this.character);
-        this.addObjectsToMap(this.level.enemies);
-
+        this.drawScene();
         this.ctx.translate(-this.camera_x - this.cameraToCharacter, 0);
-
-        this.addToMap(this.statusBarEnergy);
-        this.addToMap(this.statusBarCoin);
-        this.addToMap(this.statusBarBottle);
-
-        this.ctx.translate(this.camera_x + this.cameraToCharacter, 0);
-
-        this.addObjectsToMap(this.throwableObjects);
-        this.ctx.translate(-this.camera_x - this.cameraToCharacter, 0);
+        this.drawHUD();
         let self = this;
         requestAnimationFrame(function () {
             self.draw();
         });
     }
 
+    /**
+     * 
+     */
+    drawScene() {
+        this.addObjectsToMap(this.level.backgroundObjects);
+        this.addObjectsToMap(this.level.cloudObjects);
+        this.addObjectsToMap(this.level.collectableObjects);
+        this.addToMap(this.character);
+        this.addObjectsToMap(this.level.enemies);
+        this.addObjectsToMap(this.throwableObjects);
+    }
+
+    /**
+     * 
+     */
+    drawHUD() {
+        this.addToMap(this.statusBarEnergy);
+        this.addToMap(this.statusBarCoin);
+        this.addToMap(this.statusBarBottle);
+    }
+
+    /**
+     * 
+     * @param {Array} objects 
+     */
     addObjectsToMap(objects) {
         objects.forEach(object => {
             this.addToMap(object);
@@ -297,7 +281,6 @@ class World {
         if (object.otherDirection) {
             this.flipImage(object);
         }
-
         try {
             object.draw(this.ctx);
             // object.drawFrame(this.ctx);
@@ -306,19 +289,24 @@ class World {
             console.warn('Failed to load image in world.class.js. Error: ' + e);
             console.error('Can not load image: ' + this.img.src);
         }
-
-
         if (object.otherDirection) {
             this.flipImageBack();
         }
     }
 
+    /**
+     * 
+     * @param {Object} object 
+     */
     flipImage(object) {
         this.ctx.save();
         this.ctx.translate(object.width + 2 * object.x, 0);
         this.ctx.scale(-1, 1);
     }
 
+    /**
+     * 
+     */
     flipImageBack() {
         this.ctx.restore();
     }

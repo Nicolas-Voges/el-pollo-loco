@@ -140,9 +140,10 @@ class MovableObject extends DrawableObject {
      * 
      * @param {Object} obj 
      * @returns {boolean} ture if the differnce between this object bottom side and the colliding objects
-     * top side is lower than the difference between this object right Side and the colliding objects left side.
+     * top side is lower than the difference between this object right Side and the colliding objects left side
+     * and if this object is above its ground.
      */
     isComingFromTop(obj) {
-        return this.rightSide() - obj.leftSide() > this.bottomSide() - obj.topSide();
+        return this.rightSide() - obj.leftSide() > this.bottomSide() - obj.topSide() && this.isAboveGround();
     }
 }
