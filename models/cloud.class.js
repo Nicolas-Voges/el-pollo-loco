@@ -16,6 +16,9 @@ class Cloud extends MovableObject {
     animate() {
         let intervalCloudMove = setInterval(() => {
             this.moveLeft();
+            if (this.x + this.width <= -500) {
+                this.x = 5000;
+            }
         }, 1000 / 200);
         this.registerInterval(intervalCloudMove, 'moves');
     }

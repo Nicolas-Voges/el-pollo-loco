@@ -34,20 +34,6 @@ class World {
     characterEnemyCollisiondetected = false;
     collisionsReactionRuns = false;
 
-    /**
-     * Dramatischere Musik abspielen, sobald der Endboss in Erscheinung tritt und eine kleine Videosequenz, die damit anfängt,
-     * das Pepe ein fragendes "Hö?" von sich gibt und der Charakter stehen bleibt und der User nicht mehr steuern kann, außer springen.
-     * Dann fährt die Kamera weiter nach Rechts und der Endboss geht normal da lang in Richtung Pepe, aber der Endboss ist noch nicht
-     * auf einem Bildschirm mit Pepe. Dann kommt das Metal Gear Solid Geräusch, wenn der Gegner einen entdeckt. Bzw. ein ähnliches Geräusch.
-     * Die Animation Alerta wird sogleich abgespielt und dann macht der Endboss eine Attacke ins Leere, um seine Kraft zu demonstrieren
-     * und die Kamera soll so wackeln, wie bei einer erschütterung. Dann kommt ein Kampfschrei und der Endboss rennt los und springt.
-     * Sobald der Endboss springt, fährt die Kamera zurück auf Pepe und dann muss der User schnell reagieren, weil die Sequenz damit endet
-     * und sobald die Kamera ihn wieder fixiert hat, ist Pepe wieder steuerbar. Der User soll entkommen können, wenn er innerhalb von
-     * bspw. 250ms reagiert. Dann geht der Kampf los und das Huhn muss Pepe verfolgen
-     *  
-     * */
-
-
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -57,6 +43,7 @@ class World {
         this.loadSounds();
         this.run();
         this.checkBackgroundPosition();
+        test();
     }
 
     async loadSounds() {
@@ -81,7 +68,7 @@ class World {
             this.checkCollisions();
             this.checkThrowableObjects();
             this.checkForDeadEnemies();
-            this.checkForEndbossAnimation();
+            checkForEndbossAnimation();
             if (this.bossCameraActiv) {
                 this.bossCamera();
             }
@@ -135,79 +122,8 @@ class World {
         }
     }
 
-    checkForEndbossAnimation() {
-        if (this.character.x > 3800 && !this.endbossAnimationRuns && !this.endbossAnimationHasRun) {
-            this.endbossAnimationRuns = true;
-            this.runEndbossAnimation();
-        }
-    }
 
-    runEndbossAnimation() {
-        this.character.deleteAllIntervals();
-        this.cameraInAnimation();
-    }
 
-    cameraInAnimation() {
-        let camaraAnimate = setInterval(() => {
-            if (this.camera_x >= -4300) {
-                this.camera_x -= 2;
-            } else {
-                clearInterval(camaraAnimate);
-                this.bossEntrenceAnimation();
-            }
-        }, 1000 / 60);
-    }
-
-    bossEntrenceAnimation() {
-        let bossEntrence = setInterval(() => {
-            if (this.endboss.x > 4700) {
-                this.endboss.x--;
-            } else {
-                clearInterval(bossEntrence);
-                this.bossAlertAnimation();
-            }
-        }, 20);
-    }
-
-    bossAlertAnimation(animatinCount = 0, cameraOut = false) {
-        this.clearEnemies();
-        this.endboss.deleteIntervals('animations');
-        this.endboss.deleteIntervals('moves');
-        let alertAnimation = setInterval(() => {
-            if (this.endboss.currentImage < this.endboss.IMAGES_ALERT.length - 1 || animatinCount < 2) {
-                if (this.endboss.currentImage === this.endboss.IMAGES_ALERT.length - 1) {
-                    animatinCount++;
-                }
-                this.endboss.playAnimation(this.endboss.IMAGES_ALERT);
-            } else {
-                clearInterval(alertAnimation);
-                if (cameraOut) {
-                    this.endboss.animate();
-                    let movingLeft = setInterval(() => {
-                        if (this.endboss.x >= 4000) {
-                            this.endboss.moveLeft();
-                        } else {
-                            clearInterval(movingLeft);
-                            // this.endboss.deleteIntervals('animations');
-                            this.bossAttackAnimation(true);
-                        }
-                    }, 1000 / 60);
-                    this.cameraOutAnimation();
-                } else {
-                    this.bossAttackAnimation();
-                }
-            }
-        }, 1000 / 8);
-    }
-
-    clearEnemies() {
-        this.level.enemies.forEach(enemie => {
-            if (!enemie instanceof Endboss) {
-                enemie.deleteAllIntervals();
-            }
-        });
-        this.level.enemies.splice(0, this.level.enemies.length - 1);
-    }
 
     bossAttack() {
         if (!this.endboss.isAttacking) {
@@ -258,104 +174,7 @@ class World {
         }
     }
 
-    bossAttackAnimation(end = false) {
-        let distance = 3800;
-        if (!end) {
-            this.endboss.applyGravity();
-            distance = 4500;
-        }
-        this.endboss.speedY = 22;
-        this.endboss.currentImage = 0;
-        let animatingCharacter = false;
-        this.endboss.deleteIntervals('animations');
-        this.endboss.deleteIntervals('moves');
-        let jump = setInterval(() => {
-            if (this.endboss.isAboveGround() || this.endboss.x >= distance) {
-                this.endboss.x -= 4;
-            } else {
-                clearInterval(jump);
-                this.earthquakeAnimation(end);
-            }
-        }, 10);
-        let attack = setInterval(() => {
-            if (this.endboss.currentImage < this.endboss.IMAGES_ATTACK.length - 1) {
-                this.endboss.playAnimation(this.endboss.IMAGES_ATTACK);
-                // console.log(this.endboss.currentImage + ' + ' + attack);
-            } else {
-                clearInterval(attack);
-                // this.endboss.animate();
-            }
-        }, 100);
-    }
-
-    earthquakeAnimation(end = false, attack = false) {
-        if (attack) {
-            this.earthquakeDone = false;
-        }
-        let yMax = 25;
-        let y = 0;
-        let quotient = 2;
-        let moveUp = true;
-        let translate = 0;
-        let earthquake = setInterval(() => {
-            if (y <= yMax && moveUp) {
-                y++;
-                this.ctx.translate(0, 3 / (quotient / 10));
-                translate -= 3 / (quotient / 10);
-                quotient *= quotient;
-                // console.log(translate);
-                if (y == yMax) {
-                    moveUp = false;
-                    y = 0;
-                    yMax -= 5;
-                    quotient = 2;
-                }
-            } else if (y <= yMax && !moveUp) {
-                y++;
-                this.ctx.translate(0, -3.3 / (quotient / 10));
-                translate += 3.3 / (quotient / 10);
-                quotient *= quotient;
-                // console.log(translate);
-                if (y == yMax) {
-                    moveUp = true;
-                    y = 0;
-                    yMax -= 5;
-                    quotient = 2;
-                }
-            }
-            if (yMax <= 0) {
-                clearInterval(earthquake);
-                this.ctx.translate(0, translate);
-                this.earthquakeDone = true;
-                if (!end && !attack) {
-                    this.character.applyGravity();
-                    this.bossAlertAnimation(1, true);
-                } else if (attack) {
-                    // this.bossAlertAnimation(1, true);
-                    this.bossFightDone = true;
-                    this.bossFightStarted = false;
-                }
-                this.endboss.isAttacking = false;
-                if (end) {
-                    this.endbossAnimationRuns = false;
-                    this.endbossAnimationHasRun = true;
-                }
-            }
-        }, 0.1);
-    }
-
-    cameraOutAnimation() {
-        let camaraAnimate = setInterval(() => {
-            if (this.camera_x <= -3800) {
-                this.camera_x += 4;
-            } else {
-                clearInterval(camaraAnimate);
-                this.character.animate();
-                this.bossCameraActiv = true;
-                // this.endbossAnimationHasRun = true;
-            }
-        }, 1000 / 60);
-    }
+    
 
     cameraIsMoving = false;
 

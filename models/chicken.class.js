@@ -30,7 +30,7 @@ class Chicken extends Enemy {
             if (!this.isDead()) {
                 this.moveLeft();
                 if (this.x + this.width <= 0) {
-                    this.x = 7500;
+                    this.x = 5000;
                 }
             }
         }, 1000 / 60);

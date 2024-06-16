@@ -3,6 +3,7 @@ let ctx;
 let world;
 let keybord = new Keyboard();
 let activeIntervals = [];
+let pauseIntervals = [];
 
 function clearAllIntervals() {
     intervals.activeIntervals.forEach((interval) => {
