@@ -7,7 +7,7 @@ function checkForEndbossAnimation() {
 }
 
 function runEndbossAnimation() {
-    world.character.deleteAllIntervals();
+    deleteIntervalsByClassName('character');
     cameraInAnimation();
 }
 
@@ -35,6 +35,7 @@ function bossEntrenceAnimation() {
 
 function bossAlertAnimation(animatinCount = 0, cameraOut = false) {
     clearEnemies();
+
     world.endboss.deleteIntervals('animations');
     world.endboss.deleteIntervals('moves');
     let alertAnimation = setInterval(() => {
@@ -65,25 +66,26 @@ function bossAlertAnimation(animatinCount = 0, cameraOut = false) {
 }
 
 function clearEnemies() {
-    world.level.enemies.forEach(enemie => {
-        if (!enemie instanceof Endboss) {
-            enemie.deleteAllIntervals();
-        }
-    });
+    deleteIntervalsByClassName('enemy');
+    // world.level.enemies.forEach(enemie => {
+    //     if (!enemie instanceof Endboss) {
+    //         enemie.deleteAllIntervals();
+    //     }
+    // });
     world.level.enemies.splice(0, world.level.enemies.length - 1);
 }
 
 function bossAttackAnimation(end = false) {
     let distance = 3800;
     if (!end) {
-        world.endboss.applyGravity();
+        registerInterval(true, 'world.endboss.applyGravity()', 1000 / 60, 'endboss gravity', 'endboss');
+        // world.endboss.applyGravity();
         distance = 4500;
     }
     world.endboss.speedY = 22;
     world.endboss.currentImage = 0;
     let animatingCharacter = false;
-    world.endboss.deleteIntervals('animations');
-    world.endboss.deleteIntervals('moves');
+    deleteIntervalsByClassName('endboss');
     let jump = setInterval(() => {
         if (world.endboss.isAboveGround() || world.endboss.x >= distance) {
             world.endboss.x -= 4;
@@ -143,7 +145,7 @@ function earthquakeAnimation(end = false, attack = false) {
             world.ctx.translate(0, translate);
             world.earthquakeDone = true;
             if (!end && !attack) {
-                world.character.applyGravity();
+                registerInterval(true, 'world.character.applyGravity()', 1000 / 60, 'gravity', 'character');
                 bossAlertAnimation(1, true);
             } else if (attack) {
                 // bossAlertAnimation(1, true);
@@ -165,7 +167,7 @@ function cameraOutAnimation() {
             world.camera_x += 4;
         } else {
             clearInterval(camaraAnimate);
-            world.character.animate();
+            registerInterval(true, 'world.character.animate()', 100, 'animations', 'character');
             world.bossCameraActiv = true;
             // world.endbossAnimationHasRun = true;
         }

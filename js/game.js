@@ -78,9 +78,20 @@ function startPauseGame() {
     if (!start) {
         start = true;
         init();
+        startGameIntervals();
     } else if (!world.endbossAnimationRuns) {
         pause();
     }
+}
+
+function startGameIntervals() {
+    startCharacterIntervals();
+}
+
+function startCharacterIntervals() {
+    registerInterval(true, 'world.character.applyGravity()', 1000 / 60, 'character gravity', 'character');
+    registerInterval(true, 'world.character.move()', 1000 / 60, 'character moves', 'character');
+    registerInterval(true, 'world.character.animate()', 100, 'character animations', 'character');
 }
 
 let isPause = false;
@@ -105,7 +116,7 @@ function pause() {
     }
 }
 
-function registerInterval(pause, functionToRecall, interval, name) {
+function registerInterval(pause, functionToRecall, interval, intervalFunction, className) {
     let id = setInterval(() => {
         eval(functionToRecall);
     }, interval);
@@ -115,7 +126,9 @@ function registerInterval(pause, functionToRecall, interval, name) {
         pause: pause,
         recallFunction: functionToRecall,
         interval: interval,
-        name: name
+        className: className,
+        intervalFunction: intervalFunction,
+        isRunning: true
     });
 }
 
@@ -124,19 +137,35 @@ function deleteIntervals(pause) {
         intervals.forEach(interval => {
             if (interval.pause) {
                 clearInterval(interval.id);
+                interval.isRunning = false;
             }
         });
     } else {
         intervals.forEach(interval => clearInterval(interval.id));
+        intervals = [];
     }
 }
 
 function restartPauseIntervals() {
+    let i = 0;
     intervals.forEach(interval => {
+        i++;
         if (interval.pause) {
             registerInterval(interval.pause, interval.functionToRecall, interval.interval);
+            intervals.splice(i, 1);
+            i--
         }
     });
+}
+
+function deleteIntervalsByClassName(className) {
+    for (let i = 0; i < intervals.length; i++) {
+        if (intervals[i].className === className) {
+            clearInterval(intervals[i].id);
+            intervals.splice(i, 1);
+            i--;
+        }
+    }
 }
 
 function restartGame() {

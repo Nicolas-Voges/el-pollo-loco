@@ -90,8 +90,6 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_LONG_IDLE);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
-        this.applyGravity();
-        this.animate();
         this.isMoving();
         this.walking_sound.volume = 0.5;
         this.sound_jump.volume = 0.4;
@@ -114,66 +112,58 @@ class Character extends MovableObject {
 
     reachedLevelEnd = false;
 
-    animate() {
-        let intervalCharacterMove = setInterval(() => {
-            this.walking_sound.pause();
+    move() {
+        this.walking_sound.pause();
 
-            if ((this.world.keyboard.moveRightKeyPush) && this.x < this.world.level.level_end_x) {
-                this.moveRight();
-                this.otherDirection = false;
-                if (!this.isAboveGround()) {
-                    this.playWalkingSound();
-                }
+        if (this.world.keyboard.moveRightKeyPush && this.notReachedLevelEnd()) {
+            this.moveRight();
+            this.otherDirection = false;
+            if (!this.isAboveGround()) {
+                this.playWalkingSound();
             }
+        }
 
-            if ((this.world.keyboard.moveLeftKeyPush) && ((this.x > 50 && !this.reachedLevelEnd) || (this.x > 3700 && this.reachedLevelEnd))) {
-                this.moveLeft();
-                this.otherDirection = true;
-                if (!this.isAboveGround()) {
-                    this.playWalkingSound();
-                }
+        if ((this.world.keyboard.moveLeftKeyPush) && ((this.x > 50 && !this.reachedLevelEnd) || (this.x > 3700 && this.reachedLevelEnd))) {
+            this.moveLeft();
+            this.otherDirection = true;
+            if (!this.isAboveGround()) {
+                this.playWalkingSound();
             }
+        }
 
-            if ((this.world.keyboard.jumpKeyPush) && this.y >= 280) {
-                this.jump();
-            }
-            if (this.x >= 3696) {
-                this.reachedLevelEnd = true;
-            }
+        if ((this.world.keyboard.jumpKeyPush) && this.y >= 280) {
+            this.jump();
+        }
+        if (this.x >= 3800) {
+            this.reachedLevelEnd = true;
+        }
 
-            if (this.x < this.world.level.level_end_x - 500 && !this.reachedLevelEnd) {
-                this.world.camera_x = -this.x;
-            }
-        }, 1000 / 60);
-
-        this.registerInterval(intervalCharacterMove, 'moves');
-
-        let intervalCharacterAnimate = setInterval(() => {
-            if (this.isDead()) {
-                this.world.statusBarEnergy.setPercentage(this.energy);
-                this.playAnimation(this.IMAGES_DEAD);
-            } else if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-                this.playHurtSound();
-                this.world.statusBarEnergy.setPercentage(this.energy);
-            } else if (this.isAboveGround()) {
-                this.playAnimation(this.IMAGES_JUMPING);
-            } else if ((this.isMovingLeft || this.isMovingRight) && this.x > 50 && this.x < this.world.level.level_end_x) {
-                this.playAnimation(this.IMAGES_WALKING);
-            } else if (!this.world.keyboard.LEFT && !this.world.keyboard.RIGHT && !this.world.keyboard.SPACE && !this.world.keyboard.UP) {
-                this.playAnimation(this.IMAGES_IDLE);
-            }
-            this.world.statusBarCoin.setPercentage(this.coins * 20 + 18);
-            this.world.statusBarBottle.setPercentage(this.bottles * 20 + 18);
-        }, 100);
-
-        this.registerInterval(intervalCharacterAnimate, 'animations');
-
-        registerInterval(true, 'world.character.test()', 20000, 'test');
+        if (this.x < this.world.level.level_end_x - 500 && !this.reachedLevelEnd) {
+            this.world.camera_x = -this.x;
+        }
     }
 
-    test() {
-        console.log('Test successfull!');
+    animate() {
+        if (this.isDead()) {
+            this.world.statusBarEnergy.setPercentage(this.energy);
+            this.playAnimation(this.IMAGES_DEAD);
+        } else if (this.isHurt()) {
+            this.playAnimation(this.IMAGES_HURT);
+            this.playHurtSound();
+            this.world.statusBarEnergy.setPercentage(this.energy);
+        } else if (this.isAboveGround()) {
+            this.playAnimation(this.IMAGES_JUMPING);
+        } else if ((this.isMovingLeft || this.isMovingRight) && this.x > 50 && this.x < this.world.level.level_end_x) {
+            this.playAnimation(this.IMAGES_WALKING);
+        } else if (!this.world.keyboard.LEFT && !this.world.keyboard.RIGHT && !this.world.keyboard.SPACE && !this.world.keyboard.UP) {
+            this.playAnimation(this.IMAGES_IDLE);
+        }
+        this.world.statusBarCoin.setPercentage(this.coins * 20 + 18);
+        this.world.statusBarBottle.setPercentage(this.bottles * 20 + 18);
+    }
+
+    notReachedLevelEnd() {
+        return this.x < this.world.level.level_end_x;
     }
 
     /**

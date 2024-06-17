@@ -27,17 +27,14 @@ class MovableObject extends DrawableObject {
      * Else this function sets this y position to its ground, ist speedY value to 0 and isJumping to false.
      */
     applyGravity() {
-        let intervalMoveableObjectsGravity = setInterval(() => {
-            if (this.isAboveGround() || this.speedY > 0) {
-                this.y -= this.speedY;
-                this.speedY -= this.acceleration;
-            } else {
-                this.y = this.ground;
-                this.isJumping = false;
-                this.speedY = 0;
-            }
-        }, 1000 / 60);
-        this.registerInterval(intervalMoveableObjectsGravity, 'gravities');
+        if (this.isAboveGround() || this.speedY > 0) {
+            this.y -= this.speedY;
+            this.speedY -= this.acceleration;
+        } else {
+            this.y = this.ground;
+            this.isJumping = false;
+            this.speedY = 0;
+        }
     }
 
     /**
