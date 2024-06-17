@@ -1,13 +1,10 @@
 class Keyboard {
-    LEFT = false;
-    RIGHT = false;
-    UP = false;
-    DOWN = false;
-    SPACE = false;
-    W = false;
-    A = false;
-    S = false;
-    D = false;
-    F = false;
-    ENTER = false;
+    jumpKeys = ['Space', 'ArrowUp', 'KeyW'];
+    moveLeftKeys = ['KeyA', 'ArrowLeft', 'unset'];
+    moveRightKeys = ['KeyD', 'ArrowRight', 'unset'];
+    throwKeys = ['KeyF', 'unset', 'unset'];
+    jumpKeyPush = false;
+    moveLeftKeyPush = false;
+    moveRightKeyPush = false;
+    throwKeyPush = false;
 } 

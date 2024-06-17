@@ -160,11 +160,11 @@ class World {
 
     checkThrowableObjects() {
         let now = new Date().getTime();
-        if (this.keyboard.F && this.character.bottles > 0 && this.lastBottleThrown + this.firingRate < now) {
+        if (this.keyboard.throwKeyPush && this.character.bottles > 0 && this.lastBottleThrown + this.firingRate < now) {
             let bottle;
-            if (this.keyboard.D || this.keyboard.RIGHT) {
+            if (this.keyboard.moveRightKeyPush) {
                 bottle = new ThrowableObject(this.character.x + (this.character.width / 3), this.character.y + (this.character.height / 2), this.character.speed);
-            } else if (this.keyboard.A || this.keyboard.LEFT) {
+            } else if (this.keyboard.moveLeftKeyPushT) {
                 bottle = new ThrowableObject(this.character.x + (this.character.width / 3), this.character.y + (this.character.height / 2), -this.character.speed);
             } else {
                 bottle = new ThrowableObject(this.character.x + (this.character.width / 3), this.character.y + (this.character.height / 2), 0);

@@ -114,11 +114,11 @@ class Character extends MovableObject {
 
     reachedLevelEnd = false;
 
-    async animate() {
+    animate() {
         let intervalCharacterMove = setInterval(() => {
             this.walking_sound.pause();
 
-            if ((this.world.keyboard.D || this.world.keyboard.RIGHT) && this.x < this.world.level.level_end_x) {
+            if ((this.world.keyboard.moveRightKeyPush) && this.x < this.world.level.level_end_x) {
                 this.moveRight();
                 this.otherDirection = false;
                 if (!this.isAboveGround()) {
@@ -126,7 +126,7 @@ class Character extends MovableObject {
                 }
             }
 
-            if ((this.world.keyboard.A || this.world.keyboard.LEFT) && ((this.x > 50 && !this.reachedLevelEnd) || (this.x > 3700 && this.reachedLevelEnd))) {
+            if ((this.world.keyboard.moveLeftKeyPush) && ((this.x > 50 && !this.reachedLevelEnd) || (this.x > 3700 && this.reachedLevelEnd))) {
                 this.moveLeft();
                 this.otherDirection = true;
                 if (!this.isAboveGround()) {
@@ -134,7 +134,7 @@ class Character extends MovableObject {
                 }
             }
 
-            if ((this.world.keyboard.W || this.world.keyboard.SPACE || this.world.keyboard.UP) && this.y >= 280) {
+            if ((this.world.keyboard.jumpKeyPush) && this.y >= 280) {
                 this.jump();
             }
             if (this.x >= 3696) {
@@ -158,7 +158,7 @@ class Character extends MovableObject {
                 this.world.statusBarEnergy.setPercentage(this.energy);
             } else if (this.isAboveGround()) {
                 this.playAnimation(this.IMAGES_JUMPING);
-            } else if ((this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.A || this.world.keyboard.D) && this.x > 50 && this.x < this.world.level.level_end_x) {
+            } else if ((this.isMovingLeft || this.isMovingRight) && this.x > 50 && this.x < this.world.level.level_end_x) {
                 this.playAnimation(this.IMAGES_WALKING);
             } else if (!this.world.keyboard.LEFT && !this.world.keyboard.RIGHT && !this.world.keyboard.SPACE && !this.world.keyboard.UP) {
                 this.playAnimation(this.IMAGES_IDLE);
@@ -168,6 +168,12 @@ class Character extends MovableObject {
         }, 100);
 
         this.registerInterval(intervalCharacterAnimate, 'animations');
+
+        registerInterval(true, 'world.character.test()', 20000, 'test');
+    }
+
+    test() {
+        console.log('Test successfull!');
     }
 
     /**

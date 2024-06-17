@@ -4,6 +4,7 @@ let world;
 let keybord = new Keyboard();
 let activeIntervals = [];
 let pauseIntervals = [];
+let intervals = [];
 
 function clearAllIntervals() {
     intervals.activeIntervals.forEach((interval) => {
@@ -19,38 +20,25 @@ function init() {
 
 window.addEventListener('keydown', (e) => {
     switch (e.code) {
-        case ('Space'):
-            keybord.SPACE = true;
+        case (world.keyboard.jumpKeys[0]):
+        case (world.keyboard.jumpKeys[1]):
+        case (world.keyboard.jumpKeys[2]):
+            keybord.jumpKeyPush = true;
             break;
-        case ('KeyA'):
-            keybord.A = true;
+        case (world.keyboard.moveLeftKeys[0]):
+        case (world.keyboard.moveLeftKeys[1]):
+        case (world.keyboard.moveLeftKeys[2]):
+            keybord.moveLeftKeyPush = true;
             break;
-        case ('ArrowLeft'):
-            keybord.LEFT = true;
+        case (world.keyboard.moveRightKeys[0]):
+        case (world.keyboard.moveRightKeys[1]):
+        case (world.keyboard.moveRightKeys[2]):
+            keybord.moveRightKeyPush = true;
             break;
-        case ('KeyD'):
-            keybord.D = true;
-            break;
-        case ('ArrowRight'):
-            keybord.RIGHT = true;
-            break;
-        case ('KeyW'):
-            keybord.W = true;
-            break;
-        case ('ArrowUp'):
-            keybord.UP = true;
-            break;
-        case ('KeyS'):
-            keybord.S = true;
-            break;
-        case ('KeyF'):
-            keybord.F = true;
-            break;
-        case ('ArrowDown'):
-            keybord.DOWN = true;
-            break;
-        case ('Enter'):
-            keybord.ENTER = true;
+        case (world.keyboard.throwKeys[0]):
+        case (world.keyboard.throwKeys[1]):
+        case (world.keyboard.throwKeys[2]):
+            keybord.throwKeyPush = true;
             break;
         default:
             break;
@@ -59,38 +47,25 @@ window.addEventListener('keydown', (e) => {
 
 window.addEventListener('keyup', (e) => {
     switch (e.code) {
-        case ('Space'):
-            keybord.SPACE = false;
+        case (world.keyboard.jumpKeys[0]):
+        case (world.keyboard.jumpKeys[1]):
+        case (world.keyboard.jumpKeys[2]):
+            keybord.jumpKeyPush = false;
             break;
-        case ('KeyA'):
-            keybord.A = false;
+        case (world.keyboard.moveLeftKeys[0]):
+        case (world.keyboard.moveLeftKeys[1]):
+        case (world.keyboard.moveLeftKeys[2]):
+            keybord.moveLeftKeyPush = false;
             break;
-        case ('ArrowLeft'):
-            keybord.LEFT = false;
+        case (world.keyboard.moveRightKeys[0]):
+        case (world.keyboard.moveRightKeys[1]):
+        case (world.keyboard.moveRightKeys[2]):
+            keybord.moveRightKeyPush = false;
             break;
-        case ('KeyD'):
-            keybord.D = false;
-            break;
-        case ('ArrowRight'):
-            keybord.RIGHT = false;
-            break;
-        case ('KeyW'):
-            keybord.W = false;
-            break;
-        case ('ArrowUp'):
-            keybord.UP = false;
-            break;
-        case ('KeyS'):
-            keybord.S = false;
-            break;
-        case ('KeyF'):
-            keybord.F = false;
-            break;
-        case ('ArrowDown'):
-            keybord.DOWN = false;
-            break;
-        case ('Enter'):
-            keybord.ENTER = false;
+        case (world.keyboard.throwKeys[0]):
+        case (world.keyboard.throwKeys[1]):
+        case (world.keyboard.throwKeys[2]):
+            keybord.throwKeyPush = false;
             break;
         default:
             break;
@@ -128,4 +103,42 @@ function pause() {
         world.character.deleteAllIntervals();
         isPause = true;
     }
+}
+
+function registerInterval(pause, functionToRecall, interval, name) {
+    let id = setInterval(() => {
+        eval(functionToRecall);
+    }, interval);
+
+    intervals.push({
+        id: id,
+        pause: pause,
+        recallFunction: functionToRecall,
+        interval: interval,
+        name: name
+    });
+}
+
+function deleteIntervals(pause) {
+    if (pause) {
+        intervals.forEach(interval => {
+            if (interval.pause) {
+                clearInterval(interval.id);
+            }
+        });
+    } else {
+        intervals.forEach(interval => clearInterval(interval.id));
+    }
+}
+
+function restartPauseIntervals() {
+    intervals.forEach(interval => {
+        if (interval.pause) {
+            registerInterval(interval.pause, interval.functionToRecall, interval.interval);
+        }
+    });
+}
+
+function restartGame() {
+
 }
