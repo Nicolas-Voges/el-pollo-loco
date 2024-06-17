@@ -89,9 +89,9 @@ function startGameIntervals() {
 }
 
 function startCharacterIntervals() {
-    registerInterval(true, 'world.character.applyGravity()', 1000 / 60, 'character gravity', 'character');
-    registerInterval(true, 'world.character.move()', 1000 / 60, 'character moves', 'character');
-    registerInterval(true, 'world.character.animate()', 100, 'character animations', 'character');
+    registerInterval(true, 'world.character.applyGravity()', 1000 / 60, 'gravity', 'character');
+    registerInterval(true, 'world.character.move()', 1000 / 60, 'moves', 'character');
+    registerInterval(true, 'world.character.animate()', 100, 'animations', 'character');
 }
 
 let isPause = false;
@@ -151,7 +151,7 @@ function restartPauseIntervals() {
     intervals.forEach(interval => {
         i++;
         if (interval.pause) {
-            registerInterval(interval.pause, interval.functionToRecall, interval.interval);
+            registerInterval(interval.pause, interval.functionToRecall, interval.interval, interval.intervalFunction, interval.className);
             intervals.splice(i, 1);
             i--
         }
@@ -161,6 +161,16 @@ function restartPauseIntervals() {
 function deleteIntervalsByClassName(className) {
     for (let i = 0; i < intervals.length; i++) {
         if (intervals[i].className === className) {
+            clearInterval(intervals[i].id);
+            intervals.splice(i, 1);
+            i--;
+        }
+    }
+}
+
+function deleteIntervalsByClassAndFunctionNames(className, intervalFunction) {
+    for (let i = 0; i < intervals.length; i++) {
+        if (intervals[i].className === className && intervals[i].intervalFunction === intervalFunction) {
             clearInterval(intervals[i].id);
             intervals.splice(i, 1);
             i--;

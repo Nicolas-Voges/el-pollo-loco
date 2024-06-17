@@ -78,7 +78,7 @@ function clearEnemies() {
 function bossAttackAnimation(end = false) {
     let distance = 3800;
     if (!end) {
-        registerInterval(true, 'world.endboss.applyGravity()', 1000 / 60, 'endboss gravity', 'endboss');
+        registerInterval(true, 'world.endboss.applyGravity()', 1000 / 60, 'gravity', 'endboss');
         // world.endboss.applyGravity();
         distance = 4500;
     }

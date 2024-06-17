@@ -155,11 +155,47 @@ class Character extends MovableObject {
             this.playAnimation(this.IMAGES_JUMPING);
         } else if ((this.isMovingLeft || this.isMovingRight) && this.x > 50 && this.x < this.world.level.level_end_x) {
             this.playAnimation(this.IMAGES_WALKING);
-        } else if (!this.world.keyboard.LEFT && !this.world.keyboard.RIGHT && !this.world.keyboard.SPACE && !this.world.keyboard.UP) {
-            this.playAnimation(this.IMAGES_IDLE);
+        } else if (this.noKeyPush) {
+            deleteIntervalsByClassAndFunctionNames('character', 'animations');
+            registerInterval(true, 'world.character.animateIdle()', 140, 'animations', 'character');
         }
         this.world.statusBarCoin.setPercentage(this.coins * 20 + 18);
         this.world.statusBarBottle.setPercentage(this.bottles * 20 + 18);
+    }
+    idleTime = 0;
+    tookIdleTime = false;
+    animateIdle() {
+        if (this.noKeyPush() && !this.isHurt() && !this.isDead()) {
+            if (!this.tookIdleTime) {
+                this.tookIdleTime = true;
+                this.idleTime = new Date().getTime();
+            }
+            if (new Date().getTime() - this.idleTime < 10000) {
+                this.playAnimation(this.IMAGES_IDLE);
+            } else {
+                this.animatLongIdle();
+            }
+        } else {
+            this.breakIdle();
+        }
+    }
+
+    animatLongIdle() {
+        if (this.noKeyPush()) {
+            this.playAnimation(this.IMAGES_LONG_IDLE);
+        } else {
+            this.breakIdle();
+        }
+    }
+
+    breakIdle() {
+        deleteIntervalsByClassAndFunctionNames('character', 'animations');
+        registerInterval(true, 'world.character.animate()', 100, 'animations', 'character');
+        this.tookIdleTime = false;
+    }
+
+    noKeyPush() {
+        return !this.world.keyboard.moveLeftKeyPush && !this.world.keyboard.moveRightKeyPush && !this.world.keyboard.jumpKeyPush && !this.world.keyboard.throwKeyPush;
     }
 
     notReachedLevelEnd() {
