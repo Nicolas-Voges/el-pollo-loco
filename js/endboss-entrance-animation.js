@@ -47,7 +47,8 @@ function bossAlertAnimation(animatinCount = 0, cameraOut = false) {
         } else {
             clearInterval(alertAnimation);
             if (cameraOut) {
-                world.endboss.animate();
+                // world.endboss.animate();
+                registerInterval(true, 'world.endboss.animate()', 200, 'animations', 'endboss');
                 let movingLeft = setInterval(() => {
                     if (world.endboss.x >= 4000) {
                         world.endboss.moveLeft();
@@ -85,7 +86,7 @@ function bossAttackAnimation(end = false) {
     world.endboss.speedY = 22;
     world.endboss.currentImage = 0;
     let animatingCharacter = false;
-    deleteIntervalsByClassName('endboss');
+    // deleteIntervalsByClassName('endboss');
     let jump = setInterval(() => {
         if (world.endboss.isAboveGround() || world.endboss.x >= distance) {
             world.endboss.x -= 4;
@@ -167,6 +168,7 @@ function cameraOutAnimation() {
             world.camera_x += 4;
         } else {
             clearInterval(camaraAnimate);
+            registerInterval(true, 'world.character.move()', 1000 / 60, 'moves', 'character');
             registerInterval(true, 'world.character.animate()', 100, 'animations', 'character');
             world.bossCameraActiv = true;
             // world.endbossAnimationHasRun = true;

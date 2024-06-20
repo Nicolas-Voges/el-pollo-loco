@@ -17,34 +17,27 @@ class Chick extends Enemy {
     IMAGES_DEAD = [
         'img/3_enemies_chicken/chicken_small/2_dead/dead.png'
     ];
-
+    id;
     constructor(x) {
         super(x).loadImage('./img/3_enemies_chicken/chicken_small/1_walk/2_w.png');
         this.loadImages(this.IMAGES_WALKING);
         this.loadImages(this.IMAGES_DEAD);
-        this.animate();
+    }
+
+    move() {
+        if (!this.isDead()) {
+            this.moveLeft();
+            if (this.x + this.width <= 0) {
+                this.x = 7500;
+            }
+        }
     }
 
     animate() {
-        let intervalChickMove = setInterval(() => {
-            if (!this.isDead()) {
-                this.moveLeft();
-                if (this.x + this.width <= 0) {
-                    this.x = 7500;
-                }
-            }
-        }, 1000 / 60);
-
-        this.registerInterval(intervalChickMove, 'moves');
-
-        let intervalChickAnimate = setInterval(() => {
-            if (this.isDead()) {
-                this.playAnimation(this.IMAGES_DEAD);
-            } else {
-                this.playAnimation(this.IMAGES_WALKING);
-            }
-        }, 120);
-
-        this.registerInterval(intervalChickAnimate, 'animations');
+        if (this.isDead()) {
+            this.playAnimation(this.IMAGES_DEAD);
+        } else {
+            this.playAnimation(this.IMAGES_WALKING);
+        }
     }
 }

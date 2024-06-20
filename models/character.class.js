@@ -93,6 +93,9 @@ class Character extends MovableObject {
         this.isMoving();
         this.walking_sound.volume = 0.5;
         this.sound_jump.volume = 0.4;
+        registerInterval(true, 'world.character.applyGravity()', 1000 / 60, 'gravity', 'character');
+        registerInterval(true, 'world.character.move()', 1000 / 60, 'moves', 'character');
+        registerInterval(true, 'world.character.animate()', 100, 'animations', 'character');
     }
 
     async playWalkingSound() {

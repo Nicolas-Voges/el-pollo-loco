@@ -25,8 +25,6 @@ class Bottle extends CollectableObject {
         super(x, y).loadImage(this.IMAGES[imgIndex]);
         this.loadImages(this.IMAGES);
         this.chooseOffset(imgIndex);
-        // this.registerInterval('bottle', this.animate, 1000 / 2);
-        // this.animate();
     }
 
     /**
@@ -57,16 +55,5 @@ class Bottle extends CollectableObject {
             default:
                 break;
         }
-    }
-
-    /**
-     * This function animates this object by changing its image index by calling playAnimation function
-     * in an interval of 2Hz and registers this interval.
-     */
-    animate() {
-        let intervalBottleAnimate = setInterval(() => {
-            this.playAnimation(this.IMAGES);
-        }, 1000 / 2);
-        this.registerInterval(intervalBottleAnimate, 'animations');
     }
 }

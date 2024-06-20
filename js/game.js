@@ -5,6 +5,42 @@ let keybord = new Keyboard();
 let activeIntervals = [];
 let pauseIntervals = [];
 let intervals = [];
+let intervalValues = {
+    character: {
+        moves: 1000 / 60,
+        animations: {
+            default: 100,
+            idle: 140
+        },
+        gravity: 1000 / 60
+    },
+    enemies: {
+        moves: 1000 / 60,
+        animations: 120
+    },
+    endboss: {
+        moves: 1000 / 60,
+        animations: 200,
+        gravity: 1000 / 60
+    },
+    world: {
+        run: 5
+    },
+    throwableObjects: {
+        moves: 20,
+        animations: 100,
+        gravity: 1000 / 60
+    },
+    collectableObjects: {
+        coins: {
+            animations: 1000 / 3
+        },
+        bottles: {
+            animations: 1000 / 2
+        }
+    }
+};
+
 
 function clearAllIntervals() {
     intervals.activeIntervals.forEach((interval) => {
@@ -72,6 +108,7 @@ window.addEventListener('keyup', (e) => {
     }
 });
 
+
 let start = false;
 function startPauseGame() {
 
@@ -85,13 +122,15 @@ function startPauseGame() {
 }
 
 function startGameIntervals() {
-    startCharacterIntervals();
+    startEnemiesIntervals();
 }
 
-function startCharacterIntervals() {
-    registerInterval(true, 'world.character.applyGravity()', 1000 / 60, 'gravity', 'character');
-    registerInterval(true, 'world.character.move()', 1000 / 60, 'moves', 'character');
-    registerInterval(true, 'world.character.animate()', 100, 'animations', 'character');
+function startEnemiesIntervals() {
+    for (let i = 0; i < world.level.enemies.length - 1; i++) {
+        const element = world.level.enemies[i].id = 1;
+        registerInterval(true, `world.level.enemies[${i}].move()`, 1000 / 60, 'moves', 'emeny');
+        registerInterval(true, `world.level.enemies[${i}].animate()`, 120, 'animations', 'emeny');
+    }
 }
 
 let isPause = false;
@@ -177,7 +216,15 @@ function deleteIntervalsByClassAndFunctionNames(className, intervalFunction) {
         }
     }
 }
-
+function deleteIntervalByClassNameAndId(className, id) {
+    for (let i = 0; i < intervals.length; i++) {
+        if (intervals[i].className === className && intervals[i].id === id) {
+            clearInterval(intervals[i].id);
+            intervals.splice(i, 1);
+            i--;
+        }
+    }
+}
 function restartGame() {
 
 }

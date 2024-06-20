@@ -55,17 +55,17 @@ function initLevel1() {
         new Cloud(5000),
     
     ],
-        backgrounds,
-        collectableObjects = [
-            new Coin(100, 100),
-            new Coin(1200, 140),
-            new Coin(1250, 130),
-            new Coin(2000, 100),
-            new Coin(2400, 50),
-            new Bottle(1550, 325, 0),
-            new Bottle(2940, 390, 1),
-            new Bottle(3740, 100, 2),
-            new Bottle(4300, 380, 0),
-            new Bottle(2370, 310, 1)
-        ]);
+    backgrounds,
+    collectableObjects = [
+        new Coin(100, 100),
+        new Coin(1200, 140),
+        new Coin(1250, 130),
+        new Coin(2000, 100),
+        new Coin(2400, 50),
+        new Bottle(1550, 325, 0),
+        new Bottle(2940, 390, 1),
+        new Bottle(3740, 100, 2),
+        new Bottle(4300, 380, 0),
+        new Bottle(2370, 310, 1)
+    ]);
 }
