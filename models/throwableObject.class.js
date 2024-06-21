@@ -29,25 +29,31 @@ class ThrowableObject extends MovableObject {
         this.x = x;
         this.y = y;
         this.speed = speed;
-        registerInterval(true, 'world.throwableObjects[0].throw()', 20, 'moves', 'throwableObject');
-        registerInterval(true, 'world.throwableObjects[0].applyGravity()', 1000 / 60, 'gravity', 'throwableObject');
-        registerInterval(true, 'world.throwableObjects[0].animate()', 100, 'animations', 'throwableObject');
+        this.throw();
+        this.applyGravity(intervalValues.throwableObjects.gravity);
+        this.animate();
         this.speedY = 15;
     }
 
     throw() {
-        this.x += 10 + this.speed;
-        if (this.isDead()) {
-            deleteIntervalsByClassName('throwableObject');
-            world.throwableObjects = [];
-        }
+        let id = setInterval(() => {
+            this.x += 10 + this.speed;
+            if (this.isDead()) {
+                deleteIntervalsByClassName('throwableObject');
+                world.throwableObjects = [];
+            }
+        }, intervalValues.throwableObjects.moves);
+        this.registerInterval(id, 'moves')
     }
 
     animate() {
-        if (this.isDead()) {
-            this.playAnimation(this.IMAGES_SPLASH);
-        } else {
-            this.playAnimation(this.IMAGES_ROTATE);
-        }
+        let id = setInterval(() => {
+            if (this.isDead()) {
+                this.playAnimation(this.IMAGES_SPLASH);
+            } else {
+                this.playAnimation(this.IMAGES_ROTATE);
+            }
+        });
+        this.registerInterval(id, 'animations');
     }
 }

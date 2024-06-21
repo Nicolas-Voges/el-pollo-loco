@@ -93,9 +93,9 @@ class Character extends MovableObject {
         this.isMoving();
         this.walking_sound.volume = 0.5;
         this.sound_jump.volume = 0.4;
-        registerInterval(true, 'world.character.applyGravity()', 1000 / 60, 'gravity', 'character');
-        registerInterval(true, 'world.character.move()', 1000 / 60, 'moves', 'character');
-        registerInterval(true, 'world.character.animate()', 100, 'animations', 'character');
+        this.applyGravity(intervalValues.character.gravity);
+        this.move();
+        this.animate();
     }
 
     async playWalkingSound() {
@@ -116,71 +116,109 @@ class Character extends MovableObject {
     reachedLevelEnd = false;
 
     move() {
-        this.walking_sound.pause();
+        let id = setInterval(() => {
+            this.walking_sound.pause();
+            this.walk();
+            this.checkForJump();
+            this.checkForReachLevelEnd();
+            this.moveCamera();
+        }, intervalValues.character.moves);
+        this.registerInterval(id, 'moves');
+    }
 
-        if (this.world.keyboard.moveRightKeyPush && this.notReachedLevelEnd()) {
-            this.moveRight();
-            this.otherDirection = false;
-            if (!this.isAboveGround()) {
-                this.playWalkingSound();
-            }
-        }
-
-        if ((this.world.keyboard.moveLeftKeyPush) && ((this.x > 50 && !this.reachedLevelEnd) || (this.x > 3700 && this.reachedLevelEnd))) {
-            this.moveLeft();
-            this.otherDirection = true;
-            if (!this.isAboveGround()) {
-                this.playWalkingSound();
-            }
-        }
-
+    checkForJump() {
         if ((this.world.keyboard.jumpKeyPush) && this.y >= 280) {
             this.jump();
         }
+    }
+
+    checkForReachLevelEnd() {
         if (this.x >= 3800) {
             this.reachedLevelEnd = true;
         }
+    }
 
+    moveCamera() {
         if (this.x < this.world.level.level_end_x - 500 && !this.reachedLevelEnd) {
             this.world.camera_x = -this.x;
         }
     }
 
-    animate() {
-        if (this.isDead()) {
-            this.world.statusBarEnergy.setPercentage(this.energy);
-            this.playAnimation(this.IMAGES_DEAD);
-        } else if (this.isHurt()) {
-            this.playAnimation(this.IMAGES_HURT);
-            this.playHurtSound();
-            this.world.statusBarEnergy.setPercentage(this.energy);
-        } else if (this.isAboveGround()) {
-            this.playAnimation(this.IMAGES_JUMPING);
-        } else if ((this.isMovingLeft || this.isMovingRight) && this.x > 50 && this.x < this.world.level.level_end_x) {
-            this.playAnimation(this.IMAGES_WALKING);
-        } else if (this.noKeyPush) {
-            deleteIntervalsByClassAndFunctionNames('character', 'animations');
-            registerInterval(true, 'world.character.animateIdle()', 140, 'animations', 'character');
+    walk() {
+        if (this.world.keyboard.moveRightKeyPush && this.notReachedLevelEnd()) {
+            this.walkRight();
         }
-        this.world.statusBarCoin.setPercentage(this.coins * 20 + 18);
-        this.world.statusBarBottle.setPercentage(this.bottles * 20 + 18);
+        if ((this.world.keyboard.moveLeftKeyPush) && ((this.x > 50 && !this.reachedLevelEnd) || (this.x > 3700 && this.reachedLevelEnd))) {
+            this.walkLeft();
+        }
     }
+
+    walkRight() {
+        this.moveRight();
+        this.otherDirection = false;
+        if (!this.isAboveGround()) {
+            this.playWalkingSound();
+        }
+    }
+
+    walkLeft() {
+        this.moveLeft();
+        this.otherDirection = true;
+        if (!this.isAboveGround()) {
+            this.playWalkingSound();
+        }
+    }
+
+    animate() {
+        let id = setInterval(() => {
+            if (this.isDead()) {
+                this.die();
+            } else if (this.isHurt()) {
+                this.hurt();
+            } else if (this.isAboveGround()) {
+                this.playAnimation(this.IMAGES_JUMPING);
+            } else if ((this.isMovingLeft || this.isMovingRight) && this.x > 50 && this.x < this.world.level.level_end_x) {
+                this.playAnimation(this.IMAGES_WALKING);
+            } else if (this.noKeyPush) {
+                this.deleteIntervals('animations');
+                this.animateIdle();
+            }
+            this.world.statusBarCoin.setPercentage(this.coins * 20 + 18);
+            this.world.statusBarBottle.setPercentage(this.bottles * 20 + 18);
+        }, intervalValues.character.animations.default);
+        this.registerInterval(id, 'animations');
+    }
+
+    die() {
+        this.world.statusBarEnergy.setPercentage(this.energy);
+        this.playAnimation(this.IMAGES_DEAD);
+    }
+
+    hurt() {
+        this.playAnimation(this.IMAGES_HURT);
+        this.playHurtSound();
+        this.world.statusBarEnergy.setPercentage(this.energy);
+    }
+
     idleTime = 0;
     tookIdleTime = false;
     animateIdle() {
-        if (this.noKeyPush() && !this.isHurt() && !this.isDead()) {
-            if (!this.tookIdleTime) {
-                this.tookIdleTime = true;
-                this.idleTime = new Date().getTime();
-            }
-            if (new Date().getTime() - this.idleTime < 10000) {
-                this.playAnimation(this.IMAGES_IDLE);
+        let id = setInterval(() => {
+            if (this.noKeyPush() && !this.isHurt() && !this.isDead()) {
+                if (!this.tookIdleTime) {
+                    this.tookIdleTime = true;
+                    this.idleTime = new Date().getTime();
+                }
+                if (new Date().getTime() - this.idleTime < 10000) {
+                    this.playAnimation(this.IMAGES_IDLE);
+                } else {
+                    this.animatLongIdle();
+                }
             } else {
-                this.animatLongIdle();
+                this.breakIdle();
             }
-        } else {
-            this.breakIdle();
-        }
+        }, intervalValues.character.animations.idle);
+        this.registerInterval(id, 'animations');
     }
 
     animatLongIdle() {
@@ -192,8 +230,8 @@ class Character extends MovableObject {
     }
 
     breakIdle() {
-        deleteIntervalsByClassAndFunctionNames('character', 'animations');
-        registerInterval(true, 'world.character.animate()', 100, 'animations', 'character');
+        this.deleteIntervals('animations');
+        this.animate();
         this.tookIdleTime = false;
     }
 

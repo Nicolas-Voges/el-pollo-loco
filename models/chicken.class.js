@@ -21,24 +21,31 @@ class Chicken extends Enemy {
     constructor(x) {
         super(x).loadImage('./img/3_enemies_chicken/chicken_normal/1_walk/2_w.png');
         this.loadImages(this.IMAGES_WALKING);
-        this.id = comingEnemyId;
-        comingEnemyId++;
+        this.loadImages(this.IMAGES_DEAD);
+        this.move();
+        this.animate();
     }
 
     move() {
-        if (!this.isDead()) {
-            this.moveLeft();
-            if (this.x + this.width <= 0) {
-                this.x = 5000;
+        let id = setInterval(() => {
+            if (!this.isDead()) {
+                this.moveLeft();
+                if (this.x + this.width <= 0) {
+                    this.x = 5000;
+                }
             }
-        }
+        }, intervalValues.enemies.moves);
+        this.registerInterval(id, 'moves');
     }
 
     animate() {
-        if (this.isDead()) {
-            this.playAnimation(this.IMAGES_DEAD);
-        } else {
-            this.playAnimation(this.IMAGES_WALKING);
-        }
+        let id = setInterval(() => {
+            if (this.isDead()) {
+                this.playAnimation(this.IMAGES_DEAD);
+            } else {
+                this.playAnimation(this.IMAGES_WALKING);
+            }
+        }, intervalValues.enemies.animations);
+        this.registerInterval(id, 'animations');
     }
 }

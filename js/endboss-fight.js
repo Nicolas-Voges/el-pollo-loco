@@ -8,6 +8,7 @@ function bossFight() {
     }
     if (world.endboss.alertDone) {
         world.endboss.isAlert = false;
+        world.endboss.move();
         if (world.endboss.width + world.endboss.x < xPlayer - 200 && !world.endboss.isAttacking) {
             // gehe zum Charaker
             world.endboss.directionX = 'Right';

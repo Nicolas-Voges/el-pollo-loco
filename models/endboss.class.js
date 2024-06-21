@@ -61,6 +61,7 @@ class Endboss extends MovableObject {
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
         this.animate();
+        this.move();
         // this.applyGravity();
     }
 
@@ -79,7 +80,9 @@ class Endboss extends MovableObject {
             }, 200);
             this.registerInterval(intervalEndbossAnimate, 'animations');
         }
+    }
 
+    move() {
         if (this.intervals.moves.length === 0) {
             let intervalEndbossMove = setInterval(() => {
                 if (this.directionX === 'Right') {

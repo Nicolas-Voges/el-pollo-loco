@@ -6,6 +6,7 @@ let activeIntervals = [];
 let pauseIntervals = [];
 let intervals = [];
 let comingEnemyId = 0;
+
 let intervalValues = {
     character: {
         moves: 1000 / 60,
@@ -53,7 +54,6 @@ function init() {
     canvas = document.getElementById('canvas');
     initLevel1();
     world = new World(canvas, keybord);
-    startGameIntervals();
 }
 
 window.addEventListener('keydown', (e) => {
@@ -113,7 +113,6 @@ window.addEventListener('keyup', (e) => {
 
 let start = false;
 function startPauseGame() {
-
     if (!start) {
         start = true;
         init();
@@ -122,33 +121,19 @@ function startPauseGame() {
     }
 }
 
-function startGameIntervals() {
-    startEnemiesIntervals();
-}
-
-function startEnemiesIntervals() {
-    for (let i = 0; i < world.level.enemies.length - 1; i++) {
-        // world.level.enemies[i].id = i;
-        registerInterval(true, `world.level.enemies[${i}].move();`, 1000 / 60, 'moves', 'emeny', world.level.enemies[i].id);
-        registerInterval(true, `world.level.enemies[${i}].animate();`, 120, 'animations', 'emeny', world.level.enemies[i].id);
-    }
-}
-for (let index = 0; index < world.level.enemies.length; index++) {
-    if (world.level.enemies[index].id) {
-        const element =
-    }    
-}
 let isPause = false;
 
 function pause() {
     if (isPause) {
         world.level.enemies.forEach((enemy) => {
             enemy.animate();
+            enemy.move();
         });
         world.character.animate();
-        world.character.applyGravity();
+        world.character.move();
+        world.character.applyGravity(intervalValues.character.gravity);
         if (world.endbossAnimationHasRun) {
-            world.endboss.applyGravity();
+            world.endboss.applyGravity(intervalValues.endboss.gravity);
         }
         isPause = false;
     } else {
@@ -160,77 +145,77 @@ function pause() {
     }
 }
 
-function registerInterval(pause, functionToRecall, interval, intervalFunction, className, callerId = null) {
-    let id = setInterval(() => {
-        eval(functionToRecall);
-    }, interval);
+// function registerInterval(pause, functionToRecall, interval, intervalFunction, className, callerId = null) {
+//     let id = setInterval(() => {
+//         eval(functionToRecall);
+//     }, interval);
 
-    intervals.push({
-        id: id,
-        pause: pause,
-        recallFunction: functionToRecall, // Function to recall this interval
-        interval: interval,
-        className: className,
-        intervalFunction: intervalFunction, // Kind of function.
-        callerId: callerId,
-        isRunning: true
-    });
-}
+//     intervals.push({
+//         id: id,
+//         pause: pause,
+//         recallFunction: functionToRecall, // Function to recall this interval
+//         interval: interval,
+//         className: className,
+//         intervalFunction: intervalFunction, // Kind of function.
+//         callerId: callerId,
+//         isRunning: true
+//     });
+// }
 
-function deleteIntervals(pause) {
-    if (pause) {
-        intervals.forEach(interval => {
-            if (interval.pause) {
-                clearInterval(interval.id);
-                interval.isRunning = false;
-            }
-        });
-    } else {
-        intervals.forEach(interval => clearInterval(interval.id));
-        intervals = [];
-    }
-}
+// function deleteIntervals(pause) {
+//     if (pause) {
+//         intervals.forEach(interval => {
+//             if (interval.pause) {
+//                 clearInterval(interval.id);
+//                 interval.isRunning = false;
+//             }
+//         });
+//     } else {
+//         intervals.forEach(interval => clearInterval(interval.id));
+//         intervals = [];
+//     }
+// }
 
-function restartPauseIntervals() {
-    let i = 0;
-    intervals.forEach(interval => {
-        i++;
-        if (interval.pause) {
-            registerInterval(interval.pause, interval.functionToRecall, interval.interval, interval.intervalFunction, interval.className);
-            intervals.splice(i, 1);
-            i--
-        }
-    });
-}
+// function restartPauseIntervals() {
+//     let i = 0;
+//     intervals.forEach(interval => {
+//         i++;
+//         if (interval.pause) {
+//             registerInterval(interval.pause, interval.functionToRecall, interval.interval, interval.intervalFunction, interval.className);
+//             intervals.splice(i, 1);
+//             i--
+//         }
+//     });
+// }
 
-function deleteIntervalsByClassName(className) {
-    for (let i = 0; i < intervals.length; i++) {
-        if (intervals[i].className === className) {
-            clearInterval(intervals[i].id);
-            intervals.splice(i, 1);
-            i--;
-        }
-    }
-}
+// function deleteIntervalsByClassName(className) {
+//     for (let i = 0; i < intervals.length; i++) {
+//         if (intervals[i].className === className) {
+//             clearInterval(intervals[i].id);
+//             intervals.splice(i, 1);
+//             i--;
+//         }
+//     }
+// }
 
-function deleteIntervalsByClassAndFunctionNames(className, intervalFunction) {
-    for (let i = 0; i < intervals.length; i++) {
-        if (intervals[i].className === className && intervals[i].intervalFunction === intervalFunction) {
-            clearInterval(intervals[i].id);
-            intervals.splice(i, 1);
-            i--;
-        }
-    }
-}
-function deleteIntervalById(id) {
-    for (let i = 0; i < intervals.length; i++) {
-        if (intervals[i].callerId === id) {
-            clearInterval(intervals[i].id);
-            intervals.splice(i, 1);
-            i--;
-        }
-    }
-}
-function restartGame() {
+// function deleteIntervalsByClassAndFunctionNames(className, intervalFunction) {
+//     for (let i = 0; i < intervals.length; i++) {
+//         if (intervals[i].className === className && intervals[i].intervalFunction === intervalFunction) {
+//             clearInterval(intervals[i].id);
+//             intervals.splice(i, 1);
+//             i--;
+//         }
+//     }
+// }
+// function deleteIntervalById(id) {
+//     for (let i = 0; i < intervals.length; i++) {
+//         if (intervals[i].callerId === id) {
+//             clearInterval(intervals[i].id);
+//             intervals.splice(i, 1);
+//             i--;
+//         }
+//     }
+// }
+// function restartGame() {
 
-}
+// }
