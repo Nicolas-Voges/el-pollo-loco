@@ -41,6 +41,53 @@ function bossFight() {
 }
 
 
+
+/**
+ * This function checks if character reached distance and increaces characters x value if thats not the case.
+ * If character reached screen end this function sets characters x value to screen end on the right.
+ * If character reached distance, after a time out it calls function to ending hit reaction.
+ * 
+ * @param {number} xStart 
+ * @param {number} distance 
+ * @param {number} id 
+ * @param {number} braceUpTime 
+ */
+function endbossHitReactionLeft(xStart, distance, id, braceUpTime) {
+    if (world.character.x < xStart + distance) {
+        world.character.x += 5;
+        if (world.character.x > 4318) {
+            world.character.x = 4318;
+            world.character.hitRreactionEnd(id, braceUpTime);
+        }
+    } else {
+        world.character.hitRreactionEnd(id, braceUpTime);
+    }
+}
+
+/**
+ * This function checks if character reached distance and decreaces characters x value if thats not the case.
+ * If character reached screen end this function sets characters x value to screen end on the left.
+ * If character reached distance, after a time out it calls function to ending hit reaction.
+ * 
+ * @param {number} xStart 
+ * @param {number} distance 
+ * @param {number} id 
+ * @param {number} braceUpTime 
+ */
+function endbossHitReactionRight(xStart, distance, id, braceUpTime) {
+    if (world.character.x > xStart - distance) {
+        world.character.hitReactionRuns = true;
+        world.character.x -= 5;
+        if (world.character.x < 3696) {
+            world.character.x = 3696;
+            world.character.hitRreactionEnd(id, braceUpTime);
+        }
+    } else {
+        world.character.hitRreactionEnd(id, braceUpTime);
+    }
+}
+
+
 function bossAttack() {
     if (!world.endboss.isAttacking) {
         world.endboss.isAttacking = true;
