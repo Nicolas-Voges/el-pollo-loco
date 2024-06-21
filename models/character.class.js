@@ -24,7 +24,6 @@ class Character extends MovableObject {
         './img/2_character_pepe/1_idle/idle/I-9.png',
         './img/2_character_pepe/1_idle/idle/I-10.png'
     ];
-
     IMAGES_LONG_IDLE = [
         'img/2_character_pepe/1_idle/long_idle/I-11.png',
         'img/2_character_pepe/1_idle/long_idle/I-12.png',
@@ -37,7 +36,6 @@ class Character extends MovableObject {
         'img/2_character_pepe/1_idle/long_idle/I-19.png',
         'img/2_character_pepe/1_idle/long_idle/I-20.png'
     ];
-
     IMAGES_WALKING = [
         './img/2_character_pepe/2_walk/W-21.png',
         './img/2_character_pepe/2_walk/W-22.png',
@@ -46,7 +44,6 @@ class Character extends MovableObject {
         './img/2_character_pepe/2_walk/W-25.png',
         './img/2_character_pepe/2_walk/W-26.png'
     ];
-
     IMAGES_JUMPING = [
         './img/2_character_pepe/3_jump/J-31.png',
         './img/2_character_pepe/3_jump/J-32.png',
@@ -58,13 +55,11 @@ class Character extends MovableObject {
         './img/2_character_pepe/3_jump/J-38.png',
         './img/2_character_pepe/3_jump/J-39.png'
     ];
-
     IMAGES_HURT = [
         'img/2_character_pepe/4_hurt/H-41.png',
         'img/2_character_pepe/4_hurt/H-42.png',
         'img/2_character_pepe/4_hurt/H-43.png'
     ];
-
     IMAGES_DEAD = [
         'img/2_character_pepe/5_dead/D-51.png',
         'img/2_character_pepe/5_dead/D-52.png',
@@ -74,28 +69,33 @@ class Character extends MovableObject {
         'img/2_character_pepe/5_dead/D-56.png'
         // 'img/2_character_pepe/5_dead/D-57.png'
     ];
-
     walking_sound = new Audio('audio/walking.mp3');
     sound_hurt = new Audio('audio/hurt.mp3');
     sound_die = new Audio('audio/die.mp3');
     sound_jump = new Audio('audio/jump.mp3');
-
     walking_soundLoaded = false;
+    reachedLevelEnd = false;
+    idleTime = 0;
+    tookIdleTime = false;
 
     constructor() {
         super().loadImage('./img/2_character_pepe/1_idle/idle/I-1.png');
-        this.loadImages(this.IMAGES_WALKING);
-        this.loadImages(this.IMAGES_JUMPING);
-        this.loadImages(this.IMAGES_IDLE);
-        this.loadImages(this.IMAGES_LONG_IDLE);
-        this.loadImages(this.IMAGES_HURT);
-        this.loadImages(this.IMAGES_DEAD);
+        this.loadAllImages();
         this.isMoving();
         this.walking_sound.volume = 0.5;
         this.sound_jump.volume = 0.4;
         this.applyGravity(intervalValues.character.gravity);
         this.move();
         this.animate();
+    }
+
+    loadAllImages() {
+        this.loadImages(this.IMAGES_WALKING);
+        this.loadImages(this.IMAGES_JUMPING);
+        this.loadImages(this.IMAGES_IDLE);
+        this.loadImages(this.IMAGES_LONG_IDLE);
+        this.loadImages(this.IMAGES_HURT);
+        this.loadImages(this.IMAGES_DEAD);
     }
 
     async playWalkingSound() {
@@ -112,8 +112,6 @@ class Character extends MovableObject {
             this.playWalkingSound();
         }
     }
-
-    reachedLevelEnd = false;
 
     move() {
         let id = setInterval(() => {
@@ -183,8 +181,6 @@ class Character extends MovableObject {
                 this.deleteIntervals('animations');
                 this.animateIdle();
             }
-            this.world.statusBarCoin.setPercentage(this.coins * 20 + 18);
-            this.world.statusBarBottle.setPercentage(this.bottles * 20 + 18);
         }, intervalValues.character.animations.default);
         this.registerInterval(id, 'animations');
     }
@@ -200,25 +196,31 @@ class Character extends MovableObject {
         this.world.statusBarEnergy.setPercentage(this.energy);
     }
 
-    idleTime = 0;
-    tookIdleTime = false;
     animateIdle() {
         let id = setInterval(() => {
             if (this.noKeyPush() && !this.isHurt() && !this.isDead()) {
-                if (!this.tookIdleTime) {
-                    this.tookIdleTime = true;
-                    this.idleTime = new Date().getTime();
-                }
-                if (new Date().getTime() - this.idleTime < 10000) {
-                    this.playAnimation(this.IMAGES_IDLE);
-                } else {
-                    this.animatLongIdle();
-                }
+                this.doIdle();
             } else {
                 this.breakIdle();
             }
         }, intervalValues.character.animations.idle);
         this.registerInterval(id, 'animations');
+    }
+
+    doIdle() {
+        this.setIdleTime();
+        if (new Date().getTime() - this.idleTime < 10000) {
+            this.playAnimation(this.IMAGES_IDLE);
+        } else {
+            this.animatLongIdle();
+        }
+    }
+
+    setIdleTime() {
+        if (!this.tookIdleTime) {
+            this.tookIdleTime = true;
+            this.idleTime = new Date().getTime();
+        }
     }
 
     animatLongIdle() {

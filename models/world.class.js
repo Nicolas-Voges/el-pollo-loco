@@ -70,6 +70,8 @@ class World {
             this.checkThrowableObjects();
             this.checkForDeadEnemies();
             checkForEndbossAnimation();
+            this.statusBarCoin.setPercentage(this.character.coins * 20 + 18);
+            this.statusBarBottle.setPercentage(this.character.bottles * 20 + 18);
             if (this.endbossAnimationHasRun) {
                 bossFight();
             }

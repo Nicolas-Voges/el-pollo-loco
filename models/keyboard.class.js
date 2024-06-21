@@ -1,8 +1,8 @@
 class Keyboard {
     jumpKeys = ['Space', 'ArrowUp', 'KeyW'];
-    moveLeftKeys = ['KeyA', 'ArrowLeft', 'unset'];
-    moveRightKeys = ['KeyD', 'ArrowRight', 'unset'];
-    throwKeys = ['KeyF', 'unset', 'unset'];
+    moveLeftKeys = ['KeyA', 'ArrowLeft', 'KeyA'];
+    moveRightKeys = ['KeyD', 'ArrowRight', 'KeyD'];
+    throwKeys = ['KeyF', 'KeyF', 'KeyF'];
     jumpKeyPush = false;
     moveLeftKeyPush = false;
     moveRightKeyPush = false;
