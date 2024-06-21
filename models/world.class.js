@@ -153,8 +153,9 @@ class World {
         let now = new Date().getTime();
         for (let i = 0; i < this.level.enemies.length; i++) {
             if (this.level.enemies[i].deathTime > 0 && this.level.enemies[i].deathTime + 1000 <= now) {
-                this.level.enemies[]//deleteInteval
+                deleteIntervalById(this.level.enemies[i].id);
                 this.level.enemies.splice(i, 1);
+                i--;
             }
         }
     }

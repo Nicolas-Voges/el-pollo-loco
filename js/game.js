@@ -5,6 +5,7 @@ let keybord = new Keyboard();
 let activeIntervals = [];
 let pauseIntervals = [];
 let intervals = [];
+let comingEnemyId = 0;
 let intervalValues = {
     character: {
         moves: 1000 / 60,
@@ -52,6 +53,7 @@ function init() {
     canvas = document.getElementById('canvas');
     initLevel1();
     world = new World(canvas, keybord);
+    startGameIntervals();
 }
 
 window.addEventListener('keydown', (e) => {
@@ -115,7 +117,6 @@ function startPauseGame() {
     if (!start) {
         start = true;
         init();
-        startGameIntervals();
     } else if (!world.endbossAnimationRuns) {
         pause();
     }
@@ -127,12 +128,16 @@ function startGameIntervals() {
 
 function startEnemiesIntervals() {
     for (let i = 0; i < world.level.enemies.length - 1; i++) {
-        const element = world.level.enemies[i].id = 1;
-        registerInterval(true, `world.level.enemies[${i}].move()`, 1000 / 60, 'moves', 'emeny');
-        registerInterval(true, `world.level.enemies[${i}].animate()`, 120, 'animations', 'emeny');
+        // world.level.enemies[i].id = i;
+        registerInterval(true, `world.level.enemies[${i}].move();`, 1000 / 60, 'moves', 'emeny', world.level.enemies[i].id);
+        registerInterval(true, `world.level.enemies[${i}].animate();`, 120, 'animations', 'emeny', world.level.enemies[i].id);
     }
 }
-
+for (let index = 0; index < world.level.enemies.length; index++) {
+    if (world.level.enemies[index].id) {
+        const element =
+    }    
+}
 let isPause = false;
 
 function pause() {
@@ -155,7 +160,7 @@ function pause() {
     }
 }
 
-function registerInterval(pause, functionToRecall, interval, intervalFunction, className) {
+function registerInterval(pause, functionToRecall, interval, intervalFunction, className, callerId = null) {
     let id = setInterval(() => {
         eval(functionToRecall);
     }, interval);
@@ -163,10 +168,11 @@ function registerInterval(pause, functionToRecall, interval, intervalFunction, c
     intervals.push({
         id: id,
         pause: pause,
-        recallFunction: functionToRecall,
+        recallFunction: functionToRecall, // Function to recall this interval
         interval: interval,
         className: className,
-        intervalFunction: intervalFunction,
+        intervalFunction: intervalFunction, // Kind of function.
+        callerId: callerId,
         isRunning: true
     });
 }
@@ -216,9 +222,9 @@ function deleteIntervalsByClassAndFunctionNames(className, intervalFunction) {
         }
     }
 }
-function deleteIntervalByClassNameAndId(className, id) {
+function deleteIntervalById(id) {
     for (let i = 0; i < intervals.length; i++) {
-        if (intervals[i].className === className && intervals[i].id === id) {
+        if (intervals[i].callerId === id) {
             clearInterval(intervals[i].id);
             intervals.splice(i, 1);
             i--;
