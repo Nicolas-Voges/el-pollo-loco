@@ -72,6 +72,7 @@ class World {
             checkForEndbossAnimation();
             this.statusBarCoin.setPercentage(this.character.coins * 20 + 18);
             this.statusBarBottle.setPercentage(this.character.bottles * 20 + 18);
+            this.statusBarEnergy.setPercentage(this.character.energy);
             if (this.endbossAnimationHasRun) {
                 bossFight();
             }
@@ -92,8 +93,8 @@ class World {
                             enemy.hasHurt = true;
                             this.character.hit(enemy.energyAttack);
                             if (enemy instanceof Endboss) {
-                                this.character.hitRreaction(220, 400);                                
-                            } else {                                
+                                this.character.hitRreaction(220, 400);
+                            } else {
                                 this.character.hitRreaction(100, 400);
                             }
                         }
@@ -233,7 +234,7 @@ class World {
             }
         }, 20);
     }
-    
+
     /**
      * 
      */
