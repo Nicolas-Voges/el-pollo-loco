@@ -229,8 +229,9 @@ function earthquakeAnimation(end = false, attack = false) {
 }
 
 /**
+ * This function beginns the earthquake if the
  * 
- * @param {*} attack 
+ * @param {boolean} attack is true.
  */
 function setBeginEarthquake(attack) {
     if (attack) {

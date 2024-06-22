@@ -19,22 +19,20 @@ class World {
     endboss = this.level.enemies[this.level.enemies.length - 1];
     cameraToCharacter = 100;
     bossCameraActiv = false;
-    endbossAnimationHasRun = false;
-    earthquakeDone = false;
     lastAttack = 0;
-    earthquakeSrarted = false;
-
-    bossFightStarted = false;
-    bossFightDone = true;
-
-    bossAttackAnimationRuns = false;
-    attackJumpStarted = false;
-
     lastCollision = 0;
     characterEnemyCollisiondetected = false;
     collisionsReactionRuns = false;
-
     cameraIsMoving = false;
+
+    endbossAnimationHasRun = false; // in endboss-entrence und -fight.js auslagern.
+    earthquakeDone = false; // in endboss-entrence und -fight.js auslagern.
+    earthquakeSrarted = false; // in endboss-entrence und -fight.js auslagern.
+    bossFightStarted = false; // in endboss-entrence und -fight.js auslagern.
+    bossFightDone = true; // in endboss-entrence und -fight.js auslagern.
+    bossAttackAnimationRuns = false; // in endboss-entrence und -fight.js auslagern.
+    attackJumpStarted = false; // in endboss-entrence und -fight.js auslagern.
+
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -46,6 +44,7 @@ class World {
         this.run();
         this.checkBackgroundPosition();
     }
+
 
     async loadSounds() {
         this.sound_music.load();
@@ -60,9 +59,11 @@ class World {
         this.sound_music.volume = 0.25;
     }
 
+
     setWorld() {
         this.character.world = this;
     }
+
 
     run() {
         let intervalWorldRun = setInterval(() => {
@@ -70,9 +71,7 @@ class World {
             this.checkThrowableObjects();
             this.checkForDeadEnemies();
             checkForEndbossAnimation();
-            this.statusBarCoin.setPercentage(this.character.coins * 20 + 18);
-            this.statusBarBottle.setPercentage(this.character.bottles * 20 + 18);
-            this.statusBarEnergy.setPercentage(this.character.energy);
+            this.updateStatusBars();
             if (this.endbossAnimationHasRun) {
                 bossFight();
             }
@@ -81,75 +80,88 @@ class World {
         activeIntervals.push(intervalWorldRun);
     }
 
+
+    updateStatusBars() {
+        this.statusBarCoin.setPercentage(this.character.coins * 20 + 18);
+        this.statusBarBottle.setPercentage(this.character.bottles * 20 + 18);
+        this.statusBarEnergy.setPercentage(this.character.energy);
+    }
+
+    
     checkCollisions() {
         if (!this.endbossAnimationRuns) {
-            this.level.enemies.forEach((enemy) => {
-                if (this.character.isColliding(enemy) && !this.characterEnemyCollisiondetected && !enemy.isDead()) {
-                    this.characterEnemyCollisiondetected = true;
-                    this.lastCollision = new Date().getTime();
-                    if (!enemy.isDead() && !this.character.isComingFromTop(enemy)) { // Hier gucken, von wo der Enemy auf den Character trifft.
-                        if (!enemy.hasHurt && !this.collisionsReactionRuns) {
-                            this.collisionsReactionRuns = true;
-                            enemy.hasHurt = true;
-                            this.character.hit(enemy.energyAttack);
-                            if (enemy instanceof Endboss) {
-                                this.character.hitRreaction(220, 400);
-                            } else {
-                                this.character.hitRreaction(100, 400);
-                            }
-                        }
-                    } else if (!enemy.hasHurt && this.character.isComingFromTop(enemy) && this.character.speedY < 0 && this.character.isJumping && !this.collisionsReactionRuns) {
-                        if (enemy instanceof Endboss) { // Kollision nur einmal checken
-                            enemy.hit(5);
-                            if (!enemy.isDead()) {
-                                this.character.hitRreaction(360, 20);
-                                this.character.speedY = 15;
-                            }
-                        } else {
-                            if (!enemy.isDead()) {
-                                // this.character.hitRreaction();
-                                this.character.speedY = 25;
-                            }
-                            enemy.energy = 0;
-                        }
-                    }
-                    // console.log(this.character.energy);
-                } else {
-                    enemy.hasHurt = false;
-                }
-                if (new Date().getTime() - this.lastCollision > 500) {
-                    this.characterEnemyCollisiondetected = false;
-                    this.collisionsReactionRuns = false;
-                    this.level.enemies.forEach(enemy => enemy.hasHurt = false);
-                    enemy.hasHurt = false;
-                }
-                this.throwableObjects.forEach((bottle) => {
-                    if (bottle.isColliding(enemy)) {
-                        if (!bottle.hited) {
-                            enemy.hit(this.character.energyAttack);
-                            bottle.hited = true;
-                        }
-                        bottle.deleteIntervals('gravities');
-                        bottle.deleteIntervals('moves');
-                        bottle.energy = 0;
-                    }
-                })
-            });
-            let i = 0;
-            this.level.collectableObjects.forEach((obj) => {
-                if (this.character.isColliding(obj)) {
-                    if (obj instanceof Coin) {
-                        this.character.coins++;
-                        this.statusBarCoin.percentage += 20;
-                    } else {
-                        this.character.bottles++;
-                        this.statusBarBottle.percentage += 20;
-                    }
-                    this.level.collectableObjects.splice(i, 1);
-                }
-                i++;
-            })
+            this.checkEnemyCollisions();
+            this.checkCollectableObjectCollisions();
         }
+    }
+
+    checkEnemyCollisions() {
+        this.level.enemies.forEach((enemy) => {
+            if (this.character.isColliding(enemy) && !this.characterEnemyCollisiondetected && !enemy.isDead()) {
+                this.characterEnemyCollisiondetected = true;
+                this.lastCollision = new Date().getTime();
+                if (!enemy.isDead() && !this.character.isComingFromTop(enemy)) { // Hier gucken, von wo der Enemy auf den Character trifft.
+                    if (!enemy.hasHurt && !this.collisionsReactionRuns) {
+                        this.collisionsReactionRuns = true;
+                        enemy.hasHurt = true;
+                        this.character.hit(enemy.energyAttack);
+                        if (enemy instanceof Endboss) {
+                            this.character.hitRreaction(220, 400);
+                        } else {
+                            this.character.hitRreaction(100, 400);
+                        }
+                    }
+                } else if (!enemy.hasHurt && this.character.isComingFromTop(enemy) && this.character.speedY < 0 && this.character.isJumping && !this.collisionsReactionRuns) {
+                    if (enemy instanceof Endboss) { // Kollision nur einmal checken
+                        enemy.hit(5);
+                        if (!enemy.isDead()) {
+                            this.character.hitRreaction(360, 20);
+                            this.character.speedY = 15;
+                        }
+                    } else {
+                        if (!enemy.isDead()) {
+                            this.character.speedY = 25;
+                        }
+                        enemy.energy = 0;
+                    }
+                }
+            } else {
+                enemy.hasHurt = false;
+            }
+            if (new Date().getTime() - this.lastCollision > 500) {
+                this.characterEnemyCollisiondetected = false;
+                this.collisionsReactionRuns = false;
+                this.level.enemies.forEach(enemy => enemy.hasHurt = false);
+                enemy.hasHurt = false;
+            }
+            this.throwableObjects.forEach((bottle) => {
+                if (bottle.isColliding(enemy)) {
+                    if (!bottle.hited) {
+                        enemy.hit(this.character.energyAttack);
+                        bottle.hited = true;
+                    }
+                    bottle.deleteIntervals('gravities');
+                    bottle.deleteIntervals('moves');
+                    bottle.energy = 0;
+                }
+            })
+        });
+    }
+
+    checkCollectableObjectCollisions() {
+        this.level.collectableObjects.forEach((obj, i) => {
+            if (this.character.isColliding(obj)) {
+                if (obj instanceof Coin) {
+                    this.character.coins++;
+                    this.statusBarCoin.percentage += 20;
+                } else {
+                    this.character.bottles++;
+                    this.statusBarBottle.percentage += 20;
+                }
+                this.level.collectableObjects.splice(i, 1);
+            }
+            i++;
+        });
     }
 
     checkForDeadEnemies() {
