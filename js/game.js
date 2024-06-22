@@ -57,56 +57,60 @@ function init() {
 }
 
 window.addEventListener('keydown', (e) => {
-    switch (e.code) {
-        case (world.keyboard.jumpKeys[0]):
-        case (world.keyboard.jumpKeys[1]):
-        case (world.keyboard.jumpKeys[2]):
-            keybord.jumpKeyPush = true;
-            break;
-        case (world.keyboard.moveLeftKeys[0]):
-        case (world.keyboard.moveLeftKeys[1]):
-        case (world.keyboard.moveLeftKeys[2]):
-            keybord.moveLeftKeyPush = true;
-            break;
-        case (world.keyboard.moveRightKeys[0]):
-        case (world.keyboard.moveRightKeys[1]):
-        case (world.keyboard.moveRightKeys[2]):
-            keybord.moveRightKeyPush = true;
-            break;
-        case (world.keyboard.throwKeys[0]):
-        case (world.keyboard.throwKeys[1]):
-        case (world.keyboard.throwKeys[2]):
-            keybord.throwKeyPush = true;
-            break;
-        default:
-            break;
+    if (start) {
+        switch (e.code) {
+            case (world.keyboard.jumpKeys[0]):
+            case (world.keyboard.jumpKeys[1]):
+            case (world.keyboard.jumpKeys[2]):
+                keybord.jumpKeyPush = true;
+                break;
+            case (world.keyboard.moveLeftKeys[0]):
+            case (world.keyboard.moveLeftKeys[1]):
+            case (world.keyboard.moveLeftKeys[2]):
+                keybord.moveLeftKeyPush = true;
+                break;
+            case (world.keyboard.moveRightKeys[0]):
+            case (world.keyboard.moveRightKeys[1]):
+            case (world.keyboard.moveRightKeys[2]):
+                keybord.moveRightKeyPush = true;
+                break;
+            case (world.keyboard.throwKeys[0]):
+            case (world.keyboard.throwKeys[1]):
+            case (world.keyboard.throwKeys[2]):
+                keybord.throwKeyPush = true;
+                break;
+            default:
+                break;
+        }
     }
 });
 
 window.addEventListener('keyup', (e) => {
-    switch (e.code) {
-        case (world.keyboard.jumpKeys[0]):
-        case (world.keyboard.jumpKeys[1]):
-        case (world.keyboard.jumpKeys[2]):
-            keybord.jumpKeyPush = false;
-            break;
-        case (world.keyboard.moveLeftKeys[0]):
-        case (world.keyboard.moveLeftKeys[1]):
-        case (world.keyboard.moveLeftKeys[2]):
-            keybord.moveLeftKeyPush = false;
-            break;
-        case (world.keyboard.moveRightKeys[0]):
-        case (world.keyboard.moveRightKeys[1]):
-        case (world.keyboard.moveRightKeys[2]):
-            keybord.moveRightKeyPush = false;
-            break;
-        case (world.keyboard.throwKeys[0]):
-        case (world.keyboard.throwKeys[1]):
-        case (world.keyboard.throwKeys[2]):
-            keybord.throwKeyPush = false;
-            break;
-        default:
-            break;
+    if (start) {
+        switch (e.code) {
+            case (world.keyboard.jumpKeys[0]):
+            case (world.keyboard.jumpKeys[1]):
+            case (world.keyboard.jumpKeys[2]):
+                keybord.jumpKeyPush = false;
+                break;
+            case (world.keyboard.moveLeftKeys[0]):
+            case (world.keyboard.moveLeftKeys[1]):
+            case (world.keyboard.moveLeftKeys[2]):
+                keybord.moveLeftKeyPush = false;
+                break;
+            case (world.keyboard.moveRightKeys[0]):
+            case (world.keyboard.moveRightKeys[1]):
+            case (world.keyboard.moveRightKeys[2]):
+                keybord.moveRightKeyPush = false;
+                break;
+            case (world.keyboard.throwKeys[0]):
+            case (world.keyboard.throwKeys[1]):
+            case (world.keyboard.throwKeys[2]):
+                keybord.throwKeyPush = false;
+                break;
+            default:
+                break;
+        }
     }
 });
 

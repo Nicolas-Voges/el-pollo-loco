@@ -1,5 +1,5 @@
 class Character extends MovableObject {
-    x = 930;
+    x = 3700;// 930;
     y = 250;
     width = 100;
     height = 150;
@@ -314,7 +314,7 @@ class Character extends MovableObject {
             } else if (this.reachedLevelEnd && this.onLeftScreenSide(xStart)) {
                 endbossHitReactionLeft(xStart, distance, id, braceUpTime);
             } else if (this.reachedLevelEnd && !this.onLeftScreenSide(xStart)) {
-                endbossHitReactionRight(xStart, distance, id, braceUpTime)
+                endbossHitReactionRight(xStart, distance, id, braceUpTime);
             } else {
                 this.hitRreactionEnd(id, braceUpTime);
             }
