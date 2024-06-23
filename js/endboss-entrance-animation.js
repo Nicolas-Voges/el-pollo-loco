@@ -51,6 +51,7 @@ function bossEntrenceAnimation() {
         } else {
             clearInterval(bossEntrence);
             bossAlertAnimation();
+            bossStatusbarIsShown = true;
         }
     }, 20);
 }

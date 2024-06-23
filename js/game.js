@@ -6,6 +6,7 @@ let activeIntervals = [];
 let pauseIntervals = [];
 let intervals = [];
 let comingEnemyId = 0;
+let bossStatusbarIsShown = false;
 
 let intervalValues = {
     character: {

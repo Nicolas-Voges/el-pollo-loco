@@ -11,6 +11,7 @@ class World {
     statusBarEnergy = new StatusBarEnergy();
     statusBarCoin = new StatusBarCoin();
     statusBarBottle = new StatusBarBottle();
+    statusBarBoss = new StatusBarBoss();
     throwableObjects = [];
     lastBottleThrown = 0;
     firingRate = 1500;
@@ -85,6 +86,7 @@ class World {
         this.statusBarCoin.setPercentage(this.character.coins * 20 + 18);
         this.statusBarBottle.setPercentage(this.character.bottles * 20 + 18);
         this.statusBarEnergy.setPercentage(this.character.energy);
+        this.statusBarBoss.setPercentage(this.endboss.energy);
     }
 
     
@@ -281,6 +283,9 @@ class World {
         this.addToMap(this.statusBarEnergy);
         this.addToMap(this.statusBarCoin);
         this.addToMap(this.statusBarBottle);
+        if (bossStatusbarIsShown) {
+            this.addToMap(this.statusBarBoss);
+        }
     }
 
     /**
