@@ -162,9 +162,11 @@ function bossAttackAnimation(end = false) {
  * @param {boolean} end false.
  */
 function resetCharacterPosition(end) {
+    characterPosition = 3800;
     if (!end) {
         world.endboss.applyGravity(intervalValues.endboss.gravity);
         characterPosition = 4500;
+        console.log('resetet');
     }
 }
 
@@ -182,10 +184,12 @@ function bossJump(end) {
     world.endboss.currentImage = 0;
     let jump = setInterval(() => {
         if (world.endboss.isAboveGround() || world.endboss.x >= characterPosition) {
+            console.log('X');
             world.endboss.x -= 4;
         } else {
             clearInterval(jump);
             earthquakeAnimation(end);
+            console.log('X Fertig');
         }
     }, 10);
 }
