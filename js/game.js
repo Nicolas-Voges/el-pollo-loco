@@ -127,6 +127,8 @@ function startPauseGame() {
 }
 
 let isPause = false;
+let endbossMoveWasOn = false;
+let endbossAnimateWasOn = false;
 
 function pause() {
     if (isPause) {
@@ -139,15 +141,58 @@ function pause() {
         world.character.applyGravity(intervalValues.character.gravity);
         if (world.endbossAnimationHasRun) {
             world.endboss.applyGravity(intervalValues.endboss.gravity);
+            if (endbossMoveWasOn) {
+                world.endboss.move();
+            }
+            if (endbossAnimateWasOn) {
+                world.endboss.animate();
+            }
         }
         isPause = false;
     } else {
+        isPause = true;
         world.level.enemies.forEach((enemy) => {
             enemy.deleteAllIntervals();
         });
         world.character.deleteAllIntervals();
-        isPause = true;
+        if (world.endbossAnimationHasRun) {
+            if (world.endboss.intervals.moves.length === 0) {
+                endbossMoveWasOn = false;
+            } else {
+                endbossMoveWasOn = true;
+            }
+            if (world.endboss.intervals.animations.length === 0) {
+                endbossAnimateWasOn = false;
+            } else {
+                endbossAnimateWasOn = true;
+            }
+
+            world.endboss.deleteAllIntervals();
+
+        }
     }
+}
+
+
+function restartGame() {
+    world = null;
+    resetGlobalVariables();
+    deleteAllIntervals();
+    init();
+}
+
+function resetGlobalVariables() {
+    comingEnemyId = 0;
+    bossStatusbarIsShown = false;
+    animatinCount = 0;
+    characterPosition = 3800;
+}
+
+
+function deleteAllIntervals() {
+    activeIntervals.forEach(interval => {
+        clearInterval(interval);
+    });
 }
 
 // function registerInterval(pause, functionToRecall, interval, intervalFunction, className, callerId = null) {
@@ -220,7 +265,4 @@ function pause() {
 //             i--;
 //         }
 //     }
-// }
-// function restartGame() {
-
 // }

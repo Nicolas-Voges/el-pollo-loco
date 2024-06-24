@@ -221,6 +221,8 @@ class World {
             //     clearInterval(backgroundPosition);
             // }
         }, 20);
+        this.intervals.push(backgroundPosition);
+        activeIntervals.push(backgroundPosition);
         let cloudPosition = setInterval(() => {
             if (!this.cameraIsMoving) {
                 this.level.cloudObjects.forEach((cloud) => {
@@ -247,6 +249,8 @@ class World {
                 // clearInterval(cloudPosition);
             }
         }, 20);
+        this.intervals.push(cloudPosition);
+        activeIntervals.push(cloudPosition);
     }
 
     /**

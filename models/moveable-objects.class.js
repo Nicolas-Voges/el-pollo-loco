@@ -46,7 +46,7 @@ class MovableObject extends DrawableObject {
      */
     isMoving() {
         let x = this.x
-        setInterval(() => {
+        let id = setInterval(() => {
             if (this.x > x) {
                 this.isMovingRight = true;
                 this.isMovingLeft = false;
@@ -61,6 +61,7 @@ class MovableObject extends DrawableObject {
                 this.isMovingRight = false;
             }
         }, 20);
+        activeIntervals.push(id);
     }
 
     /**

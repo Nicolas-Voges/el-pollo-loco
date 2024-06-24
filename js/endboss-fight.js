@@ -1,23 +1,25 @@
 function bossFight() {
-    world.endboss.animate();
-    let xPlayer = world.character.x;
-    if (!world.bossFightStarted && world.bossFightDone && new Date().getTime() - world.lastAttack > 1000) {
-        world.bossFightDone = false;
-        world.endboss.isAlert = true;
-        world.bossFightStarted = true;
-    }
-    if (world.endboss.alertDone) {
-        world.endboss.isAlert = false;
-        world.endboss.move();
-        if (world.endboss.width + world.endboss.x < xPlayer - 200 && !world.endboss.isAttacking) {
-            world.endboss.directionX = 'Right';
-        } else if (world.endboss.x > xPlayer + world.character.width + 200 && !world.endboss.isAttacking) {
-            world.endboss.directionX = 'Left';
-        } else {
-            world.endboss.directionX = 'Stay';
-            if (!world.endboss.isAttacking && world.endboss.alertDone && !world.endboss.isAboveGround() && new Date().getTime() - world.lastAttack > 2000) {
-                world.endboss.alertDone = false;
-                bossAttack();
+    if (!isPause) {
+        world.endboss.animate();
+        let xPlayer = world.character.x;
+        if (!world.bossFightStarted && world.bossFightDone && new Date().getTime() - world.lastAttack > 1000) {
+            world.bossFightDone = false;
+            world.endboss.isAlert = true;
+            world.bossFightStarted = true;
+        }
+        if (world.endboss.alertDone) {
+            world.endboss.isAlert = false;
+            world.endboss.move();
+            if (world.endboss.width + world.endboss.x < xPlayer - 200 && !world.endboss.isAttacking) {
+                world.endboss.directionX = 'Right';
+            } else if (world.endboss.x > xPlayer + world.character.width + 200 && !world.endboss.isAttacking) {
+                world.endboss.directionX = 'Left';
+            } else {
+                world.endboss.directionX = 'Stay';
+                if (!world.endboss.isAttacking && world.endboss.alertDone && !world.endboss.isAboveGround() && new Date().getTime() - world.lastAttack > 2000) {
+                    world.endboss.alertDone = false;
+                    bossAttack();
+                }
             }
         }
     }
@@ -78,35 +80,43 @@ function bossAttack() {
     }
     let xPlayer = world.character.x;
     let jump = setInterval(() => {
-        if (world.endboss.isAboveGround()) {
-            world.attackJumpStarted = true;
-            if ((world.endboss.width / 2) + world.endboss.x < xPlayer + (world.character.width / 2) - 4) {
-                world.endboss.otherDirection = true;
-                world.endboss.x += 4;
-            } else if ((world.endboss.width / 2) + world.endboss.x > xPlayer + (world.character.width / 2) + 4) {
-                world.endboss.otherDirection = false;
-                world.endboss.x -= 4;
+        if (!isPause) {
+            if (world.endboss.isAboveGround()) {
+                world.attackJumpStarted = true;
+                if ((world.endboss.width / 2) + world.endboss.x < xPlayer + (world.character.width / 2) - 4) {
+                    world.endboss.otherDirection = true;
+                    world.endboss.x += 4;
+                } else if ((world.endboss.width / 2) + world.endboss.x > xPlayer + (world.character.width / 2) + 4) {
+                    world.endboss.otherDirection = false;
+                    world.endboss.x -= 4;
+                }
+            } else if (world.attackJumpStarted) {
+                clearInterval(jump);
+                activeIntervals.splice(activeIntervals.indexOf(jump), 1);
+                world.attackJumpStarted = false;
+                earthquakeAnimation(false, true);
             }
-        } else if (world.attackJumpStarted) {
-            clearInterval(jump);
-            world.attackJumpStarted = false;
-            earthquakeAnimation(false, true);
-        }
-        if (!world.earthquakeStarted && world.endboss.speedY <= 0 && !world.endboss.isAboveGround() && world.earthquakeDone) {
-            world.earthquakeStarted = true;
+            if (!world.earthquakeStarted && world.endboss.speedY <= 0 && !world.endboss.isAboveGround() && world.earthquakeDone) {
+                world.earthquakeStarted = true;
+            }
         }
     }, 10);
+    activeIntervals.push(jump);
     world.endboss.deleteIntervals('animations');
     world.endboss.deleteIntervals('moves');
     if (!world.bossAttackAnimationRuns) {
         let attack = setInterval(() => {
-            world.bossAttackAnimationRuns = true;
-            if (world.endboss.currentImage < world.endboss.IMAGES_ATTACK.length - 1 && world.attackJumpStarted) {
-                world.endboss.playAnimation(world.endboss.IMAGES_ATTACK);
-            } else if (world.attackJumpStarted && !world.endboss.isAboveGround()) {
-                clearInterval(attack);
-                world.bossAttackAnimationRuns = false;
+            if (!isPause) {
+                world.bossAttackAnimationRuns = true;
+                if (world.endboss.currentImage < world.endboss.IMAGES_ATTACK.length - 1 && world.attackJumpStarted) {
+                    world.endboss.playAnimation(world.endboss.IMAGES_ATTACK);
+                } else if (world.attackJumpStarted && !world.endboss.isAboveGround()) {
+                    clearInterval(attack);
+                    activeIntervals.splice(activeIntervals.indexOf(attack), 1);
+                    world.bossAttackAnimationRuns = false;
+                }
             }
         }, 90);
+        activeIntervals.push(attack);
     }
 }
