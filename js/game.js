@@ -203,7 +203,7 @@ function deleteAllIntervals() {
 //     intervals.push({
 //         id: id,
 //         pause: pause,
-//         recallFunction: functionToRecall, // Function to recall this interval
+//         recallFunction: functionToRecall, // Function to recall this interval with eval('functionToRecall').
 //         interval: interval,
 //         className: className,
 //         intervalFunction: intervalFunction, // Kind of function.
@@ -257,6 +257,7 @@ function deleteAllIntervals() {
 //         }
 //     }
 // }
+
 // function deleteIntervalById(id) {
 //     for (let i = 0; i < intervals.length; i++) {
 //         if (intervals[i].callerId === id) {

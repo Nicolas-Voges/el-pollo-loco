@@ -57,7 +57,7 @@ class Character extends MovableObject {
 
     /**
      * This function plays the walking sound and chatches the case
-     * that the sound isn´t loaded jet.
+     * that the sound isn´t loaded yet.
      */
     async playWalkingSound() {
         this.walking_sound.pause();
