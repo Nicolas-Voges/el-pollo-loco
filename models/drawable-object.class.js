@@ -26,7 +26,6 @@ class DrawableObject {
     sound_chickenHit = new Audio('audio/chicken-hit.mp3');
     sound_bossHit = new Audio('audio/boss-hit.mp3');
     collisionDetected = false;
-    // lastCollision = 0;
     hasHurt = false;
     isAlert = false;
 
@@ -144,7 +143,6 @@ class DrawableObject {
     }
 
     hit(energyAttack) {
-        // console.log('TREFFER!');
         if (this instanceof Chick) {
             this.sound_chickHit.play();
         }

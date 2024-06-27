@@ -1,15 +1,8 @@
 class StatusBarEnergy extends StatusBar {
-    IMAGES = [
-        'img/7_statusbars/1_statusbar/2_statusbar_health/green/0.png',
-        'img/7_statusbars/1_statusbar/2_statusbar_health/green/20.png',
-        'img/7_statusbars/1_statusbar/2_statusbar_health/green/40.png',
-        'img/7_statusbars/1_statusbar/2_statusbar_health/green/60.png',
-        'img/7_statusbars/1_statusbar/2_statusbar_health/green/80.png',
-        'img/7_statusbars/1_statusbar/2_statusbar_health/green/100.png'
-    ];
+    IMAGES = IMAGES_PATHS.statusbars.life.IMAGES;
 
     constructor() {
-        super().loadImage('img/7_statusbars/1_statusbar/2_statusbar_health/green/100.png');
+        super().loadImage(this.IMAGES[0]);
         this.loadImages(this.IMAGES);
         this.setPercentage(this.percentage);
     }
@@ -23,11 +16,11 @@ class StatusBarEnergy extends StatusBar {
     resolveImageIndex() {
         if (this.percentage === 100) {
             return 5;
-        } else if (this.percentage > 70) {
+        } else if (this.percentage > 75) {
             return 4;
-        } else if (this.percentage > 50) {
+        } else if (this.percentage > 40) {
             return 3;
-        } else if (this.percentage > 30) {
+        } else if (this.percentage > 20) {
             return 2;
         } else if (this.percentage > 0) {
             return 1;

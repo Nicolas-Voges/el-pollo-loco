@@ -7,7 +7,10 @@ let pauseIntervals = [];
 let intervals = [];
 let comingEnemyId = 0;
 let bossStatusbarIsShown = false;
-
+let isPause = false;
+let endbossMoveWasOn = false;
+let endbossAnimateWasOn = false;
+let start = false;
 let intervalValues = {
     character: {
         moves: 1000 / 60,
@@ -116,7 +119,6 @@ window.addEventListener('keyup', (e) => {
 });
 
 
-let start = false;
 function startPauseGame() {
     if (!start) {
         start = true;
@@ -126,50 +128,95 @@ function startPauseGame() {
     }
 }
 
-let isPause = false;
-let endbossMoveWasOn = false;
-let endbossAnimateWasOn = false;
 
 function pause() {
     if (isPause) {
-        world.level.enemies.forEach((enemy) => {
-            enemy.animate();
-            enemy.move();
-        });
-        world.character.animate();
-        world.character.move();
-        world.character.applyGravity(intervalValues.character.gravity);
-        if (world.endbossAnimationHasRun) {
-            world.endboss.applyGravity(intervalValues.endboss.gravity);
-            if (endbossMoveWasOn) {
-                world.endboss.move();
-            }
-            if (endbossAnimateWasOn) {
-                world.endboss.animate();
-            }
-        }
-        isPause = false;
+        setPlay();
     } else {
-        isPause = true;
-        world.level.enemies.forEach((enemy) => {
-            enemy.deleteAllIntervals();
-        });
-        world.character.deleteAllIntervals();
-        if (world.endbossAnimationHasRun) {
-            if (world.endboss.intervals.moves.length === 0) {
-                endbossMoveWasOn = false;
-            } else {
-                endbossMoveWasOn = true;
-            }
-            if (world.endboss.intervals.animations.length === 0) {
-                endbossAnimateWasOn = false;
-            } else {
-                endbossAnimateWasOn = true;
-            }
+        setPause();
+    }
+}
 
-            world.endboss.deleteAllIntervals();
 
+function setPlay() {
+    setEnemiesPlay();
+    setCharacterPlay();
+    setBossPlay();
+    isPause = false;
+}
+
+
+function setEnemiesPlay() {
+    world.level.enemies.forEach((enemy) => {
+        enemy.animate();
+        enemy.move();
+    });
+}
+
+
+function setCharacterPlay() {
+    world.character.animate();
+    world.character.move();
+    world.character.applyGravity(intervalValues.character.gravity);
+}
+
+
+function setBossPlay() {
+    if (world.endbossAnimationHasRun) {
+        world.endboss.applyGravity(intervalValues.endboss.gravity);
+        if (endbossMoveWasOn) {
+            world.endboss.move();
         }
+        if (endbossAnimateWasOn) {
+            world.endboss.animate();
+        }
+    }
+}
+
+
+function setPause() {
+    isPause = true;
+    setEnemiesPause();
+    setCharacterPause();
+    setBossPause();
+}
+
+
+function setEnemiesPause() {
+    world.level.enemies.forEach((enemy) => {
+        enemy.deleteAllIntervals();
+    });
+}
+
+
+function setCharacterPause() {
+    world.character.deleteAllIntervals();
+}
+
+
+function setBossPause() {
+    if (world.endbossAnimationHasRun) {
+        checkBossMoved();
+        checkBossAnimated();
+        world.endboss.deleteAllIntervals();
+    }
+}
+
+
+function checkBossAnimated() {
+    if (world.endboss.intervals.animations.length === 0) {
+        endbossAnimateWasOn = false;
+    } else {
+        endbossAnimateWasOn = true;
+    }
+}
+
+
+function checkBossMoved() {
+    if (world.endboss.intervals.moves.length === 0) {
+        endbossMoveWasOn = false;
+    } else {
+        endbossMoveWasOn = true;
     }
 }
 
@@ -180,6 +227,7 @@ function restartGame() {
     deleteAllIntervals();
     init();
 }
+
 
 function resetGlobalVariables() {
     comingEnemyId = 0;

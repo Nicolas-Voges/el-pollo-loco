@@ -33,7 +33,7 @@ class Character extends MovableObject {
      * Also it adjusts the volume of characters sound.
      */
     constructor() {
-        super().loadImage('./img/2_character_pepe/1_idle/idle/I-1.png');
+        super().loadImage(this.IMAGES_IDLE[0]);
         this.loadAllImages();
         this.isMoving();
         this.walking_sound.volume = 0.5;

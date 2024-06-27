@@ -3,18 +3,25 @@ class Coin extends CollectableObject {
     offsetRight = 37;
     offsetBottom = 37;
     offsetLeft = 37;
+    IMAGES = IMAGES_PATHS.coins.IMAGES;
 
+    /**
+     * This first called function calls the constructor function of collectable objects and hands over
+     * 
+     * @param {number} x 
+     * @param {number} y 
+     * 
+     * Also loads coin images and animates the coin.
+     */
     constructor(x, y) {
-        super(x, y).loadImage('img/8_coin/coin_1.png');
+        super(x, y).loadImage(this.IMAGES[0]);
         this.loadImages(this.IMAGES);
         this.animate();
     }
 
-    IMAGES = [
-        'img/8_coin/coin_1.png',
-        'img/8_coin/coin_2.png'
-    ];
-    
+    /**
+     * This function animates the chick in an interval and registers it.
+     */
     animate() {
         let intervalCoinAnimate = setInterval(() => {
             this.playAnimation(this.IMAGES);

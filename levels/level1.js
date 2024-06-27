@@ -2,26 +2,43 @@ let level1;
 let collectableObjects
 let backgrounds = [];
 
-for (let i = 0, px = -719; i < 7; i++, px += 1438) {
-    backgrounds.push(new BackgroungObject('./img/5_background/layers/air.png', px, 0));
-    backgrounds.push(new BackgroungObject('./img/5_background/layers/air.png', 719 + px , 0));
+createBackgrounds();
+
+/**
+ * This function creates the backgrounds for the game and hands over layer and optional speed.
+ */
+function createBackgrounds() {
+    createAir();
+    createBackground(3, 3);
+    createBackground(2, 1.5);
+    createBackground(1);
 }
 
-for (let i = 0, px = -719; i < 7; i++, px += 1438) {
-    backgrounds.push(new BackgroungObject('./img/5_background/layers/3_third_layer/1.png', px, 4));
-    backgrounds.push(new BackgroungObject('./img/5_background/layers/3_third_layer/2.png', 719 + px, 4));
+/**
+ * This function creates new background objects by considering layer and speed.
+ * 
+ * @param {number} layer 
+ * @param {number} speed 
+ */
+function createBackground(layer, speed = 0) {
+    for (let i = 0, px = -719; i < 7; i++, px += 1438) {
+        backgrounds.push(new BackgroungObject(IMAGES_PATHS.backgrounds[`layer${layer}`][0], px, speed));
+        backgrounds.push(new BackgroungObject(IMAGES_PATHS.backgrounds[`layer${layer}`][1], 719 + px, speed));
+    }
 }
 
-for (let i = 0, px = -719; i < 7; i++, px += 1438) {
-    backgrounds.push(new BackgroungObject('./img/5_background/layers/2_second_layer/1.png', px, 2));
-    backgrounds.push(new BackgroungObject('./img/5_background/layers/2_second_layer/2.png', 719 + px, 2));
+/**
+ * This function creates the background air.
+ */
+function createAir() {
+    for (let i = 0, px = -719; i < 14; i++, px += 719) {
+        backgrounds.push(new BackgroungObject(IMAGES_PATHS.backgrounds.air[0], px, 0));
+    }
 }
 
-for (let i = 0, px = -719; i < 7; i++, px += 1438) {
-    backgrounds.push(new BackgroungObject('./img/5_background/layers/1_first_layer/1.png', px, 0));
-    backgrounds.push(new BackgroungObject('./img/5_background/layers/1_first_layer/2.png', 719 + px, 0));
-}
-
+/**
+ * This function initializes level1 with enemies, clouds, backgrounds and collectable objects.
+ */
 function initLevel1() {
     level1 = new Level([
         new Chick(1500),
@@ -46,26 +63,25 @@ function initLevel1() {
         new Chicken(3300),
         new Endboss()
     ],
-    cloudObjects = [
-        new Cloud(20),
-        new Cloud(1020),
-        new Cloud(2020),
-        new Cloud(3333),
-        new Cloud(4000),
-        new Cloud(5000),
-    
-    ],
-    backgrounds,
-    collectableObjects = [
-        new Coin(100, 100),
-        new Coin(1200, 140),
-        new Coin(1250, 130),
-        new Coin(2000, 100),
-        new Coin(2400, 50),
-        new Bottle(1550, 325, 0),
-        new Bottle(2940, 390, 1),
-        new Bottle(3740, 100, 2),
-        new Bottle(4300, 380, 0),
-        new Bottle(2370, 310, 1)
-    ]);
+        cloudObjects = [
+            new Cloud(900),
+            new Cloud(1020),
+            new Cloud(2020),
+            new Cloud(3333),
+            new Cloud(4000),
+            new Cloud(5000)
+        ],
+        backgrounds,
+        collectableObjects = [
+            new Coin(100, 100),
+            new Coin(1200, 140),
+            new Coin(1250, 130),
+            new Coin(2000, 100),
+            new Coin(2400, 50),
+            new Bottle(1550, 325, 0),
+            new Bottle(2940, 390, 1),
+            new Bottle(3740, 100, 2),
+            new Bottle(4300, 380, 0),
+            new Bottle(2370, 310, 1)
+        ]);
 }
