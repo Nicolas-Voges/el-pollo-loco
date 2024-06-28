@@ -8,7 +8,7 @@ class MovableObject extends DrawableObject {
     lastJump = 0;
     directionX;
     directionY;
-    hitReactionRuns = false; // Only for Charakter.
+    hitReactionRuns = false;
     isJumping = false;
     ground = 280;
     isMovingRight = false;

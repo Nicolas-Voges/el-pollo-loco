@@ -47,19 +47,19 @@ let intervalValues = {
     }
 };
 
-
-function clearAllIntervals() {
-    intervals.activeIntervals.forEach((interval) => {
-        clearInterval(interval);
-    });
-}
-
+/**
+ * This function initializes the game by creating level and world and
+ * gives the world canvas and keboard.
+ */
 function init() {
     canvas = document.getElementById('canvas');
     initLevel1();
     world = new World(canvas, keybord);
 }
 
+/**
+ * This function listens for key down events and sets the right booleans to true. 
+ */
 window.addEventListener('keydown', (e) => {
     if (start) {
         switch (e.code) {
@@ -89,6 +89,9 @@ window.addEventListener('keydown', (e) => {
     }
 });
 
+/**
+ * This function listens for key up events and sets the right booleans to false.
+ */
 window.addEventListener('keyup', (e) => {
     if (start) {
         switch (e.code) {
@@ -118,7 +121,10 @@ window.addEventListener('keyup', (e) => {
     }
 });
 
-
+/**
+ * This function starts the game if it is not already started.
+ * If game already runs this function pauses the game if also endboss entrence animation is not running now.
+ */
 function startPauseGame() {
     if (!start) {
         start = true;
@@ -128,7 +134,10 @@ function startPauseGame() {
     }
 }
 
-
+/**
+ * This function checks if game is pausing. If thats the case it calls set play function.
+ * Otherwise calls the set pause function.
+ */
 function pause() {
     if (isPause) {
         setPlay();
@@ -137,7 +146,9 @@ function pause() {
     }
 }
 
-
+/**
+ * This function lets the game play.
+ */
 function setPlay() {
     setEnemiesPlay();
     setCharacterPlay();
@@ -145,7 +156,9 @@ function setPlay() {
     isPause = false;
 }
 
-
+/**
+ * This function reactivates enemies intervals.
+ */
 function setEnemiesPlay() {
     world.level.enemies.forEach((enemy) => {
         enemy.animate();
@@ -153,14 +166,18 @@ function setEnemiesPlay() {
     });
 }
 
-
+/**
+ * This function reactivates characters intervals.
+ */
 function setCharacterPlay() {
     world.character.animate();
     world.character.move();
     world.character.applyGravity(intervalValues.character.gravity);
 }
 
-
+/**
+ * This function reactivates boss intervals.
+ */
 function setBossPlay() {
     if (world.endbossAnimationHasRun) {
         world.endboss.applyGravity(intervalValues.endboss.gravity);
@@ -173,7 +190,9 @@ function setBossPlay() {
     }
 }
 
-
+/**
+ * This function pauses the game.
+ */
 function setPause() {
     isPause = true;
     setEnemiesPause();
@@ -181,19 +200,25 @@ function setPause() {
     setBossPause();
 }
 
-
+/**
+ * This function clears all enemy intervals.
+ */
 function setEnemiesPause() {
     world.level.enemies.forEach((enemy) => {
         enemy.deleteAllIntervals();
     });
 }
 
-
+/**
+ * This function clears all intervals of character.
+ */
 function setCharacterPause() {
     world.character.deleteAllIntervals();
 }
 
-
+/**
+ * This function clears all intervals of endboss.
+ */
 function setBossPause() {
     if (world.endbossAnimationHasRun) {
         checkBossMoved();
@@ -202,7 +227,9 @@ function setBossPause() {
     }
 }
 
-
+/**
+ * This function checks if boss animation interval is active and save it in a boolean.
+ */
 function checkBossAnimated() {
     if (world.endboss.intervals.animations.length === 0) {
         endbossAnimateWasOn = false;
@@ -211,7 +238,9 @@ function checkBossAnimated() {
     }
 }
 
-
+/**
+ * This function checks if boss move interval is active and save it in a boolean.
+ */
 function checkBossMoved() {
     if (world.endboss.intervals.moves.length === 0) {
         endbossMoveWasOn = false;
@@ -220,7 +249,9 @@ function checkBossMoved() {
     }
 }
 
-
+/**
+ * This function restarts the game.
+ */
 function restartGame() {
     world = null;
     resetGlobalVariables();
@@ -228,7 +259,9 @@ function restartGame() {
     init();
 }
 
-
+/**
+ * This function resets global variables.
+ */
 function resetGlobalVariables() {
     comingEnemyId = 0;
     bossStatusbarIsShown = false;
@@ -236,13 +269,21 @@ function resetGlobalVariables() {
     characterPosition = 3800;
 }
 
-
+/**
+ * This function clears all intervals registered in active intervals array.
+ */
 function deleteAllIntervals() {
     activeIntervals.forEach(interval => {
         clearInterval(interval);
     });
 }
 
+
+// function clearAllIntervals() {
+//     intervals.activeIntervals.forEach((interval) => {
+//         clearInterval(interval);
+//     });
+// }
 // function registerInterval(pause, functionToRecall, interval, intervalFunction, className, callerId = null) {
 //     let id = setInterval(() => {
 //         eval(functionToRecall);
