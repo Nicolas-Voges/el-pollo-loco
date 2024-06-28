@@ -28,6 +28,8 @@ class DrawableObject {
     collisionDetected = false;
     hasHurt = false;
     isAlert = false;
+    alertStated = false;
+    alertDone = false;
 
     /**
      * This first called function calls the constructor function of drawable object class.
@@ -38,11 +40,22 @@ class DrawableObject {
         this.sound_bossHit.load();
     }
 
+    /**
+     * This function 
+     * 
+     * @param {*} intervalId 
+     * @param {*} kind 
+     */
     registerInterval(intervalId, kind) {
         this.intervals[`${kind}`].push(intervalId);
         activeIntervals.push(intervalId);
     }
 
+    /**
+     * This function 
+     * 
+     * @param {*} kind 
+     */
     deleteIntervals(kind) {
         this.intervals[`${kind}`].forEach((id) => {
             clearInterval(id);
@@ -51,58 +64,83 @@ class DrawableObject {
         this.intervals[`${kind}`] = [];
     }
 
+    /**
+     * This function 
+     */
     deleteAllIntervals() {
-        this.intervals.animations.forEach((id) => {
-            clearInterval(id);
-            this.intervals.animations.splice(this.intervals.animations.indexOf(id), 1);
-            activeIntervals.splice(activeIntervals.indexOf(id), 1);
-        });
-        this.intervals.moves.forEach((id) => {
-            clearInterval(id);
-            this.intervals.moves.splice(this.intervals.moves.indexOf(id), 1);
-            activeIntervals.splice(activeIntervals.indexOf(id), 1);
-        });
-        this.intervals.gravities.forEach((id) => {
-            clearInterval(id);
-            this.intervals.gravities.splice(this.intervals.gravities.indexOf(id), 1);
-            activeIntervals.splice(activeIntervals.indexOf(id), 1);
-        });
+        this.deleteIntervals('animations');
+        this.deleteIntervals('moves');
+        this.deleteIntervals('gravities');
     }
-    alertStated = false;
-    alertDone = false;
 
+    /**
+     * This function 
+     * 
+     * @param {*} images 
+     */
     playAnimation(images) {
-        if (this.currentImage >= images.length) {
-            this.currentImage = 0;
-        }
+        this.checkIndexRange(images);
         let path = images[this.currentImage];
         this.img = this.imageCache[path];
         this.currentImage++;
         if (this.isAlert && !this.isDead()) {
-            if (!this.alertStated) {
-                this.currentImage = 0;                
-            }
-            this.alertStated = true;
-            if (this.currentImage >= images.length -1) {
-                this.currentImage = images.length -1;
-                this.alertDone = true;
-            }
-
+            this.playAlertAnimation(images);
         } else if (this.isDead() && this.currentImage >= images.length - 1) {
-            if (this.deathTime <= 0) {
-                this.deathTime = new Date().getTime();
-            }
-            this.currentImage = images.length - 1;
-            this.deathAnimationDone = true;
+            this.playDeathAnimation(images);
         } else if (!this.isDead() && this.currentImage >= images.length) {
             this.currentImage = 0;
         }
     }
 
+    /**
+     * 
+     * @param {*} images 
+     */
+    checkIndexRange(images) {
+        if (this.currentImage >= images.length) {
+            this.currentImage = 0;
+        }
+    }
+
+    /**
+     * 
+     */
+    playAlertAnimation(images) {
+        if (!this.alertStated) {
+            this.currentImage = 0;
+        }
+        this.alertStated = true;
+        if (this.currentImage >= images.length - 1) {
+            this.currentImage = images.length - 1;
+            this.alertDone = true;
+        }
+    }
+
+    /**
+     * 
+     */
+    playDeathAnimation(images) {
+        if (this.deathTime <= 0) {
+            this.deathTime = new Date().getTime();
+        }
+        this.currentImage = images.length - 1;
+        this.deathAnimationDone = true;
+    }
+
+    /**
+     * This function 
+     * 
+     * @returns 
+     */
     isDead() {
         return this.energy <= 0;
     }
 
+    /**
+     * This function 
+     * 
+     * @param {*} ctx 
+     */
     drawFrame(ctx) {
         if (this instanceof Character || this instanceof Chicken || this instanceof Endboss || this instanceof ThrowableObject || this instanceof CollectableObject) {
             ctx.beginPath();
@@ -113,6 +151,11 @@ class DrawableObject {
         }
     }
 
+    /**
+     * This function 
+     * 
+     * @param {*} ctx 
+     */
     drawColliderFrame(ctx) {
         if (this instanceof Character || this instanceof Chicken || this instanceof Endboss || this instanceof ThrowableObject || this instanceof CollectableObject || this instanceof Chick) {
             ctx.beginPath();
@@ -123,11 +166,21 @@ class DrawableObject {
         }
     }
 
+    /**
+     * This function 
+     * 
+     * @param {*} path 
+     */
     loadImage(path) {
         this.img = new Image();
         this.img.src = path;
     }
 
+    /**
+     * This function 
+     * 
+     * @param {*} arr 
+     */
     loadImages(arr) {
         arr.forEach((path) => {
             let img = new Image();
@@ -136,6 +189,11 @@ class DrawableObject {
         });
     }
 
+    /**
+     * This function 
+     * 
+     * @param {*} ctx 
+     */
     draw(ctx) {
         try {
             ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
@@ -145,21 +203,14 @@ class DrawableObject {
         }
     }
 
+    /**
+     * This function 
+     * 
+     * @param {*} energyAttack 
+     */
     hit(energyAttack) {
-        if (this instanceof Chick) {
-            this.sound_chickHit.play();
-        }
-        if (this instanceof Chicken) {
-            this.sound_chickenHit.play();
-        }
-        if (this instanceof Endboss) {
-            this.sound_bossHit.play();
-        }
-        if (this instanceof Enemy || this instanceof Endboss) {
-            this.energy -= energyAttack;
-        } else {
-            this.energy -= energyAttack;
-        }
+        this.playEnemyHitSound();
+        this.energy -= energyAttack;
         if (this.energy <= 0) {
             if (!this.sound_diePlayed && this.sound_die) {
                 this.sound_die.play();
@@ -171,13 +222,40 @@ class DrawableObject {
         }
     }
 
+    /**
+     * 
+     */
+    playEnemyHitSound() {
+        if (this instanceof Chick) {
+            this.sound_chickHit.play();
+        }
+        if (this instanceof Chicken) {
+            this.sound_chickenHit.play();
+        }
+        if (this instanceof Endboss) {
+            this.sound_bossHit.play();
+        }
+    }
+
+    /**
+     * This function 
+     * 
+     * @param {*} obj 
+     * @returns 
+     */
     isColliding(obj) {
         return this.rightSide() >= this.leftSide(obj) &&
             this.leftSide() <= this.rightSide(obj) &&
             this.bottomSide() >= this.topSide(obj) &&
             this.topSide() <= this.bottomSide(obj);
     }
-    
+
+    /**
+     * This function 
+     * 
+     * @param {*} obj 
+     * @returns 
+     */
     rightSide(obj = this) {
         if (obj.otherDirection) {
             return obj.x + obj.width - obj.offsetLeft;
@@ -186,6 +264,12 @@ class DrawableObject {
         }
     }
 
+    /**
+     * This function 
+     * 
+     * @param {*} obj 
+     * @returns 
+     */
     leftSide(obj = this) {
         if (obj.otherDirection) {
             return obj.x + obj.offsetRight;
@@ -194,10 +278,22 @@ class DrawableObject {
         }
     }
 
+    /**
+     * This function 
+     * 
+     * @param {*} obj 
+     * @returns 
+     */
     topSide(obj = this) {
         return obj.y + obj.offsetTop;
     }
 
+    /**
+     * This function 
+     * 
+     * @param {*} obj 
+     * @returns 
+     */
     bottomSide(obj = this) {
         return obj.y + obj.height - obj.offsetBottom;
     }
