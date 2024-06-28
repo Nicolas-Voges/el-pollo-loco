@@ -41,10 +41,10 @@ class DrawableObject {
     }
 
     /**
-     * This function 
+     * This function registers an incoming interval id in objects intervals array and global active intervals Array.
      * 
-     * @param {*} intervalId 
-     * @param {*} kind 
+     * @param {number} intervalId 
+     * @param {string} kind 
      */
     registerInterval(intervalId, kind) {
         this.intervals[`${kind}`].push(intervalId);
@@ -52,9 +52,9 @@ class DrawableObject {
     }
 
     /**
-     * This function 
+     * This function clears all intervals of a kind and deletes the id form global interval array and from object intervals array.
      * 
-     * @param {*} kind 
+     * @param {string} kind 
      */
     deleteIntervals(kind) {
         this.intervals[`${kind}`].forEach((id) => {
@@ -65,7 +65,7 @@ class DrawableObject {
     }
 
     /**
-     * This function 
+     * This function clears all intervals of this object.
      */
     deleteAllIntervals() {
         this.deleteIntervals('animations');
@@ -74,9 +74,9 @@ class DrawableObject {
     }
 
     /**
-     * This function 
+     * This function plays the objects animations by showing images of
      * 
-     * @param {*} images 
+     * @param {Array} images 
      */
     playAnimation(images) {
         this.checkIndexRange(images);
@@ -93,8 +93,10 @@ class DrawableObject {
     }
 
     /**
+     * This function checks if current image index is lower than images array length.
+     * Otherwise sets current image index to 0.
      * 
-     * @param {*} images 
+     * @param {Array} images 
      */
     checkIndexRange(images) {
         if (this.currentImage >= images.length) {
@@ -103,7 +105,9 @@ class DrawableObject {
     }
 
     /**
+     * This function plays the alert animation.
      * 
+     * @param {Array} images 
      */
     playAlertAnimation(images) {
         if (!this.alertStated) {
@@ -117,7 +121,9 @@ class DrawableObject {
     }
 
     /**
+     * This function plays the death animation.
      * 
+     * @param {Array} images 
      */
     playDeathAnimation(images) {
         if (this.deathTime <= 0) {
@@ -128,48 +134,18 @@ class DrawableObject {
     }
 
     /**
-     * This function 
+     * This function checks if energy is lower or equal to 0 and
      * 
-     * @returns 
+     * @returns {boolean} true if thats the case.
      */
     isDead() {
         return this.energy <= 0;
     }
 
     /**
-     * This function 
+     * This function loads an image from the incomeing
      * 
-     * @param {*} ctx 
-     */
-    drawFrame(ctx) {
-        if (this instanceof Character || this instanceof Chicken || this instanceof Endboss || this instanceof ThrowableObject || this instanceof CollectableObject) {
-            ctx.beginPath();
-            ctx.lineWidth = '2';
-            ctx.strokeStyle = 'blue';
-            ctx.rect(this.x, this.y, this.width, this.height);
-            ctx.stroke();
-        }
-    }
-
-    /**
-     * This function 
-     * 
-     * @param {*} ctx 
-     */
-    drawColliderFrame(ctx) {
-        if (this instanceof Character || this instanceof Chicken || this instanceof Endboss || this instanceof ThrowableObject || this instanceof CollectableObject || this instanceof Chick) {
-            ctx.beginPath();
-            ctx.lineWidth = '1';
-            ctx.strokeStyle = 'red';
-            ctx.rect(this.x + this.offsetLeft, this.y + this.offsetTop, this.width - (this.offsetRight + this.offsetLeft), this.height - (this.offsetBottom + this.offsetTop));
-            ctx.stroke();
-        }
-    }
-
-    /**
-     * This function 
-     * 
-     * @param {*} path 
+     * @param {string} path .
      */
     loadImage(path) {
         this.img = new Image();
@@ -177,9 +153,9 @@ class DrawableObject {
     }
 
     /**
-     * This function 
+     * This function creates a new image object for every path in the incomeing
      * 
-     * @param {*} arr 
+     * @param {Array} arr .
      */
     loadImages(arr) {
         arr.forEach((path) => {
@@ -190,9 +166,9 @@ class DrawableObject {
     }
 
     /**
-     * This function 
+     * This function draws the objects image on the handed over canvas context.
      * 
-     * @param {*} ctx 
+     * @param {Object} ctx 
      */
     draw(ctx) {
         try {
@@ -204,9 +180,11 @@ class DrawableObject {
     }
 
     /**
-     * This function 
+     * This function decreases life by
      * 
-     * @param {*} energyAttack 
+     * @param {number} energyAttack and chooses a sound to play.
+     * 
+     * Also sets last hit to now.
      */
     hit(energyAttack) {
         this.playEnemyHitSound();
@@ -223,7 +201,7 @@ class DrawableObject {
     }
 
     /**
-     * 
+     * This function checks instance of object and plays its sound.
      */
     playEnemyHitSound() {
         if (this instanceof Chick) {
@@ -238,10 +216,10 @@ class DrawableObject {
     }
 
     /**
-     * This function 
+     * This function checks if this object is colliding with
      * 
-     * @param {*} obj 
-     * @returns 
+     * @param {Object} obj and
+     * @returns {boolean} true if thats the case.
      */
     isColliding(obj) {
         return this.rightSide() >= this.leftSide(obj) &&
@@ -251,10 +229,10 @@ class DrawableObject {
     }
 
     /**
-     * This function 
+     * This function checks direction of
      * 
-     * @param {*} obj 
-     * @returns 
+     * @param {Object} obj and
+     * @returns {number} x position of right side.
      */
     rightSide(obj = this) {
         if (obj.otherDirection) {
@@ -265,10 +243,10 @@ class DrawableObject {
     }
 
     /**
-     * This function 
+     * This function checks direction of
      * 
-     * @param {*} obj 
-     * @returns 
+     * @param {Object} obj and
+     * @returns {number} x position of left side.
      */
     leftSide(obj = this) {
         if (obj.otherDirection) {
@@ -279,22 +257,53 @@ class DrawableObject {
     }
 
     /**
-     * This function 
+     * This function checks direction of
      * 
-     * @param {*} obj 
-     * @returns 
+     * @param {Object} obj and
+     * @returns {number} y position of top side.
      */
     topSide(obj = this) {
         return obj.y + obj.offsetTop;
     }
 
     /**
-     * This function 
+     * This function checks direction of
      * 
-     * @param {*} obj 
-     * @returns 
+     * @param {Object} obj and
+     * @returns {number} y position of bottom side.
      */
     bottomSide(obj = this) {
         return obj.y + obj.height - obj.offsetBottom;
     }
+
+    // /**
+    //  * This function 
+    //  * 
+    //  * @param {Object} ctx 
+    //  */
+    // drawFrame(ctx) {
+    //     if (this instanceof Character || this instanceof Chicken || this instanceof Endboss || this instanceof ThrowableObject || this instanceof CollectableObject) {
+    //         ctx.beginPath();
+    //         ctx.lineWidth = '2';
+    //         ctx.strokeStyle = 'blue';
+    //         ctx.rect(this.x, this.y, this.width, this.height);
+    //         ctx.stroke();
+    //     }
+    // }
+
+    // /**
+    //  * This function 
+    //  * 
+    //  * @param {*} ctx 
+    //  */
+    // drawColliderFrame(ctx) {
+    //     if (this instanceof Character || this instanceof Chicken || this instanceof Endboss || this instanceof ThrowableObject || this instanceof CollectableObject || this instanceof Chick) {
+    //         ctx.beginPath();
+    //         ctx.lineWidth = '1';
+    //         ctx.strokeStyle = 'red';
+    //         ctx.rect(this.x + this.offsetLeft, this.y + this.offsetTop, this.width - (this.offsetRight + this.offsetLeft), this.height - (this.offsetBottom + this.offsetTop));
+    //         ctx.stroke();
+    //     }
+    // }
 }
+
