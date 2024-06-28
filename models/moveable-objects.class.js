@@ -13,6 +13,7 @@ class MovableObject extends DrawableObject {
     ground = 280;
     isMovingRight = false;
     isMovingLeft = false;
+    xPast;
 
     /**
      * This first called function goes to the constuctor function in DrawableObject class.
@@ -45,23 +46,38 @@ class MovableObject extends DrawableObject {
      * the values isMovingRight and isMovingLeft to false or true.
      */
     isMoving() {
-        let x = this.x
+        this.xPast = this.x
         let id = setInterval(() => {
-            if (this.x > x) {
-                this.isMovingRight = true;
-                this.isMovingLeft = false;
-                x = this.x;
-            }
-            else if (this.x < x) {
-                this.isMovingLeft = true;
-                this.isMovingRight = false;
-                x = this.x;
-            } else if (this.x === x) {
-                this.isMovingLeft = false;
-                this.isMovingRight = false;
-            }
+            this.checkPosition();
         }, 20);
         activeIntervals.push(id);
+    }
+
+    /**
+     * This function checks if x position changed.
+     */
+    checkPosition() {
+        if (this.x > this.xPast) {
+            this.setMovingBooleans(false, true);
+            this.xPast = this.x;
+        }
+        else if (this.x < this.xPast) {
+            this.setMovingBooleans(true, false);
+            this.xPast = this.x;
+        } else if (this.x === this.xPast) {
+            this.setMovingBooleans(false, false);
+        }
+    }
+
+    /**
+     * This function sets booleans for moving.
+     * 
+     * @param {boolean} left 
+     * @param {boolean} right 
+     */
+    setMovingBooleans(left, right) {
+        this.isMovingLeft = left;
+        this.isMovingRight = right;
     }
 
     /**

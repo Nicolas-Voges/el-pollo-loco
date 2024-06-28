@@ -3,19 +3,33 @@ class StatusBarBottle extends StatusBar {
     percentage = 0;
     IMAGES = IMAGES_PATHS.statusbars.bottles.IMAGES;
 
+    /**
+     * This first called function calls the constructor function and loads images.
+     * Also sets percentage.
+     * 
+     */
     constructor() {
         super().loadImage(this.IMAGES[0]);
-        this.setPercentage(this.percentage);
         this.loadImages(this.IMAGES);
         this.setPercentage(this.percentage);
     }
-    
+
+    /**
+     * This function chooses the image by considering its persentage.
+     * 
+     * @param {number} percentage 
+     */
     setPercentage(percentage) {
         this.percentage = percentage;
         let path = this.IMAGES[this.resolveImageIndex()];
         this.img = this.imageCache[path];
     }
 
+    /**
+     * This function checks percentage and
+     * 
+     * @returns {number} .
+     */
     resolveImageIndex() {
         if (this.percentage >= 99) {
             return 5;

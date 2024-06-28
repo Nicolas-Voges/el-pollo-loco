@@ -29,6 +29,9 @@ class DrawableObject {
     hasHurt = false;
     isAlert = false;
 
+    /**
+     * This first called function calls the constructor function of drawable object class.
+     */
     constructor() {
         this.sound_chickHit.load();
         this.sound_chickenHit.load();

@@ -5,11 +5,17 @@ class ThrowableObject extends MovableObject {
     offsetRight = 10;
     offsetBottom = 15;
     offsetLeft = 10;
-
     IMAGES_ROTATE = IMAGES_PATHS.throwableObject.IMAGES_ROTATE;
-
     IMAGES_SPLASH = IMAGES_PATHS.throwableObject.IMAGES_SPLASH;
 
+    /**
+     * This first called function calls the constructor function of movable object class and loads images.
+     * Also sets the position and speed values and makes a bottle moving and animated.
+     * 
+     * @param {number} x 
+     * @param {number} y 
+     * @param {number} speed 
+     */
     constructor(x, y, speed) {
         super().loadImage(this.IMAGES_ROTATE[0]);
         this.loadImages(this.IMAGES_ROTATE);
@@ -23,6 +29,9 @@ class ThrowableObject extends MovableObject {
         this.speedY = 15;
     }
 
+    /**
+     * This function moves the bottle in an interval and registers it.
+     */
     throw() {
         let id = setInterval(() => {
             this.x += 10 + this.speed;
@@ -34,6 +43,9 @@ class ThrowableObject extends MovableObject {
         this.registerInterval(id, 'moves')
     }
 
+    /**
+     * This function animates the bottle in an interval and registers it.
+     */
     animate() {
         let id = setInterval(() => {
             if (this.isDead()) {
