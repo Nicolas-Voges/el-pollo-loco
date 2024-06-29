@@ -5,14 +5,17 @@ let y = 0;
 let quotient = 2;
 let moveUp = true;
 let translate = 0;
+let endbossAnimationRuns = false;
+let endbossAnimationHasRun = false;
+let earthquakeDone = false;
 
 /**
  * This function checks if character reached end of level and endboss animation wasn´t running yet and
  * runs endboss animation if thats the case.
  */
 function checkForEndbossAnimation() {
-    if (world.character.x > 3800 && !world.endbossAnimationRuns && !world.endbossAnimationHasRun) {
-        world.endbossAnimationRuns = true;
+    if (world.character.x > 3800 && !endbossAnimationRuns && !endbossAnimationHasRun) {
+        endbossAnimationRuns = true;
         runEndbossAnimation();
     }
 }
@@ -237,7 +240,7 @@ function earthquakeAnimation(end = false, attack = false) {
  */
 function setBeginEarthquake(attack) {
     if (attack) {
-        world.earthquakeDone = false;
+        earthquakeDone = false;
     }
 }
 
@@ -316,16 +319,16 @@ function resetDefaultEarthquakeValues() {
  * This function resets earthquake values if this function is called by attack function.
  */
 function resetAttackEarthquakeValues() {
-    world.bossFightDone = true;
-    world.bossFightStarted = false;
+    bossFightDone = true;
+    bossFightStarted = false;
 }
 
 /**
  * This function resets earthquake values if this function is called by end boss entrence function.
  */
 function resetEndEarthquakeValues() {
-    world.endbossAnimationRuns = false;
-    world.endbossAnimationHasRun = true;
+    endbossAnimationRuns = false;
+    endbossAnimationHasRun = true;
 }
 
 /**
@@ -333,7 +336,7 @@ function resetEndEarthquakeValues() {
  */
 function resetGlobalEarthquakeValues() {
     world.ctx.translate(0, translate);
-    world.earthquakeDone = true;
+    earthquakeDone = true;
     yMax = 25;
     y = 0;
     quotient = 2;

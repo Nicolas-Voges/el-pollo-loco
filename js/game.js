@@ -55,6 +55,7 @@ function init() {
     canvas = document.getElementById('canvas');
     initLevel1();
     world = new World(canvas, keybord);
+    loadSounds();
 }
 
 /**
@@ -129,7 +130,7 @@ function startPauseGame() {
     if (!start) {
         start = true;
         init();
-    } else if (!world.endbossAnimationRuns) {
+    } else if (!endbossAnimationRuns) {
         pause();
     }
 }
@@ -179,7 +180,7 @@ function setCharacterPlay() {
  * This function reactivates boss intervals.
  */
 function setBossPlay() {
-    if (world.endbossAnimationHasRun) {
+    if (endbossAnimationHasRun) {
         world.endboss.applyGravity(intervalValues.endboss.gravity);
         if (endbossMoveWasOn) {
             world.endboss.move();
@@ -220,7 +221,7 @@ function setCharacterPause() {
  * This function clears all intervals of endboss.
  */
 function setBossPause() {
-    if (world.endbossAnimationHasRun) {
+    if (endbossAnimationHasRun) {
         checkBossMoved();
         checkBossAnimated();
         world.endboss.deleteAllIntervals();
@@ -278,6 +279,60 @@ function deleteAllIntervals() {
     });
 }
 
+/**
+ * This function loads sounds and adjust there volume.
+ */
+async function loadSounds() {
+    world.sound_music.load();
+    world.sound_ambiente.load();
+    world.sound_glas.load();
+    world.sound_glas.volume = 0.4;
+    await world.sound_ambiente.play();
+    world.sound_ambiente.loop = true;
+    world.sound_ambiente.volume = 0.4;
+    await world.sound_music.play();
+    world.sound_music.loop = true;
+    world.sound_music.volume = 0.25;
+}
+
+/**
+ * This function adjusts background layer positions to create a 3D look.
+ */
+function adjustBackgroundPosition() {
+    changeBackgroundPosition();
+    changeCloudPosition();
+}
+
+/**
+ * This function checks if character is moving and did not reached end level screen, and
+ * moves the background in the right direction.
+ */
+function changeBackgroundPosition() {
+    world.level.backgroundObjects.forEach((bgr) => {
+        if (world.character.isMovingLeft && !endbossAnimationHasRun && world.character.x < 3696) {
+            bgr.moveLeft();
+        } else if (world.character.isMovingRight && !endbossAnimationHasRun && world.character.x < 3696) {
+            bgr.moveRight();
+        }
+    });
+}
+
+/**
+ * This function checks if character is moving and did not reached end level screen, and
+ * moves the cloud in the right direction.
+ */
+function changeCloudPosition() {
+    world.level.cloudObjects.forEach((cloud) => {
+        if (world.character.isMovingLeft && !endbossAnimationHasRun && world.character.x < 3696) {
+            cloud.speed = 1;
+        } else if (world.character.isMovingRight && !endbossAnimationHasRun && world.character.x < 3696) {
+            cloud.speed = -1;
+        }
+        else {
+            cloud.speed = 0.03;
+        }
+    });
+}
 
 // function clearAllIntervals() {
 //     intervals.activeIntervals.forEach((interval) => {

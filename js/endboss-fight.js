@@ -1,3 +1,8 @@
+let bossFightStarted = false;
+let bossFightDone = true;
+let attackJumpStarted = false;
+let bossAttackAnimationRuns = false;
+
 /**
  * This function checks whether the game is paused. If thats not the case this function animates boss.
  * Also it checks if alert animation should run and starts animation, or
@@ -6,7 +11,7 @@
 function bossFight() {
     if (!isPause) {
         world.endboss.animate();
-        if (!world.bossFightStarted && world.bossFightDone && bossAttackCooledDown()) {
+        if (!bossFightStarted && bossFightDone && bossAttackCooledDown()) {
             alertBoss();
         }
         if (world.endboss.alertDone) {
@@ -30,9 +35,9 @@ function bossAttackCooledDown() {
  * This function sets booleans to start alert animation.
  */
 function alertBoss() {
-    world.bossFightDone = false;
+    bossFightDone = false;
     world.endboss.isAlert = true;
-    world.bossFightStarted = true;
+    bossFightStarted = true;
 }
 
 /**
@@ -130,7 +135,7 @@ function bossJumpAttack() {
     let jump = setInterval(() => {
         if (!isPause) {
             checkJumpProgress(xPlayer, jump);
-            if (!world.earthquakeStarted && world.endboss.speedY <= 0 && !world.endboss.isAboveGround() && world.earthquakeDone) {
+            if (!world.earthquakeStarted && world.endboss.speedY <= 0 && !world.endboss.isAboveGround() && earthquakeDone) {
                 world.earthquakeStarted = true;
             }
         }
@@ -148,7 +153,7 @@ function bossJumpAttack() {
 function checkJumpProgress(xPlayer, jump) {
     if (world.endboss.isAboveGround()) {
         moveToCharacter(xPlayer);
-    } else if (world.attackJumpStarted) {
+    } else if (attackJumpStarted) {
         endJump(jump);
     }
 }
@@ -161,7 +166,7 @@ function checkJumpProgress(xPlayer, jump) {
 function endJump(jump) {
     clearInterval(jump);
     activeIntervals.splice(activeIntervals.indexOf(jump), 1);
-    world.attackJumpStarted = false;
+    attackJumpStarted = false;
     earthquakeAnimation(false, true);
 }
 
@@ -171,7 +176,7 @@ function endJump(jump) {
  * @param {number} xPlayer 
  */
 function moveToCharacter(xPlayer) {
-    world.attackJumpStarted = true;
+    attackJumpStarted = true;
     if ((world.endboss.width / 2) + world.endboss.x < xPlayer + (world.character.width / 2) - 4) {
         world.endboss.otherDirection = true;
         world.endboss.x += 4;
@@ -185,7 +190,7 @@ function moveToCharacter(xPlayer) {
  * This function plays the attack animation in an interval and saves intervals id.
  */
 function bossFightAttackAnimation() {
-    if (!world.bossAttackAnimationRuns) {
+    if (!bossAttackAnimationRuns) {
         let attack = setInterval(() => {
             if (!isPause) {
                 checkAttackAnimationProgress(attack);
@@ -201,12 +206,12 @@ function bossFightAttackAnimation() {
  * @param {number} attack 
  */
 function checkAttackAnimationProgress(attack) {
-    world.bossAttackAnimationRuns = true;
-    if (world.endboss.currentImage < world.endboss.IMAGES_ATTACK.length - 1 && world.attackJumpStarted) {
+    bossAttackAnimationRuns = true;
+    if (world.endboss.currentImage < world.endboss.IMAGES_ATTACK.length - 1 && attackJumpStarted) {
         world.endboss.playAnimation(world.endboss.IMAGES_ATTACK);
-    } else if (world.attackJumpStarted && !world.endboss.isAboveGround()) {
+    } else if (attackJumpStarted && !world.endboss.isAboveGround()) {
         clearInterval(attack);
         activeIntervals.splice(activeIntervals.indexOf(attack), 1);
-        world.bossAttackAnimationRuns = false;
+        bossAttackAnimationRuns = false;
     }
 }

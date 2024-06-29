@@ -16,7 +16,6 @@ class World {
     lastBottleThrown = 0;
     firingRate = 1500;
     intervals = [];
-    endbossAnimationRuns = false;
     endboss = this.level.enemies[this.level.enemies.length - 1];
     cameraToCharacter = 100;
     bossCameraActiv = false;
@@ -25,46 +24,35 @@ class World {
     characterEnemyCollisiondetected = false;
     collisionsReactionRuns = false;
 
-    endbossAnimationHasRun = false; // in endboss-entrence und -fight.js auslagern.
-    earthquakeDone = false; // in endboss-entrence und -fight.js auslagern.
-    earthquakeSrarted = false; // in endboss-entrence und -fight.js auslagern.
-    bossFightStarted = false; // in endboss-entrence und -fight.js auslagern.
-    bossFightDone = true; // in endboss-entrence und -fight.js auslagern.
-    bossAttackAnimationRuns = false; // in endboss-entrence und -fight.js auslagern.
-    attackJumpStarted = false; // in endboss-entrence und -fight.js auslagern.
-
-
+    /**
+     * This first called function gets the canvas, its context and keyboard.
+     * Also calls the draw function, sets the world to the charakter property and
+     * runs the game.
+     * 
+     * @param {Object} canvas 
+     * @param {Object} keyboard 
+     */
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.draw();
         this.setWorld();
-        this.loadSounds();
         this.run();
-        this.adjustBackgroundPosition();
     }
 
-
-    async loadSounds() {
-        this.sound_music.load();
-        this.sound_ambiente.load();
-        this.sound_glas.load();
-        this.sound_glas.volume = 0.4;
-        await this.sound_ambiente.play();
-        this.sound_ambiente.loop = true;
-        this.sound_ambiente.volume = 0.4;
-        await this.sound_music.play();
-        this.sound_music.loop = true;
-        this.sound_music.volume = 0.25;
-    }
-
-
+    /**
+     * This function sets the world to the charakter property.
+     */
     setWorld() {
         this.character.world = this;
     }
 
-
+    /**
+     * This function runs the game in an interval and registers the interval.
+     * It checks all collisions and let the endboss come. Also starts boss fight and
+     * adjust background positions.
+     */
     run() {
         let intervalWorldRun = setInterval(() => {
             this.checkCollisions();
@@ -72,15 +60,19 @@ class World {
             this.checkForDeadEnemies();
             checkForEndbossAnimation();
             this.updateStatusBars();
-            if (this.endbossAnimationHasRun) {
+            if (endbossAnimationHasRun) {
                 bossFight();
+            } else {
+                adjustBackgroundPosition();
             }
         }, 5);
         this.intervals.push(intervalWorldRun);
         activeIntervals.push(intervalWorldRun);
     }
 
-
+    /**
+     * This function updates the status bars.
+     */
     updateStatusBars() {
         this.statusBarCoin.setPercentage(this.character.coins * 20 + 18);
         this.statusBarBottle.setPercentage(this.character.bottles * 20 + 18);
@@ -88,18 +80,23 @@ class World {
         this.statusBarBoss.setPercentage(this.endboss.energy);
     }
 
-
+    /**
+     * This function checks the collisions of the game.
+     */
     checkCollisions() {
-        if (!this.endbossAnimationRuns) {
+        if (!endbossAnimationRuns) {
             this.checkEnemyCollisions();
             this.checkCollectableObjectCollisions();
         }
     }
 
+    /**
+     * This function checks for collisions with enemies and disables another collision till the next 500ms.
+     */
     checkEnemyCollisions() {
         this.level.enemies.forEach((enemy) => {
             if (this.character.isColliding(enemy) && !this.characterEnemyCollisiondetected && !enemy.isDead()) {
-                this.detectCollision(enemy);
+                this.detectCollisionKind(enemy);
             } else {
                 enemy.hasHurt = false;
             }
@@ -110,6 +107,11 @@ class World {
         });
     }
 
+    /**
+     * This function enables next collision.
+     * 
+     * @param {Object} enemy 
+     */
     enableCollision(enemy) {
         this.characterEnemyCollisiondetected = false;
         this.collisionsReactionRuns = false;
@@ -117,6 +119,12 @@ class World {
         enemy.hasHurt = false;
     }
 
+    /**
+     * This function checks for collisions between bottles and enemies and hit the enemy if a bottle is
+     * thrown on the enemy. Also sets the bottles energy to 0.
+     * 
+     * @param {Object} enemy 
+     */
     checkBottleCollision(enemy) {
         this.throwableObjects.forEach((bottle) => {
             if (bottle.isColliding(enemy)) {
@@ -131,7 +139,13 @@ class World {
         })
     }
 
-    detectCollision(enemy) {
+    /**
+     * This function disables new collisions and checks kind of collision.
+     * Also hits enemy or character.
+     * 
+     * @param {Object} enemy 
+     */
+    detectCollisionKind(enemy) {
         this.characterEnemyCollisiondetected = true;
         this.lastCollision = new Date().getTime();
         if (!enemy.isDead() && !this.character.isComingFromTop(enemy)) {
@@ -141,6 +155,11 @@ class World {
         }
     }
 
+    /**
+     * This function hurts the character and makes him react differently when an anemy or the boss attacks.
+     * 
+     * @param {Object} enemy 
+     */
     hurtCharacter(enemy) {
         if (!enemy.hasHurt && !this.collisionsReactionRuns) {
             this.collisionsReactionRuns = true;
@@ -154,6 +173,11 @@ class World {
         }
     }
 
+    /**
+     * This function hurts the enemy if enemy is instance of endboss class or kill the enemy if he is not.
+     * 
+     * @param {Object} enemy 
+     */
     hurtEnemy(enemy) {
         if (enemy instanceof Endboss) {
             enemy.hit(5);
@@ -169,6 +193,9 @@ class World {
         }
     }
 
+    /**
+     * This function checks if character collides with a collectable object and lets the character collect.
+     */
     checkCollectableObjectCollisions() {
         this.level.collectableObjects.forEach((obj, i) => {
             if (this.character.isColliding(obj)) {
@@ -178,6 +205,12 @@ class World {
         });
     }
 
+    /**
+     * This function makes the character collecting a bottel o a coin and deletes the item in level.
+     * 
+     * @param {Object} obj 
+     * @param {number} i 
+     */
     collectItem(obj, i) {
         if (obj instanceof Coin) {
             this.character.coins++;
@@ -189,6 +222,9 @@ class World {
         this.level.collectableObjects.splice(i, 1);
     }
 
+    /**
+     * This function checks for dead enemies and deletes them after 1s.
+     */
     checkForDeadEnemies() {
         let now = new Date().getTime();
         for (let i = 0; i < this.level.enemies.length; i++) {
@@ -199,6 +235,10 @@ class World {
         }
     }
 
+    /**
+     * This function checks if character collected a bottle and throw cooled down and throw key is pushed.
+     * If thats the case this function throwes a bottle and calls the delete bottle function.
+     */
     checkThrowableObjects() {
         let now = new Date().getTime();
         if (this.keyboard.throwKeyPush && this.character.bottles > 0 && this.lastBottleThrown + this.firingRate < now) {
@@ -207,6 +247,9 @@ class World {
         this.deleteBottle();
     }
 
+    /**
+     * This function let the bottle stay if bottle hits enemy or the ground and deletes the bottle if splash animation is done.
+     */
     deleteBottle() {
         for (let i = 0; i < this.throwableObjects.length; i++) {
             if (this.throwableObjects[i].y >= 390) {
@@ -222,6 +265,9 @@ class World {
         }
     }
 
+    /**
+     * This function throws a bottle and gives the bottle a different speed value depending on character moves.
+     */
     throwBottle() {
         let bottle;
         if (this.keyboard.moveRightKeyPush) {
@@ -236,44 +282,9 @@ class World {
         this.character.bottles--;
     }
 
-    adjustBackgroundPosition() {
-        let backgroundPosition = setInterval(() => {
-            this.changeBackgroundPosition();
-        }, 20);
-        this.intervals.push(backgroundPosition);
-        activeIntervals.push(backgroundPosition);
-        let cloudPosition = setInterval(() => {
-            this.changeCloudPosition();
-        }, 20);
-        this.intervals.push(cloudPosition);
-        activeIntervals.push(cloudPosition);
-    }
-
-    changeBackgroundPosition() {
-        this.level.backgroundObjects.forEach((bgr) => {
-            if (this.character.isMovingLeft && !this.endbossAnimationHasRun && this.character.x < 3696) {
-                bgr.moveLeft();
-            } else if (this.character.isMovingRight && !this.endbossAnimationHasRun && this.character.x < 3696) {
-                bgr.moveRight();
-            }
-        });
-    }
-
-    changeCloudPosition() {
-        this.level.cloudObjects.forEach((cloud) => {
-            if (this.character.isMovingLeft && !this.endbossAnimationHasRun && this.character.x < 3696) {
-                cloud.speed = 1;
-            } else if (this.character.isMovingRight && !this.endbossAnimationHasRun && this.character.x < 3696) {
-                cloud.speed = -1;
-            }
-            else {
-                cloud.speed = 0.03;
-            }
-        });
-    }
-
     /**
-     * 
+     * This function clears the canvas context moves the context to character and draws the scene.
+     * After that translating context back and draw HUD. Also repeats this function every frame.
      */
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -288,7 +299,7 @@ class World {
     }
 
     /**
-     * 
+     * This function draws the scene including character, backgrounds and items.
      */
     drawScene() {
         this.addObjectsToMap(this.level.backgroundObjects);
@@ -300,7 +311,7 @@ class World {
     }
 
     /**
-     * 
+     * This function draws the HUD and lets boss status bar become visible when it is needed.
      */
     drawHUD() {
         this.addToMap(this.statusBarEnergy);
@@ -312,6 +323,7 @@ class World {
     }
 
     /**
+     * This function gets an array of objects and add each to the canvas context.
      * 
      * @param {Array} objects 
      */
@@ -321,6 +333,12 @@ class World {
         });
     }
 
+    /**
+     * This function draws an object on the canvas and flips it if its property other direction is true.
+     * Also flips back after drawing fliped image.
+     * 
+     * @param {Object} object 
+     */
     addToMap(object) {
         if (object.otherDirection) {
             this.flipImage(object);
@@ -339,6 +357,7 @@ class World {
     }
 
     /**
+     * This function saves the context and flips it.
      * 
      * @param {Object} object 
      */
@@ -349,7 +368,7 @@ class World {
     }
 
     /**
-     * 
+     * This function restores canvas context so it flips back.
      */
     flipImageBack() {
         this.ctx.restore();

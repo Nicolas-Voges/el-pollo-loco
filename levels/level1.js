@@ -9,8 +9,8 @@ createBackgrounds();
  */
 function createBackgrounds() {
     createAir();
-    createBackground(3, 3);
-    createBackground(2, 1.5);
+    createBackground(3, 1);
+    createBackground(2, 0.5);
     createBackground(1);
 }
 

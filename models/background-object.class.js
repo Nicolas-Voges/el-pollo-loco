@@ -2,6 +2,7 @@ class BackgroungObject extends MovableObject {
     width = 720;
     height = 480;
     speed;
+    world;
 
     /**
      * This first called function calls the consructor function of moveable object class and calls its load image function.
@@ -16,5 +17,6 @@ class BackgroungObject extends MovableObject {
         this.y = 480 - this.height;
         this.x = x;
         this.speed = speed;
+        this.speed /= 1.3333;
     }
 }
