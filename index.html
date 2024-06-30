@@ -33,8 +33,31 @@
     <script src="models/bottle.class.js"></script>
     <script src="levels/level1.js"></script>
 </head>
-<body>
+<body onload="isMobile()">
     <h1>El Pollo Loco</h1>
-    <canvas id="canvas" width="720" height="480" onclick="startPauseGame()"></canvas>
+    <div id="gameContainer">
+        <canvas id="canvas" width="720" height="480"></canvas>
+        <div id="controlls">
+            <div class="iconsBox">
+                <button onclick="document.activeElement.blur();" id="muteButton" class="icon"></button>
+                <button onclick="document.activeElement.blur();" id="settingsButton" class="icon"></button>
+                <button onclick="startPauseGame(); document.activeElement.blur();" id="pauseButton" class="icon"></button>
+                <button onclick=" canvas.requestFullscreen(); document.activeElement.blur();" id="fullscreenButton" class="squareIcon"></button>
+            </div>
+            <div>
+                <button onclick="startPauseGame()" id="startButton" class="startIcon"></button>
+            </div>
+            <div id="mobileControlls" class="lowerIconsBox visibility-hidden">
+                <div class="gameIconBoxLeft">
+                    <button id="leftButton" class="icon gameIcon"></button>
+                    <button id="rightButton" class="icon gameIcon"></button>
+                </div>
+                <div class="gameIconBoxRight">
+                    <button id="throwButton" class="icon gameIcon"></button>
+                    <button id="jumpButton" class="icon gameIcon"></button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

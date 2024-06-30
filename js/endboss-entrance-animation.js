@@ -242,6 +242,7 @@ function setBeginEarthquake(attack) {
     if (attack) {
         earthquakeDone = false;
     }
+    window.navigator.vibrate([500]);
 }
 
 /**

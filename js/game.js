@@ -1,3 +1,4 @@
+let mobileDivice = false;
 let canvas;
 let ctx;
 let world;
@@ -48,14 +49,51 @@ let intervalValues = {
 };
 
 /**
+ * This function
+ */
+function isMobile() {
+    mobileDivice = navigator.maxTouchPoints > 0 && /Android|iPhone|HUAWEI|huawei/i.test(navigator.userAgent);
+    console.log(mobileDivice);
+    console.log(navigator.userAgent);
+    if (mobileDivice) {
+        setForMobile();
+    }
+    return mobileDivice;
+}
+
+/**
+ * This function
+ */
+function setForMobile() {
+    document.querySelector('h1').classList.add('display-none');
+    setMobil(document.getElementById('gameContainer'));
+    setMobil(document.getElementById('canvas'));
+    setMobil(document.getElementById('controlls'));
+    document.getElementById('mobileControlls').classList.remove('visibility-hidden');
+}
+
+/**
+ * This function
+ * 
+ * @param {Object} element 
+ */
+function setMobil(element) {
+    element.style.width = '100%';
+    element.style.height = '100vh';
+    element.style.backgroundSize = 'contain';
+}
+
+/**
  * This function initializes the game by creating level and world and
  * gives the world canvas and keboard.
  */
 function init() {
+    document.getElementById('startButton').classList.add('display-none');
     canvas = document.getElementById('canvas');
     initLevel1();
     world = new World(canvas, keybord);
     loadSounds();
+    addTouchEvents();
 }
 
 /**
@@ -121,6 +159,45 @@ window.addEventListener('keyup', (e) => {
         }
     }
 });
+
+window.addEventListener(`contextmenu`, (e) => {
+    e.preventDefault();
+});
+
+function addTouchEvents() {
+    let throwButton = document.getElementById('throwButton');
+    let leftButton = document.getElementById('leftButton');
+    let rightButton = document.getElementById('rightButton');
+    let jumpButton = document.getElementById('jumpButton');
+    throwButton.addEventListener('touchstart', () => {
+        keybord.throwKeyPush = true;
+    });
+    throwButton.addEventListener('touchend', () => {
+        keybord.throwKeyPush = false;
+        document.activeElement.blur();
+    });
+    leftButton.addEventListener('touchstart', () => {
+        keybord.moveLeftKeyPush = true;
+    });
+    leftButton.addEventListener('touchend', () => {
+        keybord.moveLeftKeyPush = false;
+        document.activeElement.blur();
+    });
+    rightButton.addEventListener('touchstart', () => {
+        keybord.moveRightKeyPush = true;
+    });
+    rightButton.addEventListener('touchend', () => {
+        keybord.moveRightKeyPush = false;
+        document.activeElement.blur();
+    });
+    jumpButton.addEventListener('touchstart', () => {
+        keybord.jumpKeyPush = true;
+    });
+    jumpButton.addEventListener('touchend', () => {
+        keybord.jumpKeyPush = false;
+        document.activeElement.blur();
+    });
+}
 
 /**
  * This function starts the game if it is not already started.
