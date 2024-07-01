@@ -32,15 +32,6 @@ class DrawableObject {
     alertDone = false;
 
     /**
-     * This first called function calls the constructor function of drawable object class.
-     */
-    constructor() {
-        this.sound_chickHit.load();
-        this.sound_chickenHit.load();
-        this.sound_bossHit.load();
-    }
-
-    /**
      * This function registers an incoming interval id in objects intervals array and global active intervals Array.
      * 
      * @param {number} intervalId 
@@ -191,7 +182,7 @@ class DrawableObject {
         this.energy -= energyAttack;
         if (this.energy <= 0) {
             if (!this.sound_diePlayed && this.sound_die) {
-                this.sound_die.play();
+                playSound(this.sound_die);
                 this.sound_diePlayed = true;
             }
             this.energy = 0;
@@ -205,13 +196,13 @@ class DrawableObject {
      */
     playEnemyHitSound() {
         if (this instanceof Chick) {
-            this.sound_chickHit.play();
+            playSound(this.sound_chickHit);
         }
         if (this instanceof Chicken) {
-            this.sound_chickenHit.play();
+            playSound(this.sound_chickenHit);
         }
         if (this instanceof Endboss) {
-            this.sound_bossHit.play();
+            playSound(this.sound_bossHit);
         }
     }
 

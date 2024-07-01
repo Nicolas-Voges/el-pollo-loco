@@ -1,5 +1,5 @@
 class Character extends MovableObject {
-    x = 3700;// 930;
+    x = 930;
     y = 250;
     width = 100;
     height = 150;
@@ -22,7 +22,6 @@ class Character extends MovableObject {
     sound_hurt = new Audio('audio/hurt.mp3');
     sound_die = new Audio('audio/die.mp3');
     sound_jump = new Audio('audio/jump.mp3');
-    walking_soundLoaded = false;
     reachedLevelEnd = false;
     idleTime = 0;
     tookIdleTime = false;
@@ -53,25 +52,6 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_LONG_IDLE);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
-    }
-
-    /**
-     * This function plays the walking sound and chatches the case
-     * that the sound isn´t loaded yet.
-     */
-    async playWalkingSound() {
-        this.walking_sound.pause();
-        try {
-            var isPlaying = this.walking_sound.currentTime > 0 && !this.walking_sound.paused && !this.walking_sound.ended
-                && this.walking_sound.readyState > this.walking_sound.HAVE_CURRENT_DATA;
-            if (!isPlaying) {
-                await this.walking_sound.play();
-            } else {
-                walking_soundLoaded = true;
-            }
-        } catch (error) {
-            this.playWalkingSound();
-        }
     }
 
     /**
@@ -147,7 +127,7 @@ class Character extends MovableObject {
         this.moveRight();
         this.otherDirection = false;
         if (!this.isAboveGround()) {
-            this.playWalkingSound();
+            playSound(this.walking_sound);
         }
     }
 
@@ -159,7 +139,7 @@ class Character extends MovableObject {
         this.moveLeft();
         this.otherDirection = true;
         if (!this.isAboveGround()) {
-            this.playWalkingSound();
+            playSound(this.walking_sound);
         }
     }
 
@@ -197,7 +177,7 @@ class Character extends MovableObject {
      */
     hurt() {
         this.playAnimation(this.IMAGES_HURT);
-        this.playHurtSound();
+        playSound(this.sound_hurt);
     }
 
     /**
@@ -277,13 +257,6 @@ class Character extends MovableObject {
      */
     notReachedLevelEnd() {
         return this.x < this.world.level.level_end_x;
-    }
-
-    /**
-     * This function plays the hurt sound.
-     */
-    async playHurtSound() {
-        await this.sound_hurt.play();
     }
 
     /**

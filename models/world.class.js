@@ -186,11 +186,21 @@ class World {
                 this.character.speedY = 15;
             }
         } else {
-            if (!enemy.isDead()) {
-                this.character.speedY = 25;
-            }
-            enemy.energy = 0;
+            this.killEnemy(enemy);
         }
+    }
+
+    /**
+     * This function plays death sound of enemy, makes the character jamp again and set the enemy energy to 0.
+     * 
+     * @param {Object} enemy 
+     */
+    killEnemy(enemy) {
+        enemy.playEnemyHitSound();
+        if (!enemy.isDead()) {
+            this.character.speedY = 20;
+        }
+        enemy.energy = 0;
     }
 
     /**
@@ -243,6 +253,7 @@ class World {
         let now = new Date().getTime();
         if (this.keyboard.throwKeyPush && this.character.bottles > 0 && this.lastBottleThrown + this.firingRate < now) {
             this.throwBottle();
+            this.keyboard.throwKeyPush = false;
         }
         this.deleteBottle();
     }
@@ -254,7 +265,7 @@ class World {
         for (let i = 0; i < this.throwableObjects.length; i++) {
             if (this.throwableObjects[i].y >= 390) {
                 this.throwableObjects[i].energy = 0;
-                this.sound_glas.play();
+                playSound(this.sound_glas);
                 this.throwableObjects[i].deleteIntervals('gravities');
                 this.throwableObjects[i].deleteIntervals('moves');
             }

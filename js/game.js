@@ -12,11 +12,12 @@ let isPause = false;
 let endbossMoveWasOn = false;
 let endbossAnimateWasOn = false;
 let start = false;
+let pauseSetted = true;
 let intervalValues = {
     character: {
         moves: 1000 / 60,
         animations: {
-            default: 100,
+            default: 80,
             idle: 140
         },
         gravity: 1000 / 60
@@ -48,6 +49,27 @@ let intervalValues = {
     }
 };
 
+
+/**
+ * This function plays a sound if sound is fully loaded to play.
+ * 
+ * @param {Object} sound 
+ */
+async function playSound(sound) {
+    sound.pause();
+    try {
+        let isPlaying = sound.currentTime > 0 && !sound.paused && !sound.ended && sound.readyState > sound.HAVE_CURRENT_DATA;
+        if (!isPlaying) {
+            await sound.play();
+        } else {
+
+        }
+    } catch (error) {
+
+    }
+}
+
+
 /**
  * This function
  */
@@ -70,6 +92,7 @@ function setForMobile() {
     setMobil(document.getElementById('canvas'));
     setMobil(document.getElementById('controlls'));
     document.getElementById('mobileControlls').classList.remove('visibility-hidden');
+    document.getElementById('fullscreenButton').classList.add('display-none');
 }
 
 /**
@@ -81,6 +104,12 @@ function setMobil(element) {
     element.style.width = '100%';
     element.style.height = '100vh';
     element.style.backgroundSize = 'contain';
+}
+
+
+function setFullscreen() {
+    document.getElementById('canvas').requestFullscreen();
+    document.activeElement.blur();
 }
 
 /**
@@ -122,6 +151,15 @@ window.addEventListener('keydown', (e) => {
             case (world.keyboard.throwKeys[2]):
                 keybord.throwKeyPush = true;
                 break;
+            case (world.keyboard.pauseKeys[0]):
+            case (world.keyboard.pauseKeys[1]):
+            case (world.keyboard.pauseKeys[2]):
+                keybord.pauseKeyPush = true;
+                if (pauseSetted) {
+                    pauseSetted = false;
+                    startPauseGame();
+                }
+                break;
             default:
                 break;
         }
@@ -149,11 +187,6 @@ window.addEventListener('keyup', (e) => {
             case (world.keyboard.moveRightKeys[2]):
                 keybord.moveRightKeyPush = false;
                 break;
-            case (world.keyboard.throwKeys[0]):
-            case (world.keyboard.throwKeys[1]):
-            case (world.keyboard.throwKeys[2]):
-                keybord.throwKeyPush = false;
-                break;
             default:
                 break;
         }
@@ -173,7 +206,6 @@ function addTouchEvents() {
         keybord.throwKeyPush = true;
     });
     throwButton.addEventListener('touchend', () => {
-        keybord.throwKeyPush = false;
         document.activeElement.blur();
     });
     leftButton.addEventListener('touchstart', () => {
@@ -206,6 +238,7 @@ function addTouchEvents() {
 function startPauseGame() {
     if (!start) {
         start = true;
+        document.getElementById('canvas').style.backgroundImage = 'unset';
         init();
     } else if (!endbossAnimationRuns) {
         pause();
@@ -222,12 +255,14 @@ function pause() {
     } else {
         setPause();
     }
+    pauseSetted = true;
 }
 
 /**
  * This function lets the game play.
  */
 function setPlay() {
+    document.getElementById('pauseButton').style.backgroundImage = `url('img/icons/pause.png')`;
     setEnemiesPlay();
     setCharacterPlay();
     setBossPlay();
@@ -273,6 +308,7 @@ function setBossPlay() {
  */
 function setPause() {
     isPause = true;
+    document.getElementById('pauseButton').style.backgroundImage = `url('img/icons/play.png')`;
     setEnemiesPause();
     setCharacterPause();
     setBossPause();
@@ -360,14 +396,11 @@ function deleteAllIntervals() {
  * This function loads sounds and adjust there volume.
  */
 async function loadSounds() {
-    world.sound_music.load();
-    world.sound_ambiente.load();
-    world.sound_glas.load();
     world.sound_glas.volume = 0.4;
-    await world.sound_ambiente.play();
+    await playSound(world.sound_ambiente);
     world.sound_ambiente.loop = true;
     world.sound_ambiente.volume = 0.4;
-    await world.sound_music.play();
+    await playSound(world.sound_music);
     world.sound_music.loop = true;
     world.sound_music.volume = 0.25;
 }

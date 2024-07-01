@@ -1,6 +1,6 @@
 class MovableObject extends DrawableObject {
     speedY = 0;
-    acceleration = 1;
+    acceleration = 0.9;
     speed;
     sound_die;
     sound_diePlayed = false;
@@ -136,7 +136,7 @@ class MovableObject extends DrawableObject {
             this.isJumping = true;
             this.currentImage = 0;
             this.speedY = 25;
-            this.sound_jump.play();
+            playSound(this.sound_jump);
             this.lastJump = new Date().getTime();
         }
     }
