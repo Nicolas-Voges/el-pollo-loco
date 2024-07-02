@@ -250,12 +250,16 @@ class World {
      * If thats the case this function throwes a bottle and calls the delete bottle function.
      */
     checkThrowableObjects() {
-        let now = new Date().getTime();
-        if (this.keyboard.throwKeyPush && this.character.bottles > 0 && this.lastBottleThrown + this.firingRate < now) {
+        if (this.keyboard.throwKeyPush && this.character.bottles > 0 &&  this.bottleCooledDown()) {
             this.throwBottle();
             this.keyboard.throwKeyPush = false;
         }
         this.deleteBottle();
+    }
+
+
+    bottleCooledDown() {
+        return this.lastBottleThrown + this.firingRate < new Date().getTime();
     }
 
     /**

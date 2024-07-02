@@ -2,8 +2,6 @@ let level1;
 let collectableObjects
 let backgrounds = [];
 
-createBackgrounds();
-
 /**
  * This function creates the backgrounds for the game and hands over layer and optional speed.
  */
@@ -40,6 +38,7 @@ function createAir() {
  * This function initializes level1 with enemies, clouds, backgrounds and collectable objects.
  */
 function initLevel1() {
+    createBackgrounds();
     level1 = new Level([
         new Chick(1500),
         new Chick(1500),
@@ -63,25 +62,25 @@ function initLevel1() {
         new Chicken(3300),
         new Endboss()
     ],
-    cloudObjects = [
-        new Cloud(900),
-        new Cloud(1020),
-        new Cloud(2020),
-        new Cloud(3333),
-        new Cloud(4000),
-        new Cloud(5000)
-    ],
-    backgrounds,
-    collectableObjects = [
-        new Coin(100, 100),
-        new Coin(1200, 140),
-        new Coin(1250, 130),
-        new Coin(2000, 100),
-        new Coin(2400, 50),
-        new Bottle(1550, 325, 0),
-        new Bottle(2940, 390, 1),
-        new Bottle(3740, 100, 2),
-        new Bottle(4300, 380, 0),
-        new Bottle(2370, 310, 1)
-    ]);
+        cloudObjects = [
+            new Cloud(900),
+            new Cloud(1020),
+            new Cloud(2020),
+            new Cloud(3333),
+            new Cloud(4000),
+            new Cloud(5000)
+        ],
+        backgrounds,
+        collectableObjects = [
+            new Coin(100, 100),
+            new Coin(1200, 140),
+            new Coin(1250, 130),
+            new Coin(2000, 100),
+            new Coin(2400, 50),
+            new Bottle(1550, 325, 0),
+            new Bottle(2940, 390, 1),
+            new Bottle(3740, 100, 2),
+            new Bottle(4300, 380, 0),
+            new Bottle(2370, 310, 1)
+        ]);
 }

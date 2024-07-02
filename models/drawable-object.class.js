@@ -31,6 +31,10 @@ class DrawableObject {
     alertStated = false;
     alertDone = false;
 
+    constructor() {
+        drawableObjects.push(this);
+    }
+
     /**
      * This function registers an incoming interval id in objects intervals array and global active intervals Array.
      * 
@@ -141,6 +145,7 @@ class DrawableObject {
     loadImage(path) {
         this.img = new Image();
         this.img.src = path;
+        this.imageCache[path] = this.img;
     }
 
     /**

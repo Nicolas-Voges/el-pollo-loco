@@ -122,6 +122,7 @@ function init() {
     initLevel1();
     world = new World(canvas, keybord);
     loadSounds();
+    checkReadyState();
     addTouchEvents();
 }
 
@@ -149,7 +150,9 @@ window.addEventListener('keydown', (e) => {
             case (world.keyboard.throwKeys[0]):
             case (world.keyboard.throwKeys[1]):
             case (world.keyboard.throwKeys[2]):
-                keybord.throwKeyPush = true;
+                if (world.bottleCooledDown()) {
+                    keybord.throwKeyPush = true;            
+                }
                 break;
             case (world.keyboard.pauseKeys[0]):
             case (world.keyboard.pauseKeys[1]):
@@ -203,7 +206,9 @@ function addTouchEvents() {
     let rightButton = document.getElementById('rightButton');
     let jumpButton = document.getElementById('jumpButton');
     throwButton.addEventListener('touchstart', () => {
-        keybord.throwKeyPush = true;
+        if (world.bottleCooledDown()) {
+            keybord.throwKeyPush = true;            
+        }
     });
     throwButton.addEventListener('touchend', () => {
         document.activeElement.blur();
@@ -238,6 +243,7 @@ function addTouchEvents() {
 function startPauseGame() {
     if (!start) {
         start = true;
+        document.getElementById('loading-animation-overlay').classList.remove('display-none');
         document.getElementById('canvas').style.backgroundImage = 'unset';
         init();
     } else if (!endbossAnimationRuns) {

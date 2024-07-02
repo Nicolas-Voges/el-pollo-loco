@@ -209,3 +209,51 @@ const IMAGES_PATHS = {
         ]
     }
 }
+console.log(Object.keys(IMAGES_PATHS));
+let drawableObjects = [];
+
+function loadImages() {
+    Object.keys(IMAGES_PATHS).forEach((key) => {
+        if (valueTypeIsArray(key)) {
+            key.forEach((path) => {
+
+            })
+        }
+    });
+}
+
+function valueTypeIsArray(key) {
+    return Array.isArray(key);
+}
+let checkCounter = 0;
+let unloaded = 0;
+let loaded = 0;
+let imgCount = 0;
+
+function checkReadyState() {
+    setPause();
+    let id = setInterval(() => {
+        drawableObjects.forEach((obj) => {
+            Object.keys(obj.imageCache).forEach((img) => {
+                if (obj.imageCache[`${img}`].complete) {
+                    loaded++;
+                    imgCount++;
+                } else {
+                    unloaded++;
+                    imgCount++;
+                }
+            });
+        });
+        console.log(`${loaded} images loaded from ${imgCount} images`);
+        if (loaded === 261) {
+            clearInterval(id);
+            document.getElementById('loading-animation-overlay').classList.add('display-none');
+            setPlay();
+            checkCounter = 0;
+        }
+        loaded = 0;
+        unloaded = 0;
+        imgCount = 0;
+        checkCounter++;
+    }, 25);
+} 
