@@ -23,12 +23,12 @@ class Cloud extends MovableObject {
      * This function animates the chick in an interval and registers it.
      */
     animate() {
-        let intervalCloudMove = setInterval(() => {
+        let id = setInterval(() => {
             this.moveLeft();
             if (this.x + this.width <= -500) {
                 this.x = 5000;
             }
         }, 1000 / 200);
-        this.registerInterval(intervalCloudMove, 'moves');
+        this.registerInterval(id, 'moves');
     }
 }

@@ -5,9 +5,9 @@ class World {
     canvas;
     camera_x = 0;
     keyboard;
-    sound_ambiente = new Audio('audio/ambiente.mp3');
-    sound_music = new Audio('audio/music.mp3');
-    sound_glas = new Audio('audio/bottle-broken.mp3');
+    sound_ambiente = SOUNDS.world.AMBIENTE;
+    sound_music = SOUNDS.world.MUSIC;
+    sound_glas = SOUNDS.throwableObject.SPLASH;
     statusBarEnergy = new StatusBarEnergy();
     statusBarCoin = new StatusBarCoin();
     statusBarBottle = new StatusBarBottle();

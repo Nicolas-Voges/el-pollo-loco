@@ -41,10 +41,10 @@ class Endboss extends MovableObject {
      */
     animate() {
         if (this.intervals.animations.length === 0) {
-            let intervalEndbossAnimate = setInterval(() => {
+            let id = setInterval(() => {
                 this.checkConditions();
             }, 200);
-            this.registerInterval(intervalEndbossAnimate, 'animations');
+            this.registerInterval(id, 'animations');
         }
     }
 
@@ -68,10 +68,10 @@ class Endboss extends MovableObject {
      */
     move() {
         if (this.intervals.moves.length === 0) {
-            let intervalEndbossMove = setInterval(() => {
+            let id = setInterval(() => {
                 this.checkDirection();
             }, 1000 / 60);
-            this.registerInterval(intervalEndbossMove, 'moves');
+            this.registerInterval(id, 'moves');
         }
     }
 

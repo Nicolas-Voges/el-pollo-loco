@@ -13,6 +13,7 @@ let endbossMoveWasOn = false;
 let endbossAnimateWasOn = false;
 let start = false;
 let pauseSetted = true;
+let loadingComplete = false;
 let intervalValues = {
     character: {
         moves: 1000 / 60,
@@ -75,8 +76,6 @@ async function playSound(sound) {
  */
 function isMobile() {
     mobileDivice = navigator.maxTouchPoints > 0 && /Android|iPhone|HUAWEI|huawei/i.test(navigator.userAgent);
-    console.log(mobileDivice);
-    console.log(navigator.userAgent);
     if (mobileDivice) {
         setForMobile();
     }
@@ -121,9 +120,10 @@ function init() {
     canvas = document.getElementById('canvas');
     initLevel1();
     world = new World(canvas, keybord);
-    loadSounds();
-    checkReadyState();
-    addTouchEvents();
+    if (!loadingComplete) {
+        setSounds();
+        checkReadyState();
+    }
 }
 
 /**
@@ -151,7 +151,7 @@ window.addEventListener('keydown', (e) => {
             case (world.keyboard.throwKeys[1]):
             case (world.keyboard.throwKeys[2]):
                 if (world.bottleCooledDown()) {
-                    keybord.throwKeyPush = true;            
+                    keybord.throwKeyPush = true;
                 }
                 break;
             case (world.keyboard.pauseKeys[0]):
@@ -207,7 +207,7 @@ function addTouchEvents() {
     let jumpButton = document.getElementById('jumpButton');
     throwButton.addEventListener('touchstart', () => {
         if (world.bottleCooledDown()) {
-            keybord.throwKeyPush = true;            
+            keybord.throwKeyPush = true;
         }
     });
     throwButton.addEventListener('touchend', () => {
@@ -245,6 +245,7 @@ function startPauseGame() {
         start = true;
         document.getElementById('loading-animation-overlay').classList.remove('display-none');
         document.getElementById('canvas').style.backgroundImage = 'unset';
+        addTouchEvents();
         init();
     } else if (!endbossAnimationRuns) {
         pause();
@@ -396,12 +397,13 @@ function deleteAllIntervals() {
     activeIntervals.forEach(interval => {
         clearInterval(interval);
     });
+    activeIntervals = [];
 }
 
 /**
- * This function loads sounds and adjust there volume.
+ * This function sets sounds properties.
  */
-async function loadSounds() {
+async function setSounds() {
     world.sound_glas.volume = 0.4;
     await playSound(world.sound_ambiente);
     world.sound_ambiente.loop = true;

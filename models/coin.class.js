@@ -23,9 +23,9 @@ class Coin extends CollectableObject {
      * This function animates the chick in an interval and registers it.
      */
     animate() {
-        let intervalCoinAnimate = setInterval(() => {
+        let id = setInterval(() => {
             this.playAnimation(this.IMAGES);
         }, 1000 / 3);
-        this.registerInterval(intervalCoinAnimate, 'animations');
+        this.registerInterval(id, 'animations');
     }
 }

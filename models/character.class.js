@@ -18,10 +18,10 @@ class Character extends MovableObject {
     IMAGES_JUMPING = IMAGES_PATHS.character.IMAGES_JUMPING;
     IMAGES_HURT = IMAGES_PATHS.character.IMAGES_HURT;;
     IMAGES_DEAD = IMAGES_PATHS.character.IMAGES_DEAD;
-    walking_sound = new Audio('audio/walking.mp3');
-    sound_hurt = new Audio('audio/hurt.mp3');
-    sound_die = new Audio('audio/die.mp3');
-    sound_jump = new Audio('audio/jump.mp3');
+    sound_walking = SOUNDS.character.WALKING;
+    sound_hurt = SOUNDS.character.HURT;
+    sound_die = SOUNDS.character.DEAD;
+    sound_jump = SOUNDS.character.JUMPING;
     reachedLevelEnd = false;
     idleTime = 0;
     tookIdleTime = false;
@@ -32,10 +32,14 @@ class Character extends MovableObject {
      * Also it adjusts the volume of characters sound.
      */
     constructor() {
-        super().loadImage(this.IMAGES_IDLE[0]);
-        this.loadAllImages();
+        if (loadingComplete) {
+            super();
+        } else {
+            super().loadImage(this.IMAGES_IDLE[0]);
+            this.loadAllImages();
+        }
         this.isMoving();
-        this.walking_sound.volume = 0.5;
+        this.sound_walking.volume = 0.5;
         this.sound_jump.volume = 0.4;
         this.applyGravity(intervalValues.character.gravity);
         this.move();
@@ -60,7 +64,7 @@ class Character extends MovableObject {
      */
     move() {
         let id = setInterval(() => {
-            this.walking_sound.pause();
+            this.sound_walking.pause();
             this.walk();
             this.checkForJump();
             this.checkForReachLevelEnd();
@@ -127,7 +131,7 @@ class Character extends MovableObject {
         this.moveRight();
         this.otherDirection = false;
         if (!this.isAboveGround()) {
-            playSound(this.walking_sound);
+            playSound(this.sound_walking);
         }
     }
 
@@ -139,7 +143,7 @@ class Character extends MovableObject {
         this.moveLeft();
         this.otherDirection = true;
         if (!this.isAboveGround()) {
-            playSound(this.walking_sound);
+            playSound(this.sound_walking);
         }
     }
 

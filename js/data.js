@@ -1,16 +1,16 @@
 const IMAGES_PATHS = {
     character: {
         IMAGES_IDLE: [
-            './img/2_character_pepe/1_idle/idle/I-1.png',
-            './img/2_character_pepe/1_idle/idle/I-2.png',
-            './img/2_character_pepe/1_idle/idle/I-3.png',
-            './img/2_character_pepe/1_idle/idle/I-4.png',
-            './img/2_character_pepe/1_idle/idle/I-5.png',
-            './img/2_character_pepe/1_idle/idle/I-6.png',
-            './img/2_character_pepe/1_idle/idle/I-7.png',
-            './img/2_character_pepe/1_idle/idle/I-8.png',
-            './img/2_character_pepe/1_idle/idle/I-9.png',
-            './img/2_character_pepe/1_idle/idle/I-10.png'
+            'img/2_character_pepe/1_idle/idle/I-1.png',
+            'img/2_character_pepe/1_idle/idle/I-2.png',
+            'img/2_character_pepe/1_idle/idle/I-3.png',
+            'img/2_character_pepe/1_idle/idle/I-4.png',
+            'img/2_character_pepe/1_idle/idle/I-5.png',
+            'img/2_character_pepe/1_idle/idle/I-6.png',
+            'img/2_character_pepe/1_idle/idle/I-7.png',
+            'img/2_character_pepe/1_idle/idle/I-8.png',
+            'img/2_character_pepe/1_idle/idle/I-9.png',
+            'img/2_character_pepe/1_idle/idle/I-10.png'
         ],
         IMAGES_LONG_IDLE: [
             'img/2_character_pepe/1_idle/long_idle/I-11.png',
@@ -25,23 +25,23 @@ const IMAGES_PATHS = {
             'img/2_character_pepe/1_idle/long_idle/I-20.png'
         ],
         IMAGES_WALKING: [
-            './img/2_character_pepe/2_walk/W-21.png',
-            './img/2_character_pepe/2_walk/W-22.png',
-            './img/2_character_pepe/2_walk/W-23.png',
-            './img/2_character_pepe/2_walk/W-24.png',
-            './img/2_character_pepe/2_walk/W-25.png',
-            './img/2_character_pepe/2_walk/W-26.png'
+            'img/2_character_pepe/2_walk/W-21.png',
+            'img/2_character_pepe/2_walk/W-22.png',
+            'img/2_character_pepe/2_walk/W-23.png',
+            'img/2_character_pepe/2_walk/W-24.png',
+            'img/2_character_pepe/2_walk/W-25.png',
+            'img/2_character_pepe/2_walk/W-26.png'
         ],
         IMAGES_JUMPING: [
-            './img/2_character_pepe/3_jump/J-31.png',
-            './img/2_character_pepe/3_jump/J-32.png',
-            './img/2_character_pepe/3_jump/J-33.png',
-            './img/2_character_pepe/3_jump/J-34.png',
-            './img/2_character_pepe/3_jump/J-35.png',
-            './img/2_character_pepe/3_jump/J-36.png',
-            './img/2_character_pepe/3_jump/J-37.png',
-            './img/2_character_pepe/3_jump/J-38.png',
-            './img/2_character_pepe/3_jump/J-39.png'
+            'img/2_character_pepe/3_jump/J-31.png',
+            'img/2_character_pepe/3_jump/J-32.png',
+            'img/2_character_pepe/3_jump/J-33.png',
+            'img/2_character_pepe/3_jump/J-34.png',
+            'img/2_character_pepe/3_jump/J-35.png',
+            'img/2_character_pepe/3_jump/J-36.png',
+            'img/2_character_pepe/3_jump/J-37.png',
+            'img/2_character_pepe/3_jump/J-38.png',
+            'img/2_character_pepe/3_jump/J-39.png'
         ],
         IMAGES_HURT: [
             'img/2_character_pepe/4_hurt/H-41.png',
@@ -60,9 +60,9 @@ const IMAGES_PATHS = {
     },
     chick: {
         IMAGES_WALKING: [
-            './img/3_enemies_chicken/chicken_small/1_walk/1_w.png',
-            './img/3_enemies_chicken/chicken_small/1_walk/2_w.png',
-            './img/3_enemies_chicken/chicken_small/1_walk/3_w.png'
+            'img/3_enemies_chicken/chicken_small/1_walk/1_w.png',
+            'img/3_enemies_chicken/chicken_small/1_walk/2_w.png',
+            'img/3_enemies_chicken/chicken_small/1_walk/3_w.png'
         ],
         IMAGES_DEAD: [
             'img/3_enemies_chicken/chicken_small/2_dead/dead.png'
@@ -70,9 +70,9 @@ const IMAGES_PATHS = {
     },
     chicken: {
         IMAGES_WALKING: [
-            './img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
-            './img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
-            './img/3_enemies_chicken/chicken_normal/1_walk/3_w.png'
+            'img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
+            'img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
+            'img/3_enemies_chicken/chicken_normal/1_walk/3_w.png'
         ],
         IMAGES_DEAD: [
             'img/3_enemies_chicken/chicken_normal/2_dead/dead.png'
@@ -189,71 +189,103 @@ const IMAGES_PATHS = {
     },
     backgrounds: {
         air: [
-            './img/5_background/layers/air.png'
+            'img/5_background/layers/air.png'
         ],
         layer1: [
-            './img/5_background/layers/1_first_layer/1.png',
-            './img/5_background/layers/1_first_layer/2.png'
+            'img/5_background/layers/1_first_layer/1.png',
+            'img/5_background/layers/1_first_layer/2.png'
         ],
         layer2: [
-            './img/5_background/layers/2_second_layer/1.png',
-            './img/5_background/layers/2_second_layer/2.png'
+            'img/5_background/layers/2_second_layer/1.png',
+            'img/5_background/layers/2_second_layer/2.png'
         ],
         layer3: [
-            './img/5_background/layers/3_third_layer/1.png',
-            './img/5_background/layers/3_third_layer/2.png'
+            'img/5_background/layers/3_third_layer/1.png',
+            'img/5_background/layers/3_third_layer/2.png'
         ],
         clouds: [
-            './img/5_background/layers/4_clouds/1.png',
-            './img/5_background/layers/4_clouds/2.png'
+            'img/5_background/layers/4_clouds/1.png',
+            'img/5_background/layers/4_clouds/2.png'
         ]
     }
 }
-console.log(Object.keys(IMAGES_PATHS));
-let drawableObjects = [];
 
-function loadImages() {
-    Object.keys(IMAGES_PATHS).forEach((key) => {
-        if (valueTypeIsArray(key)) {
-            key.forEach((path) => {
-
-            })
-        }
-    });
+const SOUNDS = {
+    character: {
+        LONG_IDLE: new Audio('audio/snoring.mp3'),
+        WALKING: new Audio('audio/walking.mp3'),
+        JUMPING: new Audio('audio/jump.mp3'),
+        HURT:  new Audio('audio/hurt.mp3'),
+        DEAD: new Audio('audio/die.mp3')
+    },
+    chick: {
+        DEAD: new Audio('audio/chick-hit.mp3')
+    },
+    chicken: {
+        DEAD: new Audio('audio/chicken-hit.mp3')
+    },
+    endboss: {
+        ALERT: new Audio('audio/alert.mp3'),
+        ATTACK: new Audio('audio/earthquake.mp3'),
+        HURT: new Audio('audio/boss-hit.mp3'),
+        DEAD: new Audio('audio/boss-die.mp3')
+    },
+    bottle: {
+        COLLECT: new Audio('audio/bottle-collect.mp3')
+    },
+    coins: {
+        COLLECT: new Audio ('audio/coin-collect.mp3')
+    },
+    throwableObject: {
+        ROTATE: new Audio('audio/throw.mp3'),
+        SPLASH: new Audio('audio/bottle-broken.mp3')
+    },
+    world: {
+        AMBIENTE: new Audio('audio/ambiente.mp3'),
+        MUSIC: new Audio('audio/music.mp3')
+    }
 }
+
+let drawableObjects = [];
 
 function valueTypeIsArray(key) {
     return Array.isArray(key);
 }
-let checkCounter = 0;
-let unloaded = 0;
+
 let loaded = 0;
-let imgCount = 0;
 
 function checkReadyState() {
     setPause();
     let id = setInterval(() => {
-        drawableObjects.forEach((obj) => {
-            Object.keys(obj.imageCache).forEach((img) => {
-                if (obj.imageCache[`${img}`].complete) {
-                    loaded++;
-                    imgCount++;
-                } else {
-                    unloaded++;
-                    imgCount++;
-                }
-            });
-        });
-        console.log(`${loaded} images loaded from ${imgCount} images`);
-        if (loaded === 261) {
+        checkImagesLoaded();
+        checkSoundsLoaded();
+        document.getElementById('loadPercentage').innerHTML = Math.floor((100 / 278) * loaded);
+        if (loaded === 278) {
             clearInterval(id);
             document.getElementById('loading-animation-overlay').classList.add('display-none');
+            loadingComplete = true;
             setPlay();
-            checkCounter = 0;
         }
         loaded = 0;
-        unloaded = 0;
-        imgCount = 0;
-        checkCounter++;
     }, 25);
-} 
+}
+
+function checkSoundsLoaded() {
+    Object.keys(SOUNDS).forEach((key) => {
+        Object.keys(SOUNDS[`${key}`]).forEach((nextKey) => {
+            if (SOUNDS[`${key}`][`${nextKey}`].readyState > SOUNDS[`${key}`][`${nextKey}`].HAVE_CURRENT_DATA ) {
+                loaded++;
+            }
+        });
+    });
+}
+
+function checkImagesLoaded() {
+    drawableObjects.forEach((obj) => {
+        Object.keys(obj.imageCache).forEach((img) => {
+            if (obj.imageCache[`${img}`].complete) {
+                loaded++;
+            }
+        });
+    });
+}

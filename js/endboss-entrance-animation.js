@@ -8,8 +8,7 @@ let translate = 0;
 let endbossAnimationRuns = false;
 let endbossAnimationHasRun = false;
 let earthquakeDone = false;
-let earthquake_sound = new Audio('./audio/earthquake.mp3');
-
+let sound_earthquake = SOUNDS.endboss.ATTACK;
 /**
  * This function checks if character reached end of level and endboss animation wasn´t running yet and
  * runs endboss animation if thats the case.
@@ -244,7 +243,7 @@ function setBeginEarthquake(attack) {
         earthquakeDone = false;
     }
     window.navigator.vibrate([250]);
-    playSound(earthquake_sound);
+    playSound(sound_earthquake);
 }
 
 /**

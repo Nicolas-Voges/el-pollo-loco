@@ -22,9 +22,9 @@ class DrawableObject {
     energy = 100;
     lastHit = 0;
     energyAttack = 1;
-    sound_chickHit = new Audio('audio/chick-hit.mp3');
-    sound_chickenHit = new Audio('audio/chicken-hit.mp3');
-    sound_bossHit = new Audio('audio/boss-hit.mp3');
+    sound_chickHit = SOUNDS.chick.DEAD;
+    sound_chickenHit = SOUNDS.chicken.DEAD;
+    sound_bossHit = SOUNDS.endboss.HURT;
     collisionDetected = false;
     hasHurt = false;
     isAlert = false;
