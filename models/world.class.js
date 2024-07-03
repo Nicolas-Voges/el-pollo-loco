@@ -23,6 +23,7 @@ class World {
     lastCollision = 0;
     characterEnemyCollisiondetected = false;
     collisionsReactionRuns = false;
+    requestId;
 
     /**
      * This first called function gets the canvas, its context and keyboard.
@@ -54,7 +55,8 @@ class World {
      * adjust background positions.
      */
     run() {
-        let intervalWorldRun = setInterval(() => {
+        let id = setInterval(() => {
+            // console.log('world run');
             this.checkCollisions();
             this.checkThrowableObjects();
             this.checkForDeadEnemies();
@@ -66,8 +68,8 @@ class World {
                 adjustBackgroundPosition();
             }
         }, 5);
-        this.intervals.push(intervalWorldRun);
-        activeIntervals.push(intervalWorldRun);
+        this.intervals.push(id);
+        activeIntervals.push(id);
     }
 
     /**
@@ -250,7 +252,7 @@ class World {
      * If thats the case this function throwes a bottle and calls the delete bottle function.
      */
     checkThrowableObjects() {
-        if (this.keyboard.throwKeyPush && this.character.bottles > 0 &&  this.bottleCooledDown()) {
+        if (this.keyboard.throwKeyPush && this.character.bottles > 0 && this.bottleCooledDown()) {
             this.throwBottle();
             this.keyboard.throwKeyPush = false;
         }
@@ -308,7 +310,7 @@ class World {
         this.ctx.translate(-this.camera_x - this.cameraToCharacter, 0);
         this.drawHUD();
         let self = this;
-        requestAnimationFrame(function () {
+        this.requestId = requestAnimationFrame(function () {
             self.draw();
         });
     }

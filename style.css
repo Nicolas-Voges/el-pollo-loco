@@ -335,7 +335,7 @@ canvas {
 }
 
 @media only screen and (max-width: 720px) {
-    canvas, #gameContainer, #controlls {
+    canvas, #gameContainer, #controlls, .loading-animation-overlay {
         width: 100%;
         background-size: contain;
         height: 100vh;

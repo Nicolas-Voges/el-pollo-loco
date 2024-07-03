@@ -32,12 +32,8 @@ class Character extends MovableObject {
      * Also it adjusts the volume of characters sound.
      */
     constructor() {
-        if (loadingComplete) {
-            super();
-        } else {
-            super().loadImage(this.IMAGES_IDLE[0]);
-            this.loadAllImages();
-        }
+        super().loadImage(this.IMAGES_IDLE[0]);
+        this.loadAllImages();
         this.isMoving();
         this.sound_walking.volume = 0.5;
         this.sound_jump.volume = 0.4;
@@ -64,6 +60,7 @@ class Character extends MovableObject {
      */
     move() {
         let id = setInterval(() => {
+        // console.log('character move');
             this.sound_walking.pause();
             this.walk();
             this.checkForJump();
@@ -153,6 +150,7 @@ class Character extends MovableObject {
      */
     animate() {
         let id = setInterval(() => {
+        // console.log('character animate');
             if (this.isDead()) {
                 this.die();
             } else if (this.isHurt()) {
@@ -191,7 +189,8 @@ class Character extends MovableObject {
      */
     animateIdle() {
         let id = setInterval(() => {
-            if (this.noKeyPush() && !this.isHurt() && !this.isDead()) {
+        // console.log('character animateIdle');
+        if (this.noKeyPush() && !this.isHurt() && !this.isDead()) {
                 this.doIdle();
             } else {
                 this.breakIdle();
@@ -286,7 +285,8 @@ class Character extends MovableObject {
      */
     runHitReaction(distance, braceUpTime, xStart) {
         let id = setInterval(() => {
-            if (!this.reachedLevelEnd && this.notReachedLevelStart() && this.notReachedDistance(xStart, distance)) {
+        // console.log('character runHitReaction');
+        if (!this.reachedLevelEnd && this.notReachedLevelStart() && this.notReachedDistance(xStart, distance)) {
                 this.x -= 5;
             } else if (this.reachedLevelEnd && this.onLeftScreenSide(xStart)) {
                 endbossHitReactionLeft(xStart, distance, id, braceUpTime);
@@ -296,6 +296,7 @@ class Character extends MovableObject {
                 this.hitRreactionEnd(id, braceUpTime);
             }
         }, 10);
+        activeIntervals.push(id);
     }
 
     /**
@@ -337,6 +338,7 @@ class Character extends MovableObject {
      */
     hitRreactionEnd(id, braceUpTime) {
         clearInterval(id);
+        activeIntervals.splice(activeIntervals.indexOf(id), 1);
         setTimeout(() => {
             this.hitReactionRuns = false;
         }, braceUpTime);

@@ -215,7 +215,7 @@ const SOUNDS = {
         LONG_IDLE: new Audio('audio/snoring.mp3'),
         WALKING: new Audio('audio/walking.mp3'),
         JUMPING: new Audio('audio/jump.mp3'),
-        HURT:  new Audio('audio/hurt.mp3'),
+        HURT: new Audio('audio/hurt.mp3'),
         DEAD: new Audio('audio/die.mp3')
     },
     chick: {
@@ -234,7 +234,7 @@ const SOUNDS = {
         COLLECT: new Audio('audio/bottle-collect.mp3')
     },
     coins: {
-        COLLECT: new Audio ('audio/coin-collect.mp3')
+        COLLECT: new Audio('audio/coin-collect.mp3')
     },
     throwableObject: {
         ROTATE: new Audio('audio/throw.mp3'),
@@ -247,33 +247,49 @@ const SOUNDS = {
 }
 
 let drawableObjects = [];
+let loaded = 0;
+
+function loadImages() {
+    IMAGES_PATHS.throwableObject.IMAGES_ROTATE.forEach((path) => {
+        let img = new Image();
+        img.src = path;
+        imageCache[path] = img;
+    });
+    IMAGES_PATHS.throwableObject.IMAGES_SPLASH.forEach((path) => {
+        let img = new Image();
+        img.src = path;
+        imageCache[path] = img;
+    });
+}
 
 function valueTypeIsArray(key) {
     return Array.isArray(key);
 }
 
-let loaded = 0;
-
 function checkReadyState() {
     setPause();
     let id = setInterval(() => {
+        // console.log('data checkReadyState');
         checkImagesLoaded();
         checkSoundsLoaded();
-        document.getElementById('loadPercentage').innerHTML = Math.floor((100 / 278) * loaded);
-        if (loaded === 278) {
+        document.getElementById('loadPercentage').innerHTML = Math.floor((100 / 143) * loaded);
+        if (loaded === 143) {
             clearInterval(id);
+            activeIntervals.splice(activeIntervals.indexOf(id), 1);
             document.getElementById('loading-animation-overlay').classList.add('display-none');
             loadingComplete = true;
             setPlay();
         }
+        // console.log(loaded);
         loaded = 0;
     }, 25);
+    activeIntervals.push(id);
 }
 
 function checkSoundsLoaded() {
     Object.keys(SOUNDS).forEach((key) => {
         Object.keys(SOUNDS[`${key}`]).forEach((nextKey) => {
-            if (SOUNDS[`${key}`][`${nextKey}`].readyState > SOUNDS[`${key}`][`${nextKey}`].HAVE_CURRENT_DATA ) {
+            if (SOUNDS[`${key}`][`${nextKey}`].readyState > SOUNDS[`${key}`][`${nextKey}`].HAVE_CURRENT_DATA) {
                 loaded++;
             }
         });
@@ -281,11 +297,9 @@ function checkSoundsLoaded() {
 }
 
 function checkImagesLoaded() {
-    drawableObjects.forEach((obj) => {
-        Object.keys(obj.imageCache).forEach((img) => {
-            if (obj.imageCache[`${img}`].complete) {
-                loaded++;
-            }
-        });
+    Object.keys(imageCache).forEach((img) => {
+        if (imageCache[`${img}`].complete) {
+            loaded++;
+        }
     });
 }

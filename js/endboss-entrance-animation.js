@@ -34,13 +34,16 @@ function runEndbossAnimation() {
  */
 function cameraInAnimation() {
     let camaraAnimate = setInterval(() => {
+        // console.log('boss animation cameraInAnimation');
         if (world.camera_x >= -4300) {
             world.camera_x -= 2;
         } else {
             clearInterval(camaraAnimate);
+            activeIntervals.splice(activeIntervals.indexOf(camaraAnimate), 1);
             bossEntrenceAnimation();
         }
     }, 1000 / 60);
+    activeIntervals.push(camaraAnimate);
 }
 
 /**
@@ -49,14 +52,17 @@ function cameraInAnimation() {
  */
 function bossEntrenceAnimation() {
     let bossEntrence = setInterval(() => {
+        // console.log('boss animation bossEntrenceAnimation');
         if (world.endboss.x > 4700) {
             world.endboss.x--;
         } else {
             clearInterval(bossEntrence);
+            activeIntervals.splice(activeIntervals.indexOf(bossEntrence), 1);
             bossAlertAnimation();
             bossStatusbarIsShown = true;
         }
     }, 20);
+    activeIntervals.push(bossEntrence);
 }
 
 /**
@@ -81,12 +87,14 @@ function bossAlertAnimation(cameraOut = false) {
  */
 function runAlertAnimation(cameraOut) {
     let alertAnimation = setInterval(() => {
+        // console.log('boss animation runAlertAnimation');
         if (world.endboss.currentImage < world.endboss.IMAGES_ALERT.length - 1 || animatinCount < 2) {
             countAndPlayAlertAnimation();
         } else {
             endAlertAnimation(alertAnimation, cameraOut);
         }
     }, 1000 / 8);
+    activeIntervals.push(alertAnimation);
 }
 
 /**
@@ -99,6 +107,7 @@ function runAlertAnimation(cameraOut) {
 function endAlertAnimation(alertAnimation, cameraOut) {
     animatinCount = 0;
     clearInterval(alertAnimation);
+    activeIntervals.splice(activeIntervals.indexOf(alertAnimation), 1);
     if (cameraOut) {
         runMoveLeftAnimation();
     } else {
@@ -125,14 +134,17 @@ function countAndPlayAlertAnimation() {
 function runMoveLeftAnimation() {
     world.endboss.animate();
     let movingLeft = setInterval(() => {
+        // console.log('boss animation runMoveLeftAnimation');
         if (world.endboss.x >= 4000) {
             world.endboss.moveLeft();
         } else {
             clearInterval(movingLeft);
+            activeIntervals.splice(activeIntervals.indexOf(movingLeft), 1);
             world.endboss.deleteIntervals('animations');
             bossAttackAnimation(true);
         }
     }, 1000 / 60);
+    activeIntervals.push(movingLeft);
     cameraOutAnimation();
 }
 
@@ -186,13 +198,16 @@ function bossJump(end) {
     world.endboss.speedY = 22;
     world.endboss.currentImage = 0;
     let jump = setInterval(() => {
+        // console.log('boss animation bossJump');
         if (world.endboss.isAboveGround() || world.endboss.x >= characterPosition) {
             world.endboss.x -= 4;
         } else {
             clearInterval(jump);
+            activeIntervals.splice(activeIntervals.indexOf(jump), 1);
             earthquakeAnimation(end);
         }
     }, 10);
+    activeIntervals.push(jump);
 }
 
 /**
@@ -201,12 +216,15 @@ function bossJump(end) {
  */
 function playAttackAnimation() {
     let attack = setInterval(() => {
+        // console.log('boss animation playAttackAnimation');
         if (world.endboss.currentImage < world.endboss.IMAGES_ATTACK.length - 1) {
             world.endboss.playAnimation(world.endboss.IMAGES_ATTACK);
         } else {
             clearInterval(attack);
+            activeIntervals.splice(activeIntervals.indexOf(attack), 1);
         }
     }, 100);
+    activeIntervals.push(attack);
 }
 
 /**
@@ -221,6 +239,7 @@ function playAttackAnimation() {
 function earthquakeAnimation(end = false, attack = false) {
     setBeginEarthquake(attack);
     let earthquake = setInterval(() => {
+        // console.log('boss animation earthquakeAnimation');
         if (notReachedAmplitude() && moveUp) {
             moveCameraUp();
         } else if (notReachedAmplitude() && !moveUp) {
@@ -228,9 +247,11 @@ function earthquakeAnimation(end = false, attack = false) {
         }
         if (yMax <= 0) {
             clearInterval(earthquake);
+            activeIntervals.splice(activeIntervals.indexOf(earthquake), 1);
             endEarthquake(end, attack);
         }
     }, 0.1);
+    activeIntervals.push(earthquake);
 }
 
 /**
@@ -353,14 +374,17 @@ function resetGlobalEarthquakeValues() {
 function cameraOutAnimation() {
     letCharacterSleep();
     let camaraAnimate = setInterval(() => {
+        // console.log('boss animation cameraOutAnimation');
         if (world.camera_x <= -3800) {
             world.camera_x += 4;
         } else {
             clearInterval(camaraAnimate);
+            activeIntervals.splice(activeIntervals.indexOf(camaraAnimate), 1);
             world.character.move();
             world.bossCameraActiv = true;
         }
     }, 1000 / 60);
+    activeIntervals.push(camaraAnimate);
 }
 
 /**

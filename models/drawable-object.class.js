@@ -9,7 +9,7 @@ class DrawableObject {
     width = 100;
     height = 100;
     img;
-    imageCache = {};
+    // imageCache = {};
     currentImage = 0;
     otherDirection = false;
     offsetTop = 0;
@@ -76,7 +76,7 @@ class DrawableObject {
     playAnimation(images) {
         this.checkIndexRange(images);
         let path = images[this.currentImage];
-        this.img = this.imageCache[path];
+        this.img = imageCache[path];
         this.currentImage++;
         if (this.isAlert && !this.isDead()) {
             this.playAlertAnimation(images);
@@ -143,9 +143,13 @@ class DrawableObject {
      * @param {string} path .
      */
     loadImage(path) {
-        this.img = new Image();
-        this.img.src = path;
-        this.imageCache[path] = this.img;
+        if (loadingComplete) {
+            this.img = imageCache[path];
+        } else {
+            this.img = new Image();
+            this.img.src = path;
+            imageCache[path] = this.img;
+        }
     }
 
     /**
@@ -154,11 +158,13 @@ class DrawableObject {
      * @param {Array} arr .
      */
     loadImages(arr) {
-        arr.forEach((path) => {
-            let img = new Image();
-            img.src = path;
-            this.imageCache[path] = img;
-        });
+        if (!loadingComplete) {
+            arr.forEach((path) => {
+                let img = new Image();
+                img.src = path;
+                imageCache[path] = img;
+            });
+        }
     }
 
     /**

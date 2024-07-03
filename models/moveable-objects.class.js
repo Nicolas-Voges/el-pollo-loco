@@ -29,7 +29,8 @@ class MovableObject extends DrawableObject {
      */
     applyGravity(interval) {
         let id = setInterval(() => {
-            if (this.isAboveGround() || this.speedY > 0) {
+                // console.log('moveabel applyGravity');
+                if (this.isAboveGround() || this.speedY > 0) {
                 this.y -= this.speedY;
                 this.speedY -= this.acceleration;
             } else {
@@ -48,6 +49,7 @@ class MovableObject extends DrawableObject {
     isMoving() {
         this.xPast = this.x
         let id = setInterval(() => {
+                // console.log('moveabel isMoving');
             this.checkPosition();
         }, 20);
         activeIntervals.push(id);

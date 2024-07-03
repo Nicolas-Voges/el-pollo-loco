@@ -4,8 +4,8 @@ let ctx;
 let world;
 let keybord = new Keyboard();
 let activeIntervals = [];
-let pauseIntervals = [];
-let intervals = [];
+// let pauseIntervals = [];
+// let intervals = [];
 let comingEnemyId = 0;
 let bossStatusbarIsShown = false;
 let isPause = false;
@@ -14,6 +14,7 @@ let endbossAnimateWasOn = false;
 let start = false;
 let pauseSetted = true;
 let loadingComplete = false;
+let imageCache = {};
 let intervalValues = {
     character: {
         moves: 1000 / 60,
@@ -75,7 +76,7 @@ async function playSound(sound) {
  * This function
  */
 function isMobile() {
-    mobileDivice = navigator.maxTouchPoints > 0 && /Android|iPhone|HUAWEI|huawei/i.test(navigator.userAgent);
+    mobileDivice = navigator.maxTouchPoints > 0 && /Android|iPhone|HUAWEI|huawei|phone/i.test(navigator.userAgent);
     if (mobileDivice) {
         setForMobile();
     }
@@ -246,6 +247,7 @@ function startPauseGame() {
         document.getElementById('loading-animation-overlay').classList.remove('display-none');
         document.getElementById('canvas').style.backgroundImage = 'unset';
         addTouchEvents();
+        loadImages();
         init();
     } else if (!endbossAnimationRuns) {
         pause();
@@ -273,6 +275,7 @@ function setPlay() {
     setEnemiesPlay();
     setCharacterPlay();
     setBossPlay();
+    world.run();
     isPause = false;
 }
 
@@ -319,6 +322,9 @@ function setPause() {
     setEnemiesPause();
     setCharacterPause();
     setBossPause();
+    clearInterval(world.intervals[0]);
+    activeIntervals.splice(activeIntervals.indexOf(world.intervals[0]), 1);
+    world.intervals = [];
 }
 
 /**
@@ -374,6 +380,7 @@ function checkBossMoved() {
  * This function restarts the game.
  */
 function restartGame() {
+    cancelAnimationFrame(world.requestId);
     world = null;
     resetGlobalVariables();
     deleteAllIntervals();
@@ -388,6 +395,16 @@ function resetGlobalVariables() {
     bossStatusbarIsShown = false;
     animatinCount = 0;
     characterPosition = 3800;
+    backgrounds = [];
+    endbossAnimationRuns = false;
+    endbossAnimationHasRun = false;
+    earthquakeDone = false;
+    bossFightStarted = false;
+    bossFightDone = true;
+    attackJumpStarted = false;
+    bossAttackAnimationRuns = false;
+    endbossMoveWasOn = false;
+    endbossAnimateWasOn = false;
 }
 
 /**

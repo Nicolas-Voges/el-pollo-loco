@@ -32,6 +32,7 @@ class Chick extends Enemy {
      */
     move() {
         let id = setInterval(() => {
+        // console.log('chick move');
             if (!this.isDead()) {
                 this.moveLeft();
                 if (this.x + this.width <= 0) {
@@ -47,7 +48,8 @@ class Chick extends Enemy {
      */
     animate() {
         let id = setInterval(() => {
-            if (this.isDead()) {
+        // console.log('chick animate');
+        if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
             } else {
                 this.playAnimation(this.IMAGES_WALKING);

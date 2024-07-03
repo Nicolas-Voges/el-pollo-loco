@@ -42,6 +42,7 @@ class Endboss extends MovableObject {
     animate() {
         if (this.intervals.animations.length === 0) {
             let id = setInterval(() => {
+                // console.log('endboss animate');
                 this.checkConditions();
             }, 200);
             this.registerInterval(id, 'animations');
@@ -69,6 +70,7 @@ class Endboss extends MovableObject {
     move() {
         if (this.intervals.moves.length === 0) {
             let id = setInterval(() => {
+                // console.log('endboss move');
                 this.checkDirection();
             }, 1000 / 60);
             this.registerInterval(id, 'moves');

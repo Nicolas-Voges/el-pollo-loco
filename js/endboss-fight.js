@@ -133,6 +133,7 @@ function initAttack() {
 function bossJumpAttack() {
     let xPlayer = world.character.x;
     let jump = setInterval(() => {
+        // console.log('boss fight bossJumpAttack');
         if (!isPause) {
             checkJumpProgress(xPlayer, jump);
             if (!world.earthquakeStarted && world.endboss.speedY <= 0 && !world.endboss.isAboveGround() && earthquakeDone) {
@@ -192,6 +193,7 @@ function moveToCharacter(xPlayer) {
 function bossFightAttackAnimation() {
     if (!bossAttackAnimationRuns) {
         let attack = setInterval(() => {
+        // console.log('boss fight bossFightAttackAnimation');
             if (!isPause) {
                 checkAttackAnimationProgress(attack);
             }

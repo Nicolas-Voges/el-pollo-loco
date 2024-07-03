@@ -1,5 +1,5 @@
 let level1;
-let collectableObjects
+let collectableObjects;
 let backgrounds = [];
 
 /**

@@ -34,9 +34,11 @@ class ThrowableObject extends MovableObject {
      */
     throw() {
         let id = setInterval(() => {
+                // console.log('throwabel throw');
             this.x += 10 + this.speed;
             if (this.isDead()) {
-                deleteIntervalsByClassName('throwableObject');
+                clearInterval(id);
+                activeIntervals.splice(activeIntervals.indexOf(id), 1);
                 world.throwableObjects = [];
             }
         }, intervalValues.throwableObjects.moves);
@@ -48,6 +50,7 @@ class ThrowableObject extends MovableObject {
      */
     animate() {
         let id = setInterval(() => {
+                // console.log('throwabel animate');
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_SPLASH);
             } else {

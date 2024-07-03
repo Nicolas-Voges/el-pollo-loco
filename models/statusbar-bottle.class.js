@@ -22,7 +22,7 @@ class StatusBarBottle extends StatusBar {
     setPercentage(percentage) {
         this.percentage = percentage;
         let path = this.IMAGES[this.resolveImageIndex()];
-        this.img = this.imageCache[path];
+        this.img = imageCache[path];
     }
 
     /**

@@ -24,7 +24,8 @@ class Coin extends CollectableObject {
      */
     animate() {
         let id = setInterval(() => {
-            this.playAnimation(this.IMAGES);
+        // console.log('coin animate');
+        this.playAnimation(this.IMAGES);
         }, 1000 / 3);
         this.registerInterval(id, 'animations');
     }
