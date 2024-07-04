@@ -91,6 +91,7 @@ function setForMobile() {
     setMobil(document.getElementById('gameContainer'));
     setMobil(document.getElementById('canvas'));
     setMobil(document.getElementById('controlls'));
+    setMobil(document.getElementById('loading-animation-overlay'));
     document.getElementById('mobileControlls').classList.remove('visibility-hidden');
     document.getElementById('fullscreenButton').classList.add('display-none');
 }

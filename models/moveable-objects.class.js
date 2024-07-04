@@ -137,7 +137,7 @@ class MovableObject extends DrawableObject {
         if (this.jumpCooledDown()) {
             this.isJumping = true;
             this.currentImage = 0;
-            this.speedY = 25;
+            this.speedY = 22;
             playSound(this.sound_jump);
             this.lastJump = new Date().getTime();
         }
