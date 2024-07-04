@@ -46,8 +46,9 @@
             </div>
             <div id="startButtonBox">
                 <button onclick="startPauseGame()" id="startButton" class="startIcon"></button>
-                <button onclick="init()" id="restartButton" class="startIcon display-none">Restart</button>
             </div>
+            <button onclick="init()" id="restartButton" class="startIcon display-none">Restart</button>
+            <button onclick="closeGame()" id="closeButton" class="startIcon display-none">Close</button>
             <div id="mobileControlls" class="lowerIconsBox visibility-hidden">
                 <div class="gameIconBoxLeft">
                     <button id="leftButton" class="icon gameIcon"></button>
@@ -69,8 +70,8 @@
             <p id="loadingText">loading... <span id="loadPercentage"></span>%</p>
         </div>
     </div>
-    <footer>
-        <a href="impressum.html">Impressum</a> <span class="footerSeperator">|</span> <a href="datenschutz.html">Datenschutz</a> <span class="footerSeperator">|</span> <a href="https://www.linkedin.com/in/nicolas-voges-1903762b8/">LinkedIn</a> <span class="footerSeperator">|</span> <a href="https://github.com/Nicolas-Voges/el-pollo-loco">GitHub</a>
+    <footer id="footer">
+        <a href="imprint.html" target="_blank">Impressum</a> <span class="footerSeperator">|</span> <a href="privacy-policy.html" target="_blank">Datenschutz</a> <span class="footerSeperator">|</span> <a href="https://www.linkedin.com/in/nicolas-voges-1903762b8/" target="_blank">LinkedIn</a> <span class="footerSeperator">|</span> <a href="https://github.com/Nicolas-Voges/el-pollo-loco" target="_blank">GitHub</a>
     </footer>
 </body>
 </html>

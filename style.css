@@ -42,10 +42,6 @@ canvas {
 }
 
 footer {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
     padding: 20px;
     background-color: #A0220A;
     display: flex;
@@ -154,7 +150,17 @@ footer>a:hover {
     font-family: inherit;
     font-size: 64px;
     letter-spacing: 3px;
-    transform: translateY(175px);
+    align-self: start;
+    padding: 10px;
+}
+
+#closeButton {
+    color: white;
+    font-family: inherit;
+    font-size: 64px;
+    letter-spacing: 3px;
+    align-self: end;
+    padding: 10px;
 }
 
 #muteButton {
@@ -405,6 +411,21 @@ footer>a:hover {
     /* canvas, #gameContainer, #controlls {
         background-size: contain;
     }    */
+}
+
+@media only screen and (max-width: 500px) {
+    footer {
+        flex-direction: column;
+        width: 100%;
+        gap: 20px;
+    }
+    .footerSeperator {
+        display: none;
+    }
+    .gameIcon{
+        height: 25px;
+        width: 50px;
+    }
 }
 
 .visibility-hidden {

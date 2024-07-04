@@ -90,11 +90,10 @@ function isMobile() {
  */
 function setForMobile() {
     document.querySelector('h1').classList.add('display-none');
-    setMobil(document.getElementById('gameContainer'));
-    setMobil(document.getElementById('canvas'));
-    setMobil(document.getElementById('controlls'));
-    setMobil(document.getElementById('loading-animation-overlay'));
-    document.getElementById('mobileControlls').classList.remove('visibility-hidden');
+    setMobile(document.getElementById('gameContainer'));
+    setMobile(document.getElementById('canvas'));
+    setMobile(document.getElementById('controlls'));
+    setMobile(document.getElementById('loading-animation-overlay'));
     document.getElementById('fullscreenButton').classList.add('display-none');
 }
 
@@ -103,7 +102,7 @@ function setForMobile() {
  * 
  * @param {Object} element 
  */
-function setMobil(element) {
+function setMobile(element) {
     element.style.width = '100%';
     element.style.height = '100vh';
     element.style.backgroundSize = 'contain';
@@ -120,8 +119,13 @@ function setFullscreen() {
  * gives the world canvas and keboard.
  */
 function init() {
+    if (mobileDivice) {
+        document.getElementById('mobileControlls').classList.remove('visibility-hidden');
+    }
     document.getElementById('restartButton').classList.add('display-none');
+    document.getElementById('closeButton').classList.add('display-none');
     document.getElementById('startButton').classList.add('display-none');
+    document.getElementById('footer').classList.add('display-none');
     canvas = document.getElementById('canvas');
     canvas.style.backgroundColor = 'black';
     canvas.style.backgroundImage = 'unset';
@@ -132,6 +136,11 @@ function init() {
         setSounds();
         checkReadyState();
     }
+}
+
+function closeGame() {
+    document.getElementById('footer').classList.remove('display-none');
+    document.getElementById('mobileControlls').classList.add('visibility-hidden');
 }
 
 /**
@@ -400,6 +409,7 @@ function showEndScreen(gameStatus) {
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     document.getElementById('canvas').style.backgroundSize = 'contain';
     document.getElementById('restartButton').classList.remove('display-none');
+    document.getElementById('closeButton').classList.remove('display-none');
     if (gameStatus === 'lose') {
         ctx.drawImage(imageCache['img/9_intro_outro_screens/game_over/you lost.png'], 50, 50, this.canvas.width - 100, this.canvas.height - 100);
     } else if (gameStatus === 'win') {
