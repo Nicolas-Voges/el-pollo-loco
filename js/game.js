@@ -15,6 +15,8 @@ let start = false;
 let pauseSetted = true;
 let loadingComplete = false;
 let imageCache = {};
+let gameEnded = false;
+let gameEndedTime;
 let intervalValues = {
     character: {
         moves: 1000 / 60,
@@ -118,8 +120,12 @@ function setFullscreen() {
  * gives the world canvas and keboard.
  */
 function init() {
+    document.getElementById('restartButton').classList.add('display-none');
     document.getElementById('startButton').classList.add('display-none');
     canvas = document.getElementById('canvas');
+    canvas.style.backgroundColor = 'black';
+    canvas.style.backgroundImage = 'unset';
+    gameEnded = false;
     initLevel1();
     world = new World(canvas, keybord);
     if (!loadingComplete) {
@@ -132,7 +138,7 @@ function init() {
  * This function listens for key down events and sets the right booleans to true. 
  */
 window.addEventListener('keydown', (e) => {
-    if (start) {
+    if (start && !gameEnded) {
         switch (e.code) {
             case (world.keyboard.jumpKeys[0]):
             case (world.keyboard.jumpKeys[1]):
@@ -175,7 +181,7 @@ window.addEventListener('keydown', (e) => {
  * This function listens for key up events and sets the right booleans to false.
  */
 window.addEventListener('keyup', (e) => {
-    if (start) {
+    if (start && !gameEnded) {
         switch (e.code) {
             case (world.keyboard.jumpKeys[0]):
             case (world.keyboard.jumpKeys[1]):
@@ -208,7 +214,7 @@ function addTouchEvents() {
     let rightButton = document.getElementById('rightButton');
     let jumpButton = document.getElementById('jumpButton');
     throwButton.addEventListener('touchstart', () => {
-        if (world.bottleCooledDown()) {
+        if (world.bottleCooledDown() && start && !gameEnded) {
             keybord.throwKeyPush = true;
         }
     });
@@ -216,24 +222,36 @@ function addTouchEvents() {
         document.activeElement.blur();
     });
     leftButton.addEventListener('touchstart', () => {
-        keybord.moveLeftKeyPush = true;
+        if (start && !gameEnded) {
+            keybord.moveLeftKeyPush = true;
+        }
     });
     leftButton.addEventListener('touchend', () => {
-        keybord.moveLeftKeyPush = false;
+        if (start && !gameEnded) {
+            keybord.moveLeftKeyPush = false;
+        }
         document.activeElement.blur();
     });
     rightButton.addEventListener('touchstart', () => {
-        keybord.moveRightKeyPush = true;
+        if (start && !gameEnded) {
+            keybord.moveRightKeyPush = true;
+        }
     });
     rightButton.addEventListener('touchend', () => {
-        keybord.moveRightKeyPush = false;
+        if (start && !gameEnded) {
+            keybord.moveRightKeyPush = false;
+        }
         document.activeElement.blur();
     });
     jumpButton.addEventListener('touchstart', () => {
-        keybord.jumpKeyPush = true;
+        if (start && !gameEnded) {
+            keybord.jumpKeyPush = true;
+        }
     });
     jumpButton.addEventListener('touchend', () => {
-        keybord.jumpKeyPush = false;
+        if (start && !gameEnded) {
+            keybord.jumpKeyPush = false;
+        }
         document.activeElement.blur();
     });
 }
@@ -250,7 +268,7 @@ function startPauseGame() {
         addTouchEvents();
         loadImages();
         init();
-    } else if (!endbossAnimationRuns) {
+    } else if (!endbossAnimationRuns && !gameEnded) {
         pause();
     }
 }
@@ -377,15 +395,31 @@ function checkBossMoved() {
     }
 }
 
+function showEndScreen(gameStatus) {
+    ctx = document.getElementById('canvas').getContext('2d');
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    document.getElementById('canvas').style.backgroundSize = 'contain';
+    document.getElementById('restartButton').classList.remove('display-none');
+    if (gameStatus === 'lose') {
+        ctx.drawImage(imageCache['img/9_intro_outro_screens/game_over/you lost.png'], 50, 50, this.canvas.width - 100, this.canvas.height - 100);
+    } else if (gameStatus === 'win') {
+        ctx.drawImage(imageCache['img/9_intro_outro_screens/win/win_2.png'], 50, 50, this.canvas.width - 100, this.canvas.height - 100);
+    }
+}
+
 /**
  * This function restarts the game.
  */
 function restartGame() {
+    stopGame();
+    init();
+}
+
+function stopGame() {
     cancelAnimationFrame(world.requestId);
     world = null;
     resetGlobalVariables();
     deleteAllIntervals();
-    init();
 }
 
 /**
@@ -406,6 +440,11 @@ function resetGlobalVariables() {
     bossAttackAnimationRuns = false;
     endbossMoveWasOn = false;
     endbossAnimateWasOn = false;
+    keybord.jumpKeyPush = false;
+    keybord.moveLeftKeyPush = false;
+    keybord.moveRightKeyPush = false;
+    keybord.throwKeyPush = false;
+    keybord.pauseKeyPush = false;
 }
 
 /**

@@ -120,6 +120,14 @@ canvas {
     border-radius: 40px
 }
 
+#restartButton {
+    color: white;
+    font-family: inherit;
+    font-size: 64px;
+    letter-spacing: 3px;
+    transform: translateY(175px);
+}
+
 #muteButton {
     background-image: url('img/icons/mute.png');
 }

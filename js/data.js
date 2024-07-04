@@ -207,6 +207,20 @@ const IMAGES_PATHS = {
             'img/5_background/layers/4_clouds/1.png',
             'img/5_background/layers/4_clouds/2.png'
         ]
+    },
+    endScreens: {
+        win: [
+            'img/9_intro_outro_screens/win/win_1.png',
+            'img/9_intro_outro_screens/win/win_2.png',
+            'img/9_intro_outro_screens/win/won_1.png',
+            'img/9_intro_outro_screens/win/won_2.png'
+        ],
+        lose: [
+            'img/9_intro_outro_screens/game_over/game over!.png',
+            'img/9_intro_outro_screens/game_over/game over.png',
+            'img/9_intro_outro_screens/game_over/oh no you lost!.png',
+            'img/9_intro_outro_screens/game_over/you lost.png'
+        ]
     }
 }
 
@@ -260,6 +274,16 @@ function loadImages() {
         img.src = path;
         imageCache[path] = img;
     });
+    IMAGES_PATHS.endScreens.lose.forEach((path) => {
+        let img = new Image();
+        img.src = path;
+        imageCache[path] = img;
+    });
+    IMAGES_PATHS.endScreens.win.forEach((path) => {
+        let img = new Image();
+        img.src = path;
+        imageCache[path] = img;
+    });
 }
 
 function valueTypeIsArray(key) {
@@ -272,8 +296,8 @@ function checkReadyState() {
         // console.log('data checkReadyState');
         checkImagesLoaded();
         checkSoundsLoaded();
-        document.getElementById('loadPercentage').innerHTML = Math.floor((100 / 143) * loaded);
-        if (loaded === 143) {
+        document.getElementById('loadPercentage').innerHTML = Math.floor((100 / 151) * loaded);
+        if (loaded === 151) {
             clearInterval(id);
             activeIntervals.splice(activeIntervals.indexOf(id), 1);
             document.getElementById('loading-animation-overlay').classList.add('display-none');

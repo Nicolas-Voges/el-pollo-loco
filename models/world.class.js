@@ -67,9 +67,30 @@ class World {
             } else {
                 adjustBackgroundPosition();
             }
+            this.checkForEndingGame();
         }, 5);
         this.intervals.push(id);
         activeIntervals.push(id);
+    }
+
+
+    checkForEndingGame() {
+        if (this.endboss.energy <= 0 && world.endboss.deathAnimationDone && earthquakeDone) {
+            this.setGameEnd('win');
+        } else if (this.character.energy <= 0 && world.character.deathAnimationDone) {
+            this.setGameEnd('lose');
+        }
+    }
+
+    setGameEnd(gameResult) {
+        if (!gameEnded) {
+            gameEnded = true;
+            gameEndedTime = new Date().getTime();
+        }
+        if (new Date().getTime() - gameEndedTime > 1000) {
+            stopGame();
+            showEndScreen(gameResult);
+        }
     }
 
     /**
