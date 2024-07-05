@@ -119,13 +119,13 @@ function setFullscreen() {
  * gives the world canvas and keboard.
  */
 function init() {
-    if (mobileDivice) {
-        document.getElementById('mobileControlls').classList.remove('visibility-hidden');
-    }
     document.getElementById('restartButton').classList.add('display-none');
     document.getElementById('closeButton').classList.add('display-none');
     document.getElementById('startButton').classList.add('display-none');
-    document.getElementById('footer').classList.add('display-none');
+    if (mobileDivice) {
+        document.getElementById('footer').classList.add('display-none');
+        document.getElementById('mobileControlls').classList.remove('visibility-hidden');
+    }
     canvas = document.getElementById('canvas');
     canvas.style.backgroundColor = 'black';
     canvas.style.backgroundImage = 'unset';
@@ -271,6 +271,7 @@ function addTouchEvents() {
  */
 function startPauseGame() {
     if (!start) {
+        checkForMobile();
         start = true;
         document.getElementById('loading-animation-overlay').classList.remove('display-none');
         document.getElementById('canvas').style.backgroundImage = 'unset';
@@ -279,6 +280,16 @@ function startPauseGame() {
         init();
     } else if (!endbossAnimationRuns && !gameEnded) {
         pause();
+    }
+}
+
+function checkForMobile() {
+    if (mobileDivice) {
+        if (screen.availHeight > screen.availWidth) {
+            document.getElementById('portraitOverlay').classList.remove('display-none');
+            document.getElementById('footer').classList.add('display-none');
+            return;
+        }
     }
 }
 
@@ -409,7 +420,9 @@ function showEndScreen(gameStatus) {
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     document.getElementById('canvas').style.backgroundSize = 'contain';
     document.getElementById('restartButton').classList.remove('display-none');
-    document.getElementById('closeButton').classList.remove('display-none');
+    if (mobileDivice) {
+        document.getElementById('closeButton').classList.remove('display-none');
+    }
     if (gameStatus === 'lose') {
         ctx.drawImage(imageCache['img/9_intro_outro_screens/game_over/you lost.png'], 50, 50, this.canvas.width - 100, this.canvas.height - 100);
     } else if (gameStatus === 'win') {
