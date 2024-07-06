@@ -136,6 +136,7 @@ function toggleSettingsWindow() {
  * gives the world canvas and keboard.
  */
 function init() {
+    document.getElementById('settingsBox').classList.add('display-none');
     document.getElementById('restartButton').classList.add('display-none');
     document.getElementById('closeButton').classList.add('display-none');
     document.getElementById('startButton').classList.add('display-none');
@@ -159,13 +160,16 @@ function init() {
  * This function sets sounds properties.
  */
 async function setSounds() {
-    world.sound_glas.volume = 0.4;
+    setVolume();
     await playSound(world.sound_ambiente);
     world.sound_ambiente.loop = true;
-    world.sound_ambiente.volume = 0.4;
     await playSound(world.sound_music);
     world.sound_music.loop = true;
-    world.sound_music.volume = 0.25;
+}
+
+function setVolume() {
+    iteraterThroughSounds('setSFXVolume(key, nextKey)');
+    iteraterThroughSounds('setMusicVolume(key, nextKey)');
 }
 
 function closeGame() {
@@ -438,6 +442,7 @@ function pause() {
  * This function lets the game play.
  */
 function setPlay() {
+    document.getElementById('settingsBox').classList.add('display-none');
     document.getElementById('pauseButton').style.backgroundImage = `url('img/icons/pause.png')`;
     setEnemiesPlay();
     setCharacterPlay();

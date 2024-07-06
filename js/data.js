@@ -236,7 +236,7 @@ const SOUNDS = {
         },
         JUMPING: {
             SOUND: new Audio('audio/jump.mp3'),
-            VOLUME: 1
+            VOLUME: 0.5
         },
         HURT: {
             SOUND: new Audio('audio/hurt.mp3'),
@@ -250,13 +250,13 @@ const SOUNDS = {
     chick: {
         DEAD: {
             SOUND: new Audio('audio/chick-hit.mp3'),
-            VOLUME: 1
+            VOLUME: 0.3
         }
     },
     chicken: {
         DEAD: {
             SOUND: new Audio('audio/chicken-hit.mp3'),
-            VOLUME: 1
+            VOLUME: 0.5
         }
     },
     endboss: {
@@ -266,11 +266,11 @@ const SOUNDS = {
         },
         ATTACK: {
             SOUND: new Audio('audio/earthquake.mp3'),
-            VOLUME: 1
+            VOLUME: 0.3
         },
         HURT: {
             SOUND: new Audio('audio/boss-hit.mp3'),
-            VOLUME: 1
+            VOLUME: 0.7
         },
         DEAD: {
             SOUND: new Audio('audio/boss-die.mp3'),
@@ -296,23 +296,34 @@ const SOUNDS = {
         },
         SPLASH: {
             SOUND: new Audio('audio/bottle-broken.mp3'),
-            VOLUME: 1
+            VOLUME: 0.4
         }
     },
     world: {
         AMBIENTE: {
             SOUND: new Audio('audio/ambiente.mp3'),
-            VOLUME: 1
+            VOLUME: 0.4
         },
         MUSIC: {
             SOUND: new Audio('audio/music.mp3'),
-            VOLUME: 1
+            VOLUME: 0.25
         }
     }
 }
 
 let drawableObjects = [];
 let loaded = 0;
+let MUTE = 1;
+
+function muteSounds() {
+    if (MUTE === 1) {
+        MUTE = 0;
+        setVolume();
+    } else {
+        MUTE = 1;
+        setVolume();
+    }
+}
 
 function loadImages() {
     IMAGES_PATHS.throwableObject.IMAGES_ROTATE.forEach((path) => {
@@ -346,7 +357,7 @@ function addLoaded(key, nextKey) {
 function setSFXVolume(key, nextKey) {
     let input = +document.getElementById('sfxSoundInput').value
     if (nextKey !== 'MUSIC') {
-        SOUNDS[`${key}`][`${nextKey}`].SOUND.volume = SOUNDS[`${key}`][`${nextKey}`].VOLUME * (input / 100);
+        SOUNDS[`${key}`][`${nextKey}`].SOUND.volume = SOUNDS[`${key}`][`${nextKey}`].VOLUME * (input / 100) * MUTE;
     }
 }
 
@@ -354,7 +365,7 @@ function setSFXVolume(key, nextKey) {
 function setMusicVolume(key, nextKey) {
     let input = +document.getElementById('musicInput').value
     if (nextKey === 'MUSIC') {
-        SOUNDS[`${key}`][`${nextKey}`].SOUND.volume = SOUNDS[`${key}`][`${nextKey}`].VOLUME * (input / 100);
+        SOUNDS[`${key}`][`${nextKey}`].SOUND.volume = SOUNDS[`${key}`][`${nextKey}`].VOLUME * (input / 100) * MUTE;
     }
 }
 

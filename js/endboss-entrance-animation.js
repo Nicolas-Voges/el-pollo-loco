@@ -9,6 +9,7 @@ let endbossAnimationRuns = false;
 let endbossAnimationHasRun = false;
 let earthquakeDone = false;
 let sound_earthquake = SOUNDS.endboss.ATTACK.SOUND;
+
 /**
  * This function checks if character reached end of level and endboss animation wasn´t running yet and
  * runs endboss animation if thats the case.
