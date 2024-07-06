@@ -7,6 +7,10 @@
     box-sizing: border-box;
 }
 
+#loom-companion-mv3 {
+    display: none;
+}
+
 body {
     display: flex;
     flex-direction: column;
@@ -48,10 +52,10 @@ h1 {
     justify-content: center;
     align-items: center;
     text-align: center;
-    animation: fade-out 3s forwards;
+    /* animation: fade-out 3s forwards; */
 }
 
-@keyframes fade-out {
+/* @keyframes fade-out {
     35% {
         opacity: 1;
         z-index: 999;
@@ -69,7 +73,7 @@ h1 {
         opacity: 0;
         z-index: -1;
     }
-}
+} */
 
 canvas {
     background-image: url('./img/9_intro_outro_screens/start/startscreen_1.png');
@@ -82,7 +86,7 @@ canvas {
 footer {
     width: 100%;
     padding: 20px;
-    background-color: #A0220A;
+    background-color: #f6b65f;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -98,7 +102,7 @@ footer>a {
 }
 
 footer>a:hover {
-    color: wheat;
+    color: #A0220A;
 }
 
 .footerSeperator {
@@ -262,7 +266,7 @@ footer>a:hover {
 }
 
 .animation-head {
-    background-color: brown;
+    background-color: #A0220A;
     height: 260px;
     width: 130px;
     position: absolute;
@@ -429,6 +433,120 @@ footer>a:hover {
     margin-block-start: 0.5em;
 }
 
+#settingsBox {
+    border: 2px solid black;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    background-color: #f6b65f;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 24px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    padding: 20px 0;
+    max-height: 75%;
+    width: 75%;
+    overflow-y: auto;
+}
+
+#settingsBox>h2 {
+    margin-block-start: 0;
+    font-size: 32px;
+    align-self: flex-start;
+    margin-left: 20px;
+}
+
+.settings-subpoints {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+h3 {
+    font-size: 26px;
+    align-self: start;
+    letter-spacing: 3px;
+}
+
+.settings-subpoints>button {
+    background-color: transparent;
+    border: unset;
+    border: 1px solid black;
+    border-bottom: unset;
+    padding: 4px 20px;
+    font-family: inherit;
+    font-size: 24px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    background-color: hsl(35, 89%, 55%);
+}
+
+.settings-subpoints>button:hover {
+    background-color: hsl(35, 89%, 62%) !important;
+}
+
+.settings-option {
+    border-top: 2px solid black;
+    width: 100%;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-icons {
+    width: 28px;
+    height: 28px;
+}
+
+#settingsSoundButton {
+    border-top-right-radius: 10px;
+    /* outline: 1px #f6b65f; */
+    border-left: unset;
+}
+
+#settingsKeysButton {
+    border-top-left-radius: 10px;
+    border-right: unset;
+}
+
+.active-button {
+    background-color: #f6b65f !important;
+    transform: translateY(2px);
+}
+
+#settingsKeysWindow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+table {
+    box-sizing: border-box;
+    letter-spacing: 1px;
+}
+
+th {
+    font-size: 30px;
+    text-align: start;
+    padding-right: 4px;
+}
+
+td {
+    border: #000 1px solid;
+    font-size: 26px;
+    padding: 4px;
+    cursor: pointer;
+}
+
+.overflow-hidden {
+overflow: hidden;
+}
+
 @media only screen and (max-width: 720px) {
 
     canvas,
@@ -452,7 +570,8 @@ footer>a:hover {
     }    */
 }
 
-@media only screen and (max-width: 500px), (max-height: 500px) {
+@media only screen and (max-width: 500px),
+(max-height: 500px) {
     footer {
         flex-direction: column;
         gap: 20px;
@@ -467,111 +586,88 @@ footer>a:hover {
         width: 50px;
     }
 
-    #restartButton {
-        font-size: 32px;
-
-    }
-
+    #restartButton,
     #closeButton {
         font-size: 32px;
-
     }
 
     .loading-animation-overlay {
         font-size: 20px;
     }
-    
+
     .animation-container {
-        position: absolute;
         width: 170px;
         height: 170px;
-        background-color: white;
         border-radius: 20px;
-        margin: auto;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
     }
-    
+
     .animation-head {
-        background-color: brown;
         height: 130px;
         width: 65px;
-        position: absolute;
         top: 20px;
         left: 20px;
         border-radius: 65px 0 0 65px;
         transform-origin: 65px;
-        animation: spin 5s forwards infinite;
     }
 
     .animation-head:after {
-        position: absolute;
-        content: "";
         height: 90px;
         width: 45px;
-        background: linear-gradient(to bottom,
-                #f2f7f9 50%,
-                #deecf1 50%);
         top: 20px;
         left: 20px;
         border-radius: 90px 0 0 90px;
-        animation: spin2 5s forwards infinite;
         transform-origin: 45px;
     }
 
     .animation-eye {
         height: 22.5px;
         width: 22.5px;
-        background-color: #714c21;
         border-radius: 50%;
-        position: absolute;
         top: 61.5px;
         left: 61.5px;
-        animation: move 5s forwards infinite;
     }
-    
+
     @keyframes move {
         35% {
             transform: translateX(0);
         }
-    
+
         50% {
             transform: translateX(23.5px);
         }
-    
+
         85% {
             transform: translateX(23.5px);
         }
-    
+
         100% {
             transform: translateX(0);
         }
     }
-    
+
     .animation-baekLarge {
-        background-color: #fdd159;
         height: 45px;
         width: 45px;
         border-radius: 0 45px 0 0;
-        position: absolute;
         top: 40px;
         right: 40px;
-        animation: spin3 5s forwards infinite;
         transform-origin: 0 45px;
     }
 
     .animation-baekSmall {
-        background-color: #fcbd11;
         height: 22.5px;
         width: 22.5px;
-        position: absolute;
         bottom: 62.5px;
         right: 62.5px;
         border-radius: 0 0 22.5px 0;
-        animation: spin4 5s forwards infinite;
-        transform-origin: 0 0;
+    }
+
+    th {
+        font-size: 20px;
+    }
+    
+    td {
+        font-size: 18px;
     }
 }
 

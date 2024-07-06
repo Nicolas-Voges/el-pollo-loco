@@ -226,37 +226,88 @@ const IMAGES_PATHS = {
 
 const SOUNDS = {
     character: {
-        LONG_IDLE: new Audio('audio/snoring.mp3'),
-        WALKING: new Audio('audio/walking.mp3'),
-        JUMPING: new Audio('audio/jump.mp3'),
-        HURT: new Audio('audio/hurt.mp3'),
-        DEAD: new Audio('audio/die.mp3')
+        LONG_IDLE: {
+            SOUND: new Audio('audio/snoring.mp3'),
+            VOLUME: 1
+        },
+        WALKING: {
+            SOUND: new Audio('audio/walking.mp3'),
+            VOLUME: 1
+        },
+        JUMPING: {
+            SOUND: new Audio('audio/jump.mp3'),
+            VOLUME: 1
+        },
+        HURT: {
+            SOUND: new Audio('audio/hurt.mp3'),
+            VOLUME: 1
+        },
+        DEAD: {
+            SOUND: new Audio('audio/die.mp3'),
+            VOLUME: 1
+        }
     },
     chick: {
-        DEAD: new Audio('audio/chick-hit.mp3')
+        DEAD: {
+            SOUND: new Audio('audio/chick-hit.mp3'),
+            VOLUME: 1
+        }
     },
     chicken: {
-        DEAD: new Audio('audio/chicken-hit.mp3')
+        DEAD: {
+            SOUND: new Audio('audio/chicken-hit.mp3'),
+            VOLUME: 1
+        }
     },
     endboss: {
-        ALERT: new Audio('audio/alert.mp3'),
-        ATTACK: new Audio('audio/earthquake.mp3'),
-        HURT: new Audio('audio/boss-hit.mp3'),
-        DEAD: new Audio('audio/boss-die.mp3')
+        ALERT: {
+            SOUND: new Audio('audio/alert.mp3'),
+            VOLUME: 1
+        },
+        ATTACK: {
+            SOUND: new Audio('audio/earthquake.mp3'),
+            VOLUME: 1
+        },
+        HURT: {
+            SOUND: new Audio('audio/boss-hit.mp3'),
+            VOLUME: 1
+        },
+        DEAD: {
+            SOUND: new Audio('audio/boss-die.mp3'),
+            VOLUME: 1
+        }
     },
     bottle: {
-        COLLECT: new Audio('audio/bottle-collect.mp3')
+        COLLECT: {
+            SOUND: new Audio('audio/bottle-collect.mp3'),
+            VOLUME: 1
+        }
     },
     coins: {
-        COLLECT: new Audio('audio/coin-collect.mp3')
+        COLLECT: {
+            SOUND: new Audio('audio/coin-collect.mp3'),
+            VOLUME: 1
+        }
     },
     throwableObject: {
-        ROTATE: new Audio('audio/throw.mp3'),
-        SPLASH: new Audio('audio/bottle-broken.mp3')
+        ROTATE: {
+            SOUND: new Audio('audio/throw.mp3'),
+            VOLUME: 1
+        },
+        SPLASH: {
+            SOUND: new Audio('audio/bottle-broken.mp3'),
+            VOLUME: 1
+        }
     },
     world: {
-        AMBIENTE: new Audio('audio/ambiente.mp3'),
-        MUSIC: new Audio('audio/music.mp3')
+        AMBIENTE: {
+            SOUND: new Audio('audio/ambiente.mp3'),
+            VOLUME: 1
+        },
+        MUSIC: {
+            SOUND: new Audio('audio/music.mp3'),
+            VOLUME: 1
+        }
     }
 }
 
@@ -286,6 +337,35 @@ function loadImages() {
     });
 }
 
+function addLoaded(key, nextKey) {
+    if (SOUNDS[`${key}`][`${nextKey}`].SOUND.readyState > SOUNDS[`${key}`][`${nextKey}`].SOUND.HAVE_CURRENT_DATA) {
+        loaded++;
+    }
+}
+
+function setSFXVolume(key, nextKey) {
+    let input = +document.getElementById('sfxSoundInput').value
+    if (nextKey !== 'MUSIC') {
+        SOUNDS[`${key}`][`${nextKey}`].SOUND.volume = SOUNDS[`${key}`][`${nextKey}`].VOLUME * (input / 100);
+    }
+}
+
+
+function setMusicVolume(key, nextKey) {
+    let input = +document.getElementById('musicInput').value
+    if (nextKey === 'MUSIC') {
+        SOUNDS[`${key}`][`${nextKey}`].SOUND.volume = SOUNDS[`${key}`][`${nextKey}`].VOLUME * (input / 100);
+    }
+}
+
+function iteraterThroughSounds(func) {
+    Object.keys(SOUNDS).forEach((key) => {
+        Object.keys(SOUNDS[`${key}`]).forEach((nextKey) => {
+            eval(func);
+        });
+    });
+}
+
 function valueTypeIsArray(key) {
     return Array.isArray(key);
 }
@@ -311,13 +391,14 @@ function checkReadyState() {
 }
 
 function checkSoundsLoaded() {
-    Object.keys(SOUNDS).forEach((key) => {
-        Object.keys(SOUNDS[`${key}`]).forEach((nextKey) => {
-            if (SOUNDS[`${key}`][`${nextKey}`].readyState > SOUNDS[`${key}`][`${nextKey}`].HAVE_CURRENT_DATA) {
-                loaded++;
-            }
-        });
-    });
+    // Object.keys(SOUNDS).forEach((key) => {
+    //     Object.keys(SOUNDS[`${key}`]).forEach((nextKey) => {
+    //         if (SOUNDS[`${key}`][`${nextKey}`].readyState > SOUNDS[`${key}`][`${nextKey}`].HAVE_CURRENT_DATA) {
+    //             loaded++;
+    //         }
+    //     });
+    // });
+    iteraterThroughSounds('addLoaded(key, nextKey);');
 }
 
 function checkImagesLoaded() {

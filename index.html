@@ -40,7 +40,7 @@
         <div id="controlls">
             <div class="iconsBox">
                 <button onclick="document.activeElement.blur();" id="muteButton" class="icon"></button>
-                <button onclick="document.activeElement.blur();" id="settingsButton" class="icon"></button>
+                <button onclick="toggleSettingsWindow(); document.activeElement.blur();" id="settingsButton" class="icon"></button>
                 <button onclick="startPauseGame(); document.activeElement.blur();" id="pauseButton" class="icon"></button>
                 <button onclick="setFullscreen();" id="fullscreenButton" class="squareIcon"></button>
             </div>
@@ -60,6 +60,68 @@
                 </div>
             </div>
         </div>
+        <section id="settingsBox" class="display-none">
+            <h2>Settings</h2>
+            <div class="settings-subpoints">
+                <button id="settingsSoundButton" onclick="showOtherSettingsWindow()" class="settingsSoundButton active-button">Sounds</button>
+                <button id="settingsKeysButton" onclick="showOtherSettingsWindow()" class="settingsKeysButton">Key assignment</button>
+            </div>
+            <div id="settingsSoundWindow" class="settings-option">
+                <h3>SFX - Sounds</h3>
+                <div>
+                    <img class="settings-icons" src="./img/icons/mute.png" alt="mute sfx sounds">
+                    <input onchange="iteraterThroughSounds('setSFXVolume(key, nextKey)')" type="range" min="1" max="100" step="1" value="100" id="sfxSoundInput">
+                    <img class="settings-icons" src="./img/icons/loud.png" alt="turn sfx sounds loud">
+                </div>
+                <h3>Music</h3>
+                <div>
+                    <img class="settings-icons" src="./img/icons/mute.png" alt="mute music">
+                    <input onchange="iteraterThroughSounds('setMusicVolume(key, nextKey)')" type="range" min="1" max="100" step="1" value="100" id="musicInput">
+                    <img class="settings-icons" src="./img/icons/loud.png" alt="turn music loud">
+                </div>
+            </div>
+            <div id="settingsKeysWindow" class="settings-option display-none">
+                <h3>Change Keys:</h3>
+                <table>
+                    <tr>
+                        <th>Move Right</td>
+                        <td id="rightKey1" onclick="changeKey(1);">"KeyD"</td>
+                        <td id="rightKey2" onclick="changeKey(2);">ArrowRight</td>
+                        <td id="rightKey3" onclick="changeKey(3);">unset</td>
+                    </tr>
+                    <tr>
+                        <th>Move Left</td>
+                        <td id="leftKey1" onclick="changeKey(4);">KeyA</td>
+                        <td id="leftKey2" onclick="changeKey(5);">ArrowLeft</td>
+                        <td id="leftKey3" onclick="changeKey(6);">unset</td>
+                    </tr>
+                    <tr>
+                        <th>Jump</td>
+                        <td id="jumpKey1" onclick="changeKey(7);">Space</td>
+                        <td id="jumpKey2" onclick="changeKey(8);">ArrowUp</td>
+                        <td id="jumpKey3" onclick="changeKey(9);">KeyW</td>
+                    </tr>
+                    <tr>
+                        <th>Throw</td>
+                        <td id="throwKey1" onclick="changeKey(10);">KeyF</td>
+                        <td id="throwKey2" onclick="changeKey(11);">unset</td>
+                        <td id="throwKey3" onclick="changeKey(12);">unset</td>
+                    </tr>
+                    <tr>
+                        <th>Buy Bottle</td>
+                        <td id="buyKey1" onclick="changeKey(13);">KeyB</td>
+                        <td id="buyKey2" onclick="changeKey(14);">unset</td>
+                        <td id="buyKey3" onclick="changeKey(15);">unset</td>
+                    </tr>
+                    <tr>
+                        <th>Pause</td>
+                        <td id="pauseKey1" onclick="changeKey(16);">KeyP</td>
+                        <td id="pauseKey2" onclick="changeKey(17);">Enter</td>
+                        <td id="pauseKey3" onclick="changeKey(18);">unset</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
         <div id="loading-animation-overlay" class="loading-animation-overlay display-none">
             <div class="animation-container">
                 <div class="animation-baekSmall"></div>
@@ -67,7 +129,7 @@
                 <div class="animation-eye"></div>
                 <div class="animation-baekLarge"></div>
             </div>
-            <p id="loadingText">loading... <span id="loadPercentage"></span>%</p>
+            <p id="loadingText">Loading... <span id="loadPercentage"></span>%</p>
         </div>
     </div>
     <div id="portraitOverlay" class="display-none">

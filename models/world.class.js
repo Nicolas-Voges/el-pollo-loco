@@ -5,9 +5,9 @@ class World {
     canvas;
     camera_x = 0;
     keyboard;
-    sound_ambiente = SOUNDS.world.AMBIENTE;
-    sound_music = SOUNDS.world.MUSIC;
-    sound_glas = SOUNDS.throwableObject.SPLASH;
+    sound_ambiente = SOUNDS.world.AMBIENTE.SOUND;
+    sound_music = SOUNDS.world.MUSIC.SOUND;
+    sound_glas = SOUNDS.throwableObject.SPLASH.SOUND;
     statusBarEnergy = new StatusBarEnergy();
     statusBarCoin = new StatusBarCoin();
     statusBarBottle = new StatusBarBottle();
@@ -57,6 +57,7 @@ class World {
     run() {
         let id = setInterval(() => {
             // console.log('world run');
+            this.checkForMobile();
             this.checkCollisions();
             this.checkThrowableObjects();
             this.checkForDeadEnemies();
@@ -71,6 +72,28 @@ class World {
         }, 5);
         this.intervals.push(id);
         activeIntervals.push(id);
+    }
+
+
+    checkForMobile() {
+        if (mobileDivice && isPortrait() && !endbossAnimationRuns) {
+            setPause()
+            let id = setInterval(() => {
+                if (isPortrait()) {
+                    document.getElementById('portraitOverlay').style.zIndex = '1';
+                    document.getElementById('portraitOverlay').classList.remove('display-none');
+                } else {
+                    document.getElementById('portraitOverlay').style.zIndex = '-1';
+                    clearInterval(id);
+                    this.keyboard.jumpKeyPush = false;
+                    this.keyboard.moveLeftKeyPush = false;
+                    this.keyboard.moveRightKeyPush = false;
+                    this.keyboard.throwKeyPush = false;
+                    this.keyboard.pauseKeyPush = false;
+                    setPlay();
+                }
+            }, 100);
+        }
     }
 
 

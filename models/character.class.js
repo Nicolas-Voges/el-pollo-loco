@@ -18,10 +18,10 @@ class Character extends MovableObject {
     IMAGES_JUMPING = IMAGES_PATHS.character.IMAGES_JUMPING;
     IMAGES_HURT = IMAGES_PATHS.character.IMAGES_HURT;;
     IMAGES_DEAD = IMAGES_PATHS.character.IMAGES_DEAD;
-    sound_walking = SOUNDS.character.WALKING;
-    sound_hurt = SOUNDS.character.HURT;
-    sound_die = SOUNDS.character.DEAD;
-    sound_jump = SOUNDS.character.JUMPING;
+    sound_walking = SOUNDS.character.WALKING.SOUND;
+    sound_hurt = SOUNDS.character.HURT.SOUND;
+    sound_die = SOUNDS.character.DEAD.SOUND;
+    sound_jump = SOUNDS.character.JUMPING.SOUND;
     reachedLevelEnd = false;
     idleTime = 0;
     tookIdleTime = false;

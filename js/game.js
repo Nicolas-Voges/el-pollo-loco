@@ -4,6 +4,8 @@ let ctx;
 let world;
 let keybord = new Keyboard();
 let activeIntervals = [];
+let SFXvolume = 1;
+let musicVolume = 1;
 // let pauseIntervals = [];
 // let intervals = [];
 let comingEnemyId = 0;
@@ -53,6 +55,12 @@ let intervalValues = {
     }
 };
 
+function showOtherSettingsWindow() {
+    document.getElementById('settingsSoundButton').classList.toggle('active-button');
+    document.getElementById('settingsKeysButton').classList.toggle('active-button');
+    document.getElementById('settingsSoundWindow').classList.toggle('display-none');
+    document.getElementById('settingsKeysWindow').classList.toggle('display-none');
+}
 
 /**
  * This function plays a sound if sound is fully loaded to play.
@@ -114,6 +122,15 @@ function setFullscreen() {
     document.activeElement.blur();
 }
 
+function toggleSettingsWindow() {
+    element = document.getElementById('settingsBox');
+    element.classList.toggle('display-none');
+    document.querySelector('body').classList.toggle('overflow-hidden');
+    if (!element.classList.contains('display-none') && start && !isPause && !gameEnded && !endbossAnimationRuns) {
+        setPause();
+    }
+}
+
 /**
  * This function initializes the game by creating level and world and
  * gives the world canvas and keboard.
@@ -138,15 +155,121 @@ function init() {
     }
 }
 
+/**
+ * This function sets sounds properties.
+ */
+async function setSounds() {
+    world.sound_glas.volume = 0.4;
+    await playSound(world.sound_ambiente);
+    world.sound_ambiente.loop = true;
+    world.sound_ambiente.volume = 0.4;
+    await playSound(world.sound_music);
+    world.sound_music.loop = true;
+    world.sound_music.volume = 0.25;
+}
+
 function closeGame() {
     document.getElementById('footer').classList.remove('display-none');
-    document.getElementById('mobileControlls').classList.add('visibility-hidden');
+}
+let keyToChange = 0;
+function changeKey(key) {
+    document.removeEventListener('keydown', keyDown);
+    document.addEventListener('keydown', takeKey);
+    keyToChange = key;
+}
+
+function takeKey(e) {
+    console.log(e.code);
+    let output = e.code;
+    if (e.code === 'Delete') {
+        output = 'unset';
+    }
+    switch (keyToChange) {
+        case 1:
+            keybord.moveRightKeys[0] = output;
+            document.getElementById('rightKey1').innerHTML = output;
+            break;
+        case 2:
+            keybord.moveRightKeys[1] = output;
+            document.getElementById('rightKey2').innerHTML = output;
+            break;
+        case 3:
+            keybord.moveRightKeys[2] = output;
+            document.getElementById('rightKey3').innerHTML = output;
+            break;
+        case 4:
+            keybord.moveLeftKeys[0] = output;
+            document.getElementById('leftKey1').innerHTML = output;
+            break;
+        case 5:
+            keybord.moveLeftKeys[1] = output;
+            document.getElementById('leftKey2').innerHTML = output;
+            break;
+        case 6:
+            keybord.moveLeftKeys[2] = output;
+            document.getElementById('leftKey3').innerHTML = output;
+            break;
+        case 7:
+            keybord.jumpKeys[0] = output;
+            document.getElementById('jumpKey1').innerHTML = output;
+            break;
+        case 8:
+            keybord.jumpKeys[1] = output;
+            document.getElementById('jumpKey2').innerHTML = output;
+            break;
+        case 9:
+            keybord.jumpKeys[2] = output;
+            document.getElementById('jumpKey3').innerHTML = output;
+            break;
+        case 10:
+            keybord.throwKeys[0] = output;
+            document.getElementById('throwKey1').innerHTML = output;
+            break;
+        case 11:
+            keybord.throwKeys[1] = output;
+            document.getElementById('throwKey2').innerHTML = output;
+            break;
+        case 12:
+            keybord.throwKeys[2] = output;
+            document.getElementById('throwKey3').innerHTML = output;
+            break;
+        case 13:
+            keybord.buyKeys[0] = output;
+            document.getElementById('buyKey1').innerHTML = output;
+            break;
+        case 14:
+            keybord.buyKeys[1] = output;
+            document.getElementById('buyKey2').innerHTML = output;
+            break;
+        case 15:
+            keybord.buyKeys[2] = output;
+            document.getElementById('buyKey3').innerHTML = output;
+            break;
+        case 16:
+            keybord.pauseKeys[0] = output;
+            document.getElementById('pauseKey1').innerHTML = output;
+            break;
+        case 17:
+            keybord.pauseKeys[1] = output;
+            document.getElementById('pauseKey2').innerHTML = output;
+            break;
+        case 18:
+            keybord.pauseKeys[2] = output;
+            document.getElementById('pauseKey3').innerHTML = output;
+            break;
+
+        default:
+            break;
+    }
+    document.removeEventListener('keydown', takeKey);
+    document.addEventListener('keydown', keyDown);
 }
 
 /**
  * This function listens for key down events and sets the right booleans to true. 
  */
-window.addEventListener('keydown', (e) => {
+window.addEventListener('keydown', keyDown);
+function keyDown(e) {
     if (start && !gameEnded) {
         switch (e.code) {
             case (world.keyboard.jumpKeys[0]):
@@ -184,7 +307,7 @@ window.addEventListener('keydown', (e) => {
                 break;
         }
     }
-});
+};
 
 /**
  * This function listens for key up events and sets the right booleans to false.
@@ -285,12 +408,17 @@ function startPauseGame() {
 
 function checkForMobile() {
     if (mobileDivice) {
-        if (screen.availHeight > screen.availWidth) {
+        if (isPortrait()) {
             document.getElementById('portraitOverlay').classList.remove('display-none');
             document.getElementById('footer').classList.add('display-none');
             return;
         }
     }
+}
+
+
+function isPortrait() {
+    return screen.availHeight > screen.availWidth;
 }
 
 /**
@@ -422,6 +550,7 @@ function showEndScreen(gameStatus) {
     document.getElementById('restartButton').classList.remove('display-none');
     if (mobileDivice) {
         document.getElementById('closeButton').classList.remove('display-none');
+        document.getElementById('mobileControlls').classList.add('visibility-hidden');
     }
     if (gameStatus === 'lose') {
         ctx.drawImage(imageCache['img/9_intro_outro_screens/game_over/you lost.png'], 50, 50, this.canvas.width - 100, this.canvas.height - 100);
@@ -481,19 +610,6 @@ function deleteAllIntervals() {
 }
 
 /**
- * This function sets sounds properties.
- */
-async function setSounds() {
-    world.sound_glas.volume = 0.4;
-    await playSound(world.sound_ambiente);
-    world.sound_ambiente.loop = true;
-    world.sound_ambiente.volume = 0.4;
-    await playSound(world.sound_music);
-    world.sound_music.loop = true;
-    world.sound_music.volume = 0.25;
-}
-
-/**
  * This function adjusts background layer positions to create a 3D look.
  */
 function adjustBackgroundPosition() {
@@ -531,81 +647,3 @@ function changeCloudPosition() {
         }
     });
 }
-
-// function clearAllIntervals() {
-//     intervals.activeIntervals.forEach((interval) => {
-//         clearInterval(interval);
-//     });
-// }
-// function registerInterval(pause, functionToRecall, interval, intervalFunction, className, callerId = null) {
-//     let id = setInterval(() => {
-//         eval(functionToRecall);
-//     }, interval);
-
-//     intervals.push({
-//         id: id,
-//         pause: pause,
-//         recallFunction: functionToRecall, // Function to recall this interval with eval('functionToRecall').
-//         interval: interval,
-//         className: className,
-//         intervalFunction: intervalFunction, // Kind of function.
-//         callerId: callerId,
-//         isRunning: true
-//     });
-// }
-
-// function deleteIntervals(pause) {
-//     if (pause) {
-//         intervals.forEach(interval => {
-//             if (interval.pause) {
-//                 clearInterval(interval.id);
-//                 interval.isRunning = false;
-//             }
-//         });
-//     } else {
-//         intervals.forEach(interval => clearInterval(interval.id));
-//         intervals = [];
-//     }
-// }
-
-// function restartPauseIntervals() {
-//     let i = 0;
-//     intervals.forEach(interval => {
-//         i++;
-//         if (interval.pause) {
-//             registerInterval(interval.pause, interval.functionToRecall, interval.interval, interval.intervalFunction, interval.className);
-//             intervals.splice(i, 1);
-//             i--
-//         }
-//     });
-// }
-
-// function deleteIntervalsByClassName(className) {
-//     for (let i = 0; i < intervals.length; i++) {
-//         if (intervals[i].className === className) {
-//             clearInterval(intervals[i].id);
-//             intervals.splice(i, 1);
-//             i--;
-//         }
-//     }
-// }
-
-// function deleteIntervalsByClassAndFunctionNames(className, intervalFunction) {
-//     for (let i = 0; i < intervals.length; i++) {
-//         if (intervals[i].className === className && intervals[i].intervalFunction === intervalFunction) {
-//             clearInterval(intervals[i].id);
-//             intervals.splice(i, 1);
-//             i--;
-//         }
-//     }
-// }
-
-// function deleteIntervalById(id) {
-//     for (let i = 0; i < intervals.length; i++) {
-//         if (intervals[i].callerId === id) {
-//             clearInterval(intervals[i].id);
-//             intervals.splice(i, 1);
-//             i--;
-//         }
-//     }
-// }
