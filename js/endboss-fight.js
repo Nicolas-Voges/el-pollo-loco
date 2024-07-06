@@ -30,7 +30,7 @@ function bossFight() {
 function bossAttackCooledDown() {
     return new Date().getTime() - world.lastAttack > 1000;
 }
-
+let soundCounter = 0;
 /**
  * This function sets booleans to start alert animation.
  */
@@ -38,6 +38,12 @@ function alertBoss() {
     bossFightDone = false;
     world.endboss.isAlert = true;
     bossFightStarted = true;
+    if (soundCounter > 3) {
+        playSound(SOUNDS.endboss.ALERT.SOUND);
+        soundCounter = 0;
+    } else {
+        soundCounter++;
+    }
 }
 
 /**
@@ -193,7 +199,7 @@ function moveToCharacter(xPlayer) {
 function bossFightAttackAnimation() {
     if (!bossAttackAnimationRuns) {
         let attack = setInterval(() => {
-        // console.log('boss fight bossFightAttackAnimation');
+            // console.log('boss fight bossFightAttackAnimation');
             if (!isPause) {
                 checkAttackAnimationProgress(attack);
             }

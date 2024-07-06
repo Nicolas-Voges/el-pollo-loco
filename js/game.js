@@ -165,6 +165,7 @@ async function setSounds() {
     world.sound_ambiente.loop = true;
     await playSound(world.sound_music);
     world.sound_music.loop = true;
+    SOUNDS.character.LONG_IDLE.SOUND.loop = true;
 }
 
 function setVolume() {
@@ -179,6 +180,7 @@ let keyToChange = 0;
 function changeKey(key) {
     document.removeEventListener('keydown', keyDown);
     document.addEventListener('keydown', takeKey);
+    document.getElementById('chooseKeyOverlay').classList.remove('display-none');
     keyToChange = key;
 }
 
@@ -261,12 +263,12 @@ function takeKey(e) {
             keybord.pauseKeys[2] = output;
             document.getElementById('pauseKey3').innerHTML = output;
             break;
-
         default:
             break;
     }
     document.removeEventListener('keydown', takeKey);
     document.addEventListener('keydown', keyDown);
+    document.getElementById('chooseKeyOverlay').classList.add('display-none');
 }
 
 /**

@@ -209,6 +209,7 @@ class Character extends MovableObject {
             this.playAnimation(this.IMAGES_IDLE);
         } else {
             this.animatLongIdle();
+            playSound(SOUNDS.character.LONG_IDLE.SOUND);
         }
     }
 
@@ -239,6 +240,7 @@ class Character extends MovableObject {
      * Also turns boolean toolIdleTime to false.
      */
     breakIdle() {
+        SOUNDS.character.LONG_IDLE.SOUND.pause();
         this.deleteIntervals('animations');
         this.animate();
         this.tookIdleTime = false;

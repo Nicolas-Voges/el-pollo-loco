@@ -228,11 +228,11 @@ const SOUNDS = {
     character: {
         LONG_IDLE: {
             SOUND: new Audio('audio/snoring.mp3'),
-            VOLUME: 1
+            VOLUME: 0.7
         },
         WALKING: {
             SOUND: new Audio('audio/walking.mp3'),
-            VOLUME: 1
+            VOLUME: 0.6
         },
         JUMPING: {
             SOUND: new Audio('audio/jump.mp3'),
@@ -261,8 +261,8 @@ const SOUNDS = {
     },
     endboss: {
         ALERT: {
-            SOUND: new Audio('audio/alert.mp3'),
-            VOLUME: 1
+            SOUND: new Audio('audio/boss-alert.mp3'),
+            VOLUME: 0.5
         },
         ATTACK: {
             SOUND: new Audio('audio/earthquake.mp3'),
@@ -286,7 +286,7 @@ const SOUNDS = {
     coins: {
         COLLECT: {
             SOUND: new Audio('audio/coin-collect.mp3'),
-            VOLUME: 1
+            VOLUME: 0.3
         }
     },
     throwableObject: {
@@ -402,13 +402,6 @@ function checkReadyState() {
 }
 
 function checkSoundsLoaded() {
-    // Object.keys(SOUNDS).forEach((key) => {
-    //     Object.keys(SOUNDS[`${key}`]).forEach((nextKey) => {
-    //         if (SOUNDS[`${key}`][`${nextKey}`].readyState > SOUNDS[`${key}`][`${nextKey}`].HAVE_CURRENT_DATA) {
-    //             loaded++;
-    //         }
-    //     });
-    // });
     iteraterThroughSounds('addLoaded(key, nextKey);');
 }
 

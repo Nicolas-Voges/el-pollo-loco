@@ -87,6 +87,7 @@ function bossAlertAnimation(cameraOut = false) {
  * @param {boolean} cameraOut .
  */
 function runAlertAnimation(cameraOut) {
+    playSound(SOUNDS.endboss.ALERT.SOUND);
     let alertAnimation = setInterval(() => {
         // console.log('boss animation runAlertAnimation');
         if (world.endboss.currentImage < world.endboss.IMAGES_ALERT.length - 1 || animatinCount < 2) {

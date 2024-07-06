@@ -39,7 +39,7 @@ h1 {
     height: 480px;
 }
 
-#portraitOverlay {
+.overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -52,28 +52,11 @@ h1 {
     justify-content: center;
     align-items: center;
     text-align: center;
-    /* animation: fade-out 3s forwards; */
 }
 
-/* @keyframes fade-out {
-    35% {
-        opacity: 1;
-        z-index: 999;
-    }
-
-    50% {
-        opacity: 1;
-    }
-
-    95% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 0;
-        z-index: -1;
-    }
-} */
+#chooseKeyOverlay {
+    z-index: 4;
+}
 
 canvas {
     background-image: url('./img/9_intro_outro_screens/start/startscreen_1.png');

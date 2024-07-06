@@ -100,6 +100,9 @@ class World {
     checkForEndingGame() {
         if (this.endboss.energy <= 0 && world.endboss.deathAnimationDone && earthquakeDone) {
             this.setGameEnd('win');
+            SOUNDS.endboss.ALERT.SOUND.pause();
+            SOUNDS.endboss.HURT.SOUND.pause();
+            playSound(SOUNDS.endboss.DEAD.SOUND);
         } else if (this.character.energy <= 0 && world.character.deathAnimationDone) {
             this.setGameEnd('lose');
         }
@@ -256,6 +259,11 @@ class World {
         this.level.collectableObjects.forEach((obj, i) => {
             if (this.character.isColliding(obj)) {
                 this.collectItem(obj, i);
+                if (obj instanceof Coin) {
+                    playSound(SOUNDS.coins.COLLECT.SOUND);
+                } else if (obj instanceof Bottle) {
+                    playSound(SOUNDS.bottle.COLLECT.SOUND);
+                }
             }
             i++;
         });

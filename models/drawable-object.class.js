@@ -212,7 +212,7 @@ class DrawableObject {
         if (this instanceof Chicken) {
             playSound(this.sound_chickenHit);
         }
-        if (this instanceof Endboss) {
+        if (this instanceof Endboss && this.energy > 0) {
             playSound(this.sound_bossHit);
         }
     }
