@@ -2,10 +2,8 @@ let mobileDivice = false;
 let canvas;
 let ctx;
 let world;
-let keybord = new Keyboard();
+let keyboard = new Keyboard();
 let activeIntervals = [];
-let SFXvolume = 1;
-let musicVolume = 1;
 let comingEnemyId = 0;
 let bossStatusbarIsShown = false;
 let isPause = false;
@@ -13,168 +11,23 @@ let endbossMoveWasOn = false;
 let endbossAnimateWasOn = false;
 let start = false;
 let pauseSetted = true;
-let loadingComplete = false;
-let imageCache = {};
 let gameEnded = false;
 let gameEndedTime;
 let fullscreen = false;
-let intervalValues = {
-    character: {
-        moves: 1000 / 60,
-        animations: {
-            default: 80,
-            idle: 140
-        },
-        gravity: 1000 / 60
-    },
-    enemies: {
-        moves: 1000 / 60,
-        animations: 120
-    },
-    endboss: {
-        moves: 1000 / 60,
-        animations: 200,
-        gravity: 1000 / 60
-    },
-    world: {
-        run: 5
-    },
-    throwableObjects: {
-        moves: 20,
-        animations: 100,
-        gravity: 1000 / 60
-    },
-    collectableObjects: {
-        coins: {
-            animations: 1000 / 3
-        },
-        bottles: {
-            animations: 1000 / 2
-        }
-    }
-};
-
-/**
- * This function toggels between settings option windows.
- */
-function showOtherSettingsWindow() {
-    document.getElementById('settingsSoundButton').classList.toggle('active-button');
-    document.getElementById('settingsKeysButton').classList.toggle('active-button');
-    document.getElementById('settingsSoundWindow').classList.toggle('display-none');
-    document.getElementById('settingsKeysWindow').classList.toggle('display-none');
-}
-
-/**
- * This function plays a sound if sound is fully loaded to play.
- * 
- * @param {Object} sound 
- */
-async function playSound(sound) {
-    sound.pause();
-    try {
-        let isPlaying = sound.currentTime > 0 && !sound.paused && !sound.ended && sound.readyState > sound.HAVE_CURRENT_DATA;
-        if (!isPlaying) {
-            await sound.play();
-        } else {
-
-        }
-    } catch (error) {
-
-    }
-}
-
-
-/**
- * This function checks if users divice is a mobil or desktop device.
- */
-function isMobile() {
-    mobileDivice = navigator.maxTouchPoints > 0 && /Android|iPhone|HUAWEI|huawei|phone/i.test(navigator.userAgent);
-    if (mobileDivice) {
-        setForMobile();
-    }
-    return mobileDivice;
-}
-
-/**
- * This function
- */
-function setForMobile() {
-    document.querySelector('h1').classList.add('display-none');
-    setMobile(document.getElementById('gameContainer'));
-    setMobile(document.getElementById('canvas'));
-    setMobile(document.getElementById('controlls'));
-    setMobile(document.getElementById('loading-animation-overlay'));
-    document.getElementById('fullscreenButton').classList.add('display-none');
-    document.getElementById('settingsButtonBox').classList.add('display-none');
-}
-
-/**
- * This function
- * 
- * @param {Object} element 
- */
-function setMobile(element) {
-    element.style.width = '100%';
-    element.style.height = '100vh';
-    element.style.backgroundSize = 'contain';
-}
-
-
-function toggleFullscreen() {
-    if (fullscreen) {
-        endFullscreen();
-    } else {
-        setFullscreen();
-    }
-}
-
-function endFullscreen() {
-    fullscreen = false;
-    document.exitFullscreen();
-    document.getElementById('canvas').classList.remove('fullscreen');
-    document.getElementById('controlls').classList.remove('fullscreen');
-    document.getElementById('iconsBox').style.width = '80%';
-    document.activeElement.blur();
-}
-
-function setFullscreen() {
-    fullscreen = true;
-    document.getElementById('fullscreenBox').requestFullscreen();
-    document.getElementById('canvas').classList.add('fullscreen');
-    document.getElementById('controlls').classList.add('fullscreen');
-    document.getElementById('iconsBox').style.width = '100%';
-    document.activeElement.blur();
-}
-
-function toggleSettingsWindow() {
-    element = document.getElementById('settingsBox');
-    element.classList.toggle('display-none');
-    document.querySelector('body').classList.toggle('overflow-hidden');
-    if (!element.classList.contains('display-none') && start && !isPause && !gameEnded && !endbossAnimationRuns) {
-        setPause();
-    }
-}
 
 /**
  * This function initializes the game by creating level and world and
  * gives the world canvas and keboard.
  */
 function init() {
-    document.getElementById('settingsBox').classList.add('display-none');
-    document.getElementById('restartButton').classList.add('display-none');
-    document.getElementById('closeButton').classList.add('display-none');
-    document.getElementById('startButton').classList.add('display-none');
-    if (mobileDivice) {
-        document.getElementById('footer').classList.add('display-none');
-        document.getElementById('mobileControlls').classList.remove('visibility-hidden');
-        document.getElementById('mobileControlls').classList.remove('display-none');
-    }
+    removeNotNeededElements();
+    initMobile();
     canvas = document.getElementById('canvas');
     canvas.style.backgroundColor = 'black';
     canvas.style.backgroundImage = 'unset';
     gameEnded = false;
     initLevel1();
-    world = new World(canvas, keybord);
+    world = new World(canvas, keyboard);
     if (!loadingComplete) {
         setSounds();
         checkReadyState();
@@ -182,235 +35,31 @@ function init() {
 }
 
 /**
- * This function sets sounds properties.
+ * This function removes elements which may block the view.
  */
-async function setSounds() {
-    setVolume();
-    await playSound(world.sound_ambiente);
-    world.sound_ambiente.loop = true;
-    await playSound(world.sound_music);
-    world.sound_music.loop = true;
-    SOUNDS.character.LONG_IDLE.SOUND.loop = true;
+function removeNotNeededElements() {
+    document.getElementById('settingsBox').classList.add('display-none');
+    document.getElementById('restartButton').classList.add('display-none');
+    document.getElementById('closeButton').classList.add('display-none');
+    document.getElementById('startButton').classList.add('display-none');
 }
 
-function setVolume() {
-    iteraterThroughSounds('setSFXVolume(key, nextKey)');
-    iteraterThroughSounds('setMusicVolume(key, nextKey)');
+/**
+ * This function hides the footer and shows mobile controls.
+ */
+function initMobile() {
+    if (mobileDivice) {
+        document.getElementById('footer').classList.add('display-none');
+        document.getElementById('mobileControls').classList.remove('visibility-hidden');
+        document.getElementById('mobileControls').classList.remove('display-none');
+    }
 }
 
+/**
+ * This function shows the footer.
+ */
 function closeGame() {
     document.getElementById('footer').classList.remove('display-none');
-}
-let keyToChange = 0;
-
-function changeKey(key) {
-    document.removeEventListener('keydown', keyDown);
-    document.addEventListener('keydown', takeKey);
-    document.getElementById('chooseKeyOverlay').classList.remove('display-none');
-    keyToChange = key;
-}
-
-function takeKey(e) {
-    console.log(e.code);
-    let output = e.code;
-    if (e.code === 'Delete') {
-        output = 'unset';
-    }
-    switch (keyToChange) {
-        case 1:
-            keybord.moveRightKeys[0] = output;
-            document.getElementById('rightKey1').innerHTML = output;
-            break;
-        case 2:
-            keybord.moveRightKeys[1] = output;
-            document.getElementById('rightKey2').innerHTML = output;
-            break;
-        case 3:
-            keybord.moveRightKeys[2] = output;
-            document.getElementById('rightKey3').innerHTML = output;
-            break;
-        case 4:
-            keybord.moveLeftKeys[0] = output;
-            document.getElementById('leftKey1').innerHTML = output;
-            break;
-        case 5:
-            keybord.moveLeftKeys[1] = output;
-            document.getElementById('leftKey2').innerHTML = output;
-            break;
-        case 6:
-            keybord.moveLeftKeys[2] = output;
-            document.getElementById('leftKey3').innerHTML = output;
-            break;
-        case 7:
-            keybord.jumpKeys[0] = output;
-            document.getElementById('jumpKey1').innerHTML = output;
-            break;
-        case 8:
-            keybord.jumpKeys[1] = output;
-            document.getElementById('jumpKey2').innerHTML = output;
-            break;
-        case 9:
-            keybord.jumpKeys[2] = output;
-            document.getElementById('jumpKey3').innerHTML = output;
-            break;
-        case 10:
-            keybord.throwKeys[0] = output;
-            document.getElementById('throwKey1').innerHTML = output;
-            break;
-        case 11:
-            keybord.throwKeys[1] = output;
-            document.getElementById('throwKey2').innerHTML = output;
-            break;
-        case 12:
-            keybord.throwKeys[2] = output;
-            document.getElementById('throwKey3').innerHTML = output;
-            break;
-        case 13:
-            keybord.pauseKeys[0] = output;
-            document.getElementById('pauseKey1').innerHTML = output;
-            break;
-        case 14:
-            keybord.pauseKeys[1] = output;
-            document.getElementById('pauseKey2').innerHTML = output;
-            break;
-        case 15:
-            keybord.pauseKeys[2] = output;
-            document.getElementById('pauseKey3').innerHTML = output;
-            break;
-        default:
-            break;
-    }
-    document.removeEventListener('keydown', takeKey);
-    document.addEventListener('keydown', keyDown);
-    document.getElementById('chooseKeyOverlay').classList.add('display-none');
-}
-
-/**
- * This function listens for key down events and sets the right booleans to true. 
- */
-window.addEventListener('keydown', keyDown);
-function keyDown(e) {
-    if (start && !gameEnded) {
-        switch (e.code) {
-            case (world.keyboard.jumpKeys[0]):
-            case (world.keyboard.jumpKeys[1]):
-            case (world.keyboard.jumpKeys[2]):
-                keybord.jumpKeyPush = true;
-                break;
-            case (world.keyboard.moveLeftKeys[0]):
-            case (world.keyboard.moveLeftKeys[1]):
-            case (world.keyboard.moveLeftKeys[2]):
-                keybord.moveLeftKeyPush = true;
-                break;
-            case (world.keyboard.moveRightKeys[0]):
-            case (world.keyboard.moveRightKeys[1]):
-            case (world.keyboard.moveRightKeys[2]):
-                keybord.moveRightKeyPush = true;
-                break;
-            case (world.keyboard.throwKeys[0]):
-            case (world.keyboard.throwKeys[1]):
-            case (world.keyboard.throwKeys[2]):
-                if (world.bottleCooledDown()) {
-                    keybord.throwKeyPush = true;
-                }
-                break;
-            case (world.keyboard.pauseKeys[0]):
-            case (world.keyboard.pauseKeys[1]):
-            case (world.keyboard.pauseKeys[2]):
-                keybord.pauseKeyPush = true;
-                if (pauseSetted) {
-                    pauseSetted = false;
-                    startPauseGame();
-                }
-                break;
-            default:
-                break;
-        }
-    }
-};
-
-/**
- * This function listens for key up events and sets the right booleans to false.
- */
-window.addEventListener('keyup', (e) => {
-    if (start && !gameEnded) {
-        switch (e.code) {
-            case (world.keyboard.jumpKeys[0]):
-            case (world.keyboard.jumpKeys[1]):
-            case (world.keyboard.jumpKeys[2]):
-                keybord.jumpKeyPush = false;
-                break;
-            case (world.keyboard.moveLeftKeys[0]):
-            case (world.keyboard.moveLeftKeys[1]):
-            case (world.keyboard.moveLeftKeys[2]):
-                keybord.moveLeftKeyPush = false;
-                break;
-            case (world.keyboard.moveRightKeys[0]):
-            case (world.keyboard.moveRightKeys[1]):
-            case (world.keyboard.moveRightKeys[2]):
-                keybord.moveRightKeyPush = false;
-                break;
-            case (world.keyboard.throwKeys[0]):
-            case (world.keyboard.throwKeys[1]):
-            case (world.keyboard.throwKeys[2]):
-                keybord.throwKeyPush = false;
-                break;
-            default:
-                break;
-        }
-    }
-});
-
-window.addEventListener(`contextmenu`, (e) => {
-    e.preventDefault();
-});
-
-function addTouchEvents() {
-    let throwButton = document.getElementById('throwButton');
-    let leftButton = document.getElementById('leftButton');
-    let rightButton = document.getElementById('rightButton');
-    let jumpButton = document.getElementById('jumpButton');
-    throwButton.addEventListener('touchstart', () => {
-        if (world.bottleCooledDown() && start && !gameEnded) {
-            keybord.throwKeyPush = true;
-        }
-    });
-    throwButton.addEventListener('touchend', () => {
-        document.activeElement.blur();
-    });
-    leftButton.addEventListener('touchstart', () => {
-        if (start && !gameEnded) {
-            keybord.moveLeftKeyPush = true;
-        }
-    });
-    leftButton.addEventListener('touchend', () => {
-        if (start && !gameEnded) {
-            keybord.moveLeftKeyPush = false;
-        }
-        document.activeElement.blur();
-    });
-    rightButton.addEventListener('touchstart', () => {
-        if (start && !gameEnded) {
-            keybord.moveRightKeyPush = true;
-        }
-    });
-    rightButton.addEventListener('touchend', () => {
-        if (start && !gameEnded) {
-            keybord.moveRightKeyPush = false;
-        }
-        document.activeElement.blur();
-    });
-    jumpButton.addEventListener('touchstart', () => {
-        if (start && !gameEnded) {
-            keybord.jumpKeyPush = true;
-        }
-    });
-    jumpButton.addEventListener('touchend', () => {
-        if (start && !gameEnded) {
-            keybord.jumpKeyPush = false;
-        }
-        document.activeElement.blur();
-    });
 }
 
 /**
@@ -431,17 +80,11 @@ function startPauseGame() {
     }
 }
 
-function checkForMobile() {
-    if (mobileDivice) {
-        if (isPortrait()) {
-            document.getElementById('portraitOverlay').classList.remove('display-none');
-            document.getElementById('footer').classList.add('display-none');
-            return;
-        }
-    }
-}
-
-
+/**
+ * This function checks if screen height is greater than screen width.
+ * 
+ * @returns {boolean} true if thats the case.
+ */
 function isPortrait() {
     return screen.availHeight > screen.availWidth;
 }
@@ -569,17 +212,38 @@ function checkBossMoved() {
     }
 }
 
+/**
+ * This function shows the endscreen and hides mobile controls.
+ * 
+ * @param {string} gameStatus 
+ */
 function showEndScreen(gameStatus) {
     ctx = document.getElementById('canvas').getContext('2d');
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     document.getElementById('canvas').style.backgroundSize = 'contain';
     document.getElementById('endgameButtonBox').classList.remove('display-none');
-    document.getElementById('mobileControlls').classList.add('display-none');
+    document.getElementById('mobileControls').classList.add('display-none');
     document.getElementById('restartButton').classList.remove('display-none');
+    showMobileEndScreen();
+    chooseEndScreenImmage(gameStatus);
+}
+
+/**
+ * This function shows the mobile end screen.
+ */
+function showMobileEndScreen() {
     if (mobileDivice) {
         document.getElementById('closeButton').classList.remove('display-none');
-        document.getElementById('mobileControlls').classList.add('visibility-hidden');
+        document.getElementById('mobileControls').classList.add('visibility-hidden');
     }
+}
+
+/**
+ * This function chooses the background image by considering 
+ * 
+ * @param {string} gameStatus .
+ */
+function chooseEndScreenImmage(gameStatus) {
     if (gameStatus === 'lose') {
         ctx.drawImage(imageCache['img/9_intro_outro_screens/game_over/you lost.png'], 50, 50, this.canvas.width - 100, this.canvas.height - 100);
     } else if (gameStatus === 'win') {
@@ -595,6 +259,9 @@ function restartGame() {
     init();
 }
 
+/**
+ * THis function stops the game and resets global variables and intervals.
+ */
 function stopGame() {
     cancelAnimationFrame(world.requestId);
     world = null;
@@ -606,26 +273,40 @@ function stopGame() {
  * This function resets global variables.
  */
 function resetGlobalVariables() {
-    comingEnemyId = 0;
-    bossStatusbarIsShown = false;
     animatinCount = 0;
     characterPosition = 3800;
-    backgrounds = [];
-    endbossAnimationRuns = false;
-    endbossAnimationHasRun = false;
+    comingEnemyId = 0;
+    soundCounter = 0;
+    resetBossValues();
+    resetKeyboard();
+}
+
+/**
+ * This function resets global variables for end boss.
+ */
+function resetBossValues() {
     earthquakeDone = false;
-    bossFightStarted = false;
-    bossFightDone = true;
-    attackJumpStarted = false;
-    bossAttackAnimationRuns = false;
+    endbossAnimationHasRun = false;
+    endbossAnimationRuns = false;
     endbossMoveWasOn = false;
     endbossAnimateWasOn = false;
-    keybord.jumpKeyPush = false;
-    keybord.moveLeftKeyPush = false;
-    keybord.moveRightKeyPush = false;
-    keybord.throwKeyPush = false;
-    keybord.pauseKeyPush = false;
-    soundCounter = 0
+    attackJumpStarted = false;
+    bossAttackAnimationRuns = false;
+    bossFightStarted = false;
+    bossFightDone = true;
+    bossStatusbarIsShown = false;
+}
+
+/**
+ * This function resetskeyboard values.
+ */
+function resetKeyboard() {
+    keyboard.jumpKeyPush = false;
+    keyboard.moveLeftKeyPush = false;
+    keyboard.moveRightKeyPush = false;
+    keyboard.throwKeyPush = false;
+    keyboard.pauseKeyPush = false;
+    keyToChange = 0;
 }
 
 /**
@@ -675,4 +356,42 @@ function changeCloudPosition() {
             cloud.speed = 0.03;
         }
     });
+}
+
+/**
+ * This function updates the status bars.
+ */
+function updateStatusBars() {
+    world.statusBarCoin.setPercentage(world.character.coins * 20 + 18);
+    world.statusBarBottle.setPercentage(world.character.bottles * 20 + 18);
+    world.statusBarEnergy.setPercentage(world.character.energy);
+    world.statusBarBoss.setPercentage(world.endboss.energy);
+}
+
+/**
+ * This function checks if the game is over and sets values for win or lose.
+ */
+function checkForEndingGame() {
+    if (world.endboss.energy <= 0 && world.endboss.deathAnimationDone && earthquakeDone) {
+        setGameEnd('win');
+        SOUNDS.endboss.ALERT.SOUND.pause();
+        SOUNDS.endboss.HURT.SOUND.pause();
+        playSound(SOUNDS.endboss.DEAD.SOUND);
+    } else if (world.character.energy <= 0 && world.character.deathAnimationDone) {
+        setGameEnd('lose');
+    }
+}
+
+/**
+ * This function sets values to ending gane.
+ */
+function setGameEnd(gameResult) {
+    if (!gameEnded) {
+        gameEnded = true;
+        gameEndedTime = new Date().getTime();
+    }
+    if (new Date().getTime() - gameEndedTime > 1000) {
+        stopGame();
+        showEndScreen(gameResult);
+    }
 }

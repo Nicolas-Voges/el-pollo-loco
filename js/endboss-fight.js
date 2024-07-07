@@ -5,6 +5,18 @@ let bossAttackAnimationRuns = false;
 let soundCounter = 0;
 
 /**
+ * This function checks if end boss animation has run and calls boss fight if thats the case.
+ * Otherwise it adjusts the positions of backgrounds.
+ */
+function checkForEndbossFight() {
+    if (endbossAnimationHasRun) {
+        bossFight();
+    } else {
+        adjustBackgroundPosition();
+    }
+}
+
+/**
  * This function checks whether the game is paused. If thats not the case this function animates boss.
  * Also it checks if alert animation should run and starts animation, or
  * if alert animation is done and starts attack.

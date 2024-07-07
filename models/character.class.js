@@ -60,7 +60,6 @@ class Character extends MovableObject {
      */
     move() {
         let id = setInterval(() => {
-        // console.log('character move');
             this.sound_walking.pause();
             this.walk();
             this.checkForJump();
@@ -150,7 +149,6 @@ class Character extends MovableObject {
      */
     animate() {
         let id = setInterval(() => {
-        // console.log('character animate');
             if (this.isDead()) {
                 this.die();
             } else if (this.isHurt()) {
@@ -189,7 +187,6 @@ class Character extends MovableObject {
      */
     animateIdle() {
         let id = setInterval(() => {
-        // console.log('character animateIdle');
         if (this.noKeyPush() && !this.isHurt() && !this.isDead()) {
                 this.doIdle();
             } else {
@@ -287,7 +284,6 @@ class Character extends MovableObject {
      */
     runHitReaction(distance, braceUpTime, xStart) {
         let id = setInterval(() => {
-        // console.log('character runHitReaction');
         if (!this.reachedLevelEnd && this.notReachedLevelStart() && this.notReachedDistance(xStart, distance)) {
                 this.x -= 5;
             } else if (this.reachedLevelEnd && this.onLeftScreenSide(xStart)) {

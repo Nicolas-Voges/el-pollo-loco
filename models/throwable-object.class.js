@@ -41,12 +41,21 @@ class ThrowableObject extends MovableObject {
                 this.x += 10 + this.speed;
             }
             if (this.isDead()) {
-                clearInterval(id);
-                activeIntervals.splice(activeIntervals.indexOf(id), 1);
-                world.throwableObjects = [];
+                this.endThrow(id);
             }
         }, intervalValues.throwableObjects.moves);
         this.registerInterval(id, 'moves')
+    }
+
+    /**
+     * This function clears interval to throw bottle and deletes bollte.
+     * 
+     * @param {number} id 
+     */
+    endThrow(id) {
+        clearInterval(id);
+        activeIntervals.splice(activeIntervals.indexOf(id), 1);
+        world.throwableObjects = [];
     }
 
     /**

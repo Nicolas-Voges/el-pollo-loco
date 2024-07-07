@@ -5,9 +5,6 @@ class World {
     canvas;
     camera_x = 0;
     keyboard;
-    sound_ambiente = SOUNDS.world.AMBIENTE.SOUND;
-    sound_music = SOUNDS.world.MUSIC.SOUND;
-    sound_glas = SOUNDS.throwableObject.SPLASH.SOUND;
     statusBarEnergy = new StatusBarEnergy();
     statusBarCoin = new StatusBarCoin();
     statusBarBottle = new StatusBarBottle();
@@ -56,77 +53,17 @@ class World {
      */
     run() {
         let id = setInterval(() => {
-            // console.log('world run');
-            this.checkForMobile();
+            checkForPortraitView();
             this.checkCollisions();
             this.checkThrowableObjects();
             this.checkForDeadEnemies();
             checkForEndbossAnimation();
-            this.updateStatusBars();
-            if (endbossAnimationHasRun) {
-                bossFight();
-            } else {
-                adjustBackgroundPosition();
-            }
-            this.checkForEndingGame();
+            updateStatusBars();
+            checkForEndbossFight();
+            checkForEndingGame();
         }, 5);
         this.intervals.push(id);
         activeIntervals.push(id);
-    }
-
-
-    checkForMobile() {
-        if (mobileDivice && isPortrait() && !endbossAnimationRuns) {
-            setPause()
-            let id = setInterval(() => {
-                if (isPortrait()) {
-                    document.getElementById('portraitOverlay').style.zIndex = '1';
-                    document.getElementById('portraitOverlay').classList.remove('display-none');
-                } else {
-                    document.getElementById('portraitOverlay').style.zIndex = '-1';
-                    clearInterval(id);
-                    this.keyboard.jumpKeyPush = false;
-                    this.keyboard.moveLeftKeyPush = false;
-                    this.keyboard.moveRightKeyPush = false;
-                    this.keyboard.throwKeyPush = false;
-                    this.keyboard.pauseKeyPush = false;
-                    setPlay();
-                }
-            }, 100);
-        }
-    }
-
-
-    checkForEndingGame() {
-        if (this.endboss.energy <= 0 && world.endboss.deathAnimationDone && earthquakeDone) {
-            this.setGameEnd('win');
-            SOUNDS.endboss.ALERT.SOUND.pause();
-            SOUNDS.endboss.HURT.SOUND.pause();
-            playSound(SOUNDS.endboss.DEAD.SOUND);
-        } else if (this.character.energy <= 0 && world.character.deathAnimationDone) {
-            this.setGameEnd('lose');
-        }
-    }
-
-    setGameEnd(gameResult) {
-        if (!gameEnded) {
-            gameEnded = true;
-            gameEndedTime = new Date().getTime();
-        }
-        if (new Date().getTime() - gameEndedTime > 1000) {
-            stopGame();
-            showEndScreen(gameResult);
-        }
-    }
-
-    /**
-     * This function updates the status bars.
-     */
-    updateStatusBars() {
-        this.statusBarCoin.setPercentage(this.character.coins * 20 + 18);
-        this.statusBarBottle.setPercentage(this.character.bottles * 20 + 18);
-        this.statusBarEnergy.setPercentage(this.character.energy);
-        this.statusBarBoss.setPercentage(this.endboss.energy);
     }
 
     /**
@@ -260,18 +197,26 @@ class World {
             if (this.character.isColliding(obj)) {
                 this.collectItem(obj, i);
                 if (obj instanceof Coin) {
-                    playSound(SOUNDS.coins.COLLECT.SOUND);
-                    if (this.character.coins === 5 && this.character.bottles <= 5) {
-                        this.character.bottles++;
-                        this.character.coins = 0;
-                        playSound(SOUNDS.bottle.COLLECT.SOUND);
-                    }
+                    this.collectCoin();
                 } else if (obj instanceof Bottle) {
                     playSound(SOUNDS.bottle.COLLECT.SOUND);
                 }
             }
             i++;
         });
+    }
+
+    /**
+     * This function collects a coin. If user collects 58 Coins this function gets his coins and gives a bottle to the character.
+     */
+    collectCoin() {
+        playSound(SOUNDS.coins.COLLECT.SOUND);
+        if (this.character.coins === 5 && this.character.bottles <= 5) {
+            this.character.bottles++;
+            this.character.coins = 0;
+            SOUNDS.coins.COLLECT.SOUND.pause();
+            playSound(SOUNDS.bottle.COLLECT.SOUND);
+        }
     }
 
     /**
@@ -316,7 +261,11 @@ class World {
         this.deleteBottle();
     }
 
-
+    /**
+     * This function checks if throw bottle cooled down.
+     * 
+     * @returns {boolean} true if thats the case.
+     */
     bottleCooledDown() {
         return this.lastBottleThrown + this.firingRate < new Date().getTime();
     }
@@ -328,7 +277,7 @@ class World {
         for (let i = 0; i < this.throwableObjects.length; i++) {
             if (this.throwableObjects[i].y >= 390) {
                 this.throwableObjects[i].energy = 0;
-                playSound(this.sound_glas);
+                playSound(SOUNDS.throwableObject.SPLASH.SOUND);
                 this.throwableObjects[i].deleteIntervals('gravities');
                 this.throwableObjects[i].deleteIntervals('moves');
             }
@@ -419,8 +368,6 @@ class World {
         }
         try {
             object.draw(this.ctx);
-            // object.drawFrame(this.ctx);
-            // object.drawColliderFrame(this.ctx);
         } catch (e) {
             console.warn('Failed to load image in world.class.js. Error: ' + e);
             console.error('Can not load image: ' + this.img.src);

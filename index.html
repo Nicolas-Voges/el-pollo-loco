@@ -12,6 +12,7 @@
     <script src="models/world.class.js"></script>
     <script src="models/keyboard.class.js"></script>
     <script src="js/game.js"></script>
+    <script src="js/controls.js"></script>
     <script src="js/endboss-entrance-animation.js"></script>
     <script src="js/endboss-fight.js"></script>
     <script src="models/drawable-object.class.js"></script>
@@ -43,7 +44,7 @@
                 <p>Choose key..</p>
             </div>
             <canvas id="canvas" width="720" height="480"></canvas>
-            <div id="controlls">
+            <div id="controls">
                 <div id="iconsBox" class="iconsBox">
                     <button onclick="muteSounds(); document.activeElement.blur();" id="muteButton" class="icon"></button>
                     <button onclick="toggleSettingsWindow(); document.activeElement.blur();" id="settingsButton" class="icon"></button>
@@ -57,7 +58,7 @@
                     <button onclick="init()" id="restartButton" class="startIcon display-none">Restart</button>
                     <button onclick="closeGame()" id="closeButton" class="startIcon display-none">Close</button>
                 </div>
-                <div id="mobileControlls" class="lowerIconsBox visibility-hidden">
+                <div id="mobileControls" class="lowerIconsBox visibility-hidden">
                     <div class="gameIconBoxLeft">
                         <button id="leftButton" class="icon gameIcon"></button>
                         <button id="rightButton" class="icon gameIcon"></button>

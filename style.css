@@ -107,7 +107,7 @@ footer>a:hover {
     font-size: 40px;
 }
 
-#controlls {
+#controls {
     position: absolute;
     top: 0;
     width: 720px;
@@ -359,7 +359,7 @@ overflow: hidden;
 
     canvas,
     #gameContainer,
-    #controlls {
+    #controls {
         width: 100%;
         background-size: contain;
         height: 100vh;

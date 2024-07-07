@@ -309,3 +309,39 @@ const SOUNDS = {
         }
     }
 }
+
+let intervalValues = {
+    character: {
+        moves: 1000 / 60,
+        animations: {
+            default: 80,
+            idle: 140
+        },
+        gravity: 1000 / 60
+    },
+    enemies: {
+        moves: 1000 / 60,
+        animations: 120
+    },
+    endboss: {
+        moves: 1000 / 60,
+        animations: 200,
+        gravity: 1000 / 60
+    },
+    world: {
+        run: 5
+    },
+    throwableObjects: {
+        moves: 20,
+        animations: 100,
+        gravity: 1000 / 60
+    },
+    collectableObjects: {
+        coins: {
+            animations: 1000 / 3
+        },
+        bottles: {
+            animations: 1000 / 2
+        }
+    }
+};
