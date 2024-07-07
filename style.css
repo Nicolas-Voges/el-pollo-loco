@@ -352,7 +352,7 @@ td {
 }
 
 .overflow-hidden {
-overflow: hidden;
+    overflow: hidden;
 }
 
 @media only screen and (max-width: 720px) {
@@ -382,8 +382,7 @@ overflow: hidden;
     }
 
     .gameIcon {
-        height: 25px;
-        width: 50px;
+        height: 30px;
     }
 
     #restartButton,
@@ -394,9 +393,28 @@ overflow: hidden;
     th {
         font-size: 20px;
     }
-    
+
     td {
         font-size: 18px;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .gameIcon {
+        width: 75px;
+    }
+}
+
+@media only screen and (max-width: 410px) {
+    .gameIcon {
+        width: 50px;
+    }
+}
+
+@media only screen and (max-width: 360px) {
+    .settings-icons {
+        width: 18px;
+        height: 18px;
     }
 }
 
@@ -407,6 +425,11 @@ overflow: hidden;
 
 .visibility-hidden {
     visibility: hidden;
+    max-width: 1px !important;
+}
+
+.visibility-hidden>* {
+    max-width: 1px !important;
 }
 
 .display-none {

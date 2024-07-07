@@ -42,6 +42,7 @@ function removeNotNeededElements() {
     document.getElementById('restartButton').classList.add('display-none');
     document.getElementById('closeButton').classList.add('display-none');
     document.getElementById('startButton').classList.add('display-none');
+    document.getElementById('endgameButtonBox').classList.add('display-none');
 }
 
 /**
@@ -154,6 +155,7 @@ function setBossPlay() {
  */
 function setPause() {
     isPause = true;
+    changeCloudPosition(0);
     document.getElementById('pauseButton').style.backgroundImage = `url('img/icons/play.png')`;
     setEnemiesPause();
     setCharacterPause();
@@ -345,15 +347,15 @@ function changeBackgroundPosition() {
  * This function checks if character is moving and did not reached end level screen, and
  * moves the cloud in the right direction.
  */
-function changeCloudPosition() {
+function changeCloudPosition(factor = 1) {
     world.level.cloudObjects.forEach((cloud) => {
         if (world.character.isMovingLeft && !endbossAnimationHasRun && world.character.x < 3696) {
-            cloud.speed = 1;
+            cloud.speed = 1 * factor;
         } else if (world.character.isMovingRight && !endbossAnimationHasRun && world.character.x < 3696) {
-            cloud.speed = -1;
+            cloud.speed = -1 * factor;
         }
         else {
-            cloud.speed = 0.03;
+            cloud.speed = 0.03 * factor;
         }
     });
 }

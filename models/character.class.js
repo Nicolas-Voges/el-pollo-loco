@@ -25,6 +25,7 @@ class Character extends MovableObject {
     reachedLevelEnd = false;
     idleTime = 0;
     tookIdleTime = false;
+    enemyCounter = 0;
 
     /**
      * This first called function calls the constructor function in movable object class.
@@ -35,8 +36,6 @@ class Character extends MovableObject {
         super().loadImage(this.IMAGES_IDLE[0]);
         this.loadAllImages();
         this.isMoving();
-        this.sound_walking.volume = 0.5;
-        this.sound_jump.volume = 0.4;
         this.applyGravity(intervalValues.character.gravity);
         this.move();
         this.animate();
@@ -340,5 +339,14 @@ class Character extends MovableObject {
         setTimeout(() => {
             this.hitReactionRuns = false;
         }, braceUpTime);
+    }
+
+
+    countEnemies() {
+        this.enemyCounter++;
+        if (this.enemyCounter === 20 && !bossFightStarted && this.bottles < 5) {
+            this.bottles++;
+            playSound(SOUNDS.bottle.COLLECT.SOUND);
+        }
     }
 }

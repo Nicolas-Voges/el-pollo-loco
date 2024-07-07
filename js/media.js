@@ -208,6 +208,7 @@ function setFullscreen() {
  * This function toggles settings window.
  */
 function toggleSettingsWindow() {
+    resetKeyboard();
     element = document.getElementById('settingsBox');
     element.classList.toggle('display-none');
     document.querySelector('body').classList.toggle('overflow-hidden');

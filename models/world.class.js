@@ -187,6 +187,7 @@ class World {
             this.character.speedY = 20;
         }
         enemy.energy = 0;
+        this.character.countEnemies();
     }
 
     /**
@@ -198,7 +199,7 @@ class World {
                 this.collectItem(obj, i);
                 if (obj instanceof Coin) {
                     this.collectCoin();
-                } else if (obj instanceof Bottle) {
+                } else if (obj instanceof Bottle && this.character.bottles < 5) {
                     playSound(SOUNDS.bottle.COLLECT.SOUND);
                 }
             }
@@ -211,7 +212,7 @@ class World {
      */
     collectCoin() {
         playSound(SOUNDS.coins.COLLECT.SOUND);
-        if (this.character.coins === 5 && this.character.bottles <= 5) {
+        if (this.character.coins === 5 && this.character.bottles < 5) {
             this.character.bottles++;
             this.character.coins = 0;
             SOUNDS.coins.COLLECT.SOUND.pause();
@@ -229,11 +230,12 @@ class World {
         if (obj instanceof Coin) {
             this.character.coins++;
             this.statusBarCoin.percentage += 20;
-        } else {
+            this.level.collectableObjects.splice(i, 1);
+        } else if (this.character.bottles < 5) {
             this.character.bottles++;
             this.statusBarBottle.percentage += 20;
+            this.level.collectableObjects.splice(i, 1);
         }
-        this.level.collectableObjects.splice(i, 1);
     }
 
     /**

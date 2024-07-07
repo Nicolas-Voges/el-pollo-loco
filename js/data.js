@@ -227,7 +227,7 @@ const SOUNDS = {
     character: {
         LONG_IDLE: {
             SOUND: new Audio('audio/snoring.mp3'),
-            VOLUME: 0.7
+            VOLUME: 0.6
         },
         WALKING: {
             SOUND: new Audio('audio/walking.mp3'),
@@ -295,7 +295,7 @@ const SOUNDS = {
         },
         SPLASH: {
             SOUND: new Audio('audio/bottle-broken.mp3'),
-            VOLUME: 0.4
+            VOLUME: 0.3
         }
     },
     world: {
