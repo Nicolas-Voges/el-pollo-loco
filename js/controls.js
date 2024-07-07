@@ -71,18 +71,6 @@ function takeKey(e) {
             keyboard.throwKeys[2] = output;
             document.getElementById('throwKey3').innerHTML = output;
             break;
-        case 13:
-            keyboard.pauseKeys[0] = output;
-            document.getElementById('pauseKey1').innerHTML = output;
-            break;
-        case 14:
-            keyboard.pauseKeys[1] = output;
-            document.getElementById('pauseKey2').innerHTML = output;
-            break;
-        case 15:
-            keyboard.pauseKeys[2] = output;
-            document.getElementById('pauseKey3').innerHTML = output;
-            break;
         default:
             break;
     }
@@ -125,15 +113,6 @@ function keyDown(e) {
             case (world.keyboard.throwKeys[2]):
                 if (world.bottleCooledDown()) {
                     keyboard.throwKeyPush = true;
-                }
-                break;
-            case (world.keyboard.pauseKeys[0]):
-            case (world.keyboard.pauseKeys[1]):
-            case (world.keyboard.pauseKeys[2]):
-                keyboard.pauseKeyPush = true;
-                if (pauseSetted) {
-                    pauseSetted = false;
-                    startPauseGame();
                 }
                 break;
             default:
