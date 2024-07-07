@@ -4,6 +4,7 @@ let SFXvolume = 1;
 let musicVolume = 1;
 let loadingComplete = false;
 let imageCache = {};
+let isCheckingPortrait = false;
 
 /**
  * This function plays a sound if sound is fully loaded to play.
@@ -275,16 +276,33 @@ function setVolume() {
      * If thats the case this function pauses the game and checks in an interval if uster turned his divice back.
      */
 function checkForPortraitView() {
-    if (mobileDivice && isPortrait() && !endbossAnimationRuns) {
-        setPause()
+    if (mobileDivice && isPortrait() && !endbossAnimationRuns && !isCheckingPortrait) {
+        let setedPause = setValuesForPortrait();
         let id = setInterval(() => {
             if (isPortrait()) {
                 document.getElementById('portraitOverlay').style.zIndex = '1';
                 document.getElementById('portraitOverlay').classList.remove('display-none');
             } else {
-                stopCheckingPortraitView(id);
+                stopCheckingPortraitView(id, setedPause);
+                isCheckingPortrait = false;
             }
         }, 100);
+    }
+}
+
+/**
+ * This function disables a new entry into this function. Also checks if game started
+ * and sets pause and
+ * 
+ * @returns {boolean} true if thats the case.
+ */
+function setValuesForPortrait() {
+    isCheckingPortrait = true;
+    if (start) {
+        setPause();
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -293,11 +311,13 @@ function checkForPortraitView() {
 * 
 * @param {number} id 
 */
-function stopCheckingPortraitView(id) {
+function stopCheckingPortraitView(id, setedPause) {
     document.getElementById('portraitOverlay').style.zIndex = '-1';
     clearInterval(id);
-    resetKeyboard();
-    setPlay();
+    if (setedPause) {
+        resetKeyboard();
+        setPlay();
+    }
 }
 
 /**
@@ -321,6 +341,7 @@ function checkForMobile() {
         if (isPortrait()) {
             document.getElementById('portraitOverlay').classList.remove('display-none');
             document.getElementById('footer').classList.add('display-none');
+            checkForPortraitView();
         }
     }
 }
