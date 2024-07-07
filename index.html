@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El Pollo Loco</title>
     <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./animation.css">
     <link rel="shortcut icon" href="img/3_enemies_chicken/chicken_small/1_walk/1_w.png" type="image/x-icon" id="favicon-icon" />
     <script src="js/data.js"></script>
+    <script src="js/media.js"></script>
     <script src="models/world.class.js"></script>
     <script src="models/keyboard.class.js"></script>
     <script src="js/game.js"></script>
@@ -36,92 +38,99 @@
 <body onload="isMobile()">
     <h1>El Pollo Loco</h1>
     <div id="gameContainer">
-        <canvas id="canvas" width="720" height="480"></canvas>
-        <div id="controlls">
-            <div class="iconsBox">
-                <button onclick="muteSounds(); document.activeElement.blur();" id="muteButton" class="icon"></button>
-                <button onclick="toggleSettingsWindow(); document.activeElement.blur();" id="settingsButton" class="icon"></button>
-                <button onclick="startPauseGame(); document.activeElement.blur();" id="pauseButton" class="icon"></button>
-                <button onclick="setFullscreen();" id="fullscreenButton" class="squareIcon"></button>
+        <div id="fullscreenBox">
+            <div id="chooseKeyOverlay" class="overlay display-none">
+                <p>Choose key..</p>
             </div>
-            <div id="startButtonBox">
-                <button onclick="startPauseGame()" id="startButton" class="startIcon"></button>
-            </div>
-            <button onclick="init()" id="restartButton" class="startIcon display-none">Restart</button>
-            <button onclick="closeGame()" id="closeButton" class="startIcon display-none">Close</button>
-            <div id="mobileControlls" class="lowerIconsBox visibility-hidden">
-                <div class="gameIconBoxLeft">
-                    <button id="leftButton" class="icon gameIcon"></button>
-                    <button id="rightButton" class="icon gameIcon"></button>
+            <canvas id="canvas" width="720" height="480"></canvas>
+            <div id="controlls">
+                <div id="iconsBox" class="iconsBox">
+                    <button onclick="muteSounds(); document.activeElement.blur();" id="muteButton" class="icon"></button>
+                    <button onclick="toggleSettingsWindow(); document.activeElement.blur();" id="settingsButton" class="icon"></button>
+                    <button onclick="startPauseGame(); document.activeElement.blur();" id="pauseButton" class="icon"></button>
+                    <button onclick="toggleFullscreen();" id="fullscreenButton" class="squareIcon"></button>
                 </div>
-                <div class="gameIconBoxRight">
-                    <button id="throwButton" class="icon gameIcon"></button>
-                    <button id="jumpButton" class="icon gameIcon"></button>
+                <div id="startButtonBox">
+                    <button onclick="startPauseGame()" id="startButton" class="startIcon"></button>
+                </div>
+                <div id="endgameButtonBox" class="display-none">
+                    <button onclick="init()" id="restartButton" class="startIcon display-none">Restart</button>
+                    <button onclick="closeGame()" id="closeButton" class="startIcon display-none">Close</button>
+                </div>
+                <div id="mobileControlls" class="lowerIconsBox visibility-hidden">
+                    <div class="gameIconBoxLeft">
+                        <button id="leftButton" class="icon gameIcon"></button>
+                        <button id="rightButton" class="icon gameIcon"></button>
+                    </div>
+                    <div class="gameIconBoxRight">
+                        <button id="throwButton" class="icon gameIcon"></button>
+                        <button id="jumpButton" class="icon gameIcon"></button>
+                    </div>
                 </div>
             </div>
+            <section id="settingsBox" class="display-none">
+                <h2>Settings</h2>
+                <div id="settingsButtonBox" class="settings-subpoints">
+                    <button id="settingsSoundButton" onclick="showOtherSettingsWindow()" class="settingsSoundButton active-button">Sounds</button>
+                    <button id="settingsKeysButton" onclick="showOtherSettingsWindow()" class="settingsKeysButton">Key assignment</button>
+                </div>
+                <div id="settingsSoundWindow" class="settings-option">
+                    <h3>SFX - Sounds</h3>
+                    <div>
+                        <img class="settings-icons" src="./img/icons/mute.png" alt="mute sfx sounds">
+                        <input onchange="iteraterThroughSounds('setSFXVolume(key, nextKey)')" type="range" min="1" max="100" step="1" value="100" id="sfxSoundInput">
+                        <img class="settings-icons" src="./img/icons/loud.png" alt="turn sfx sounds loud">
+                    </div>
+                    <h3>Music</h3>
+                    <div>
+                        <img class="settings-icons" src="./img/icons/mute.png" alt="mute music">
+                        <input onchange="iteraterThroughSounds('setMusicVolume(key, nextKey)')" type="range" min="1" max="100" step="1" value="100" id="musicInput">
+                        <img class="settings-icons" src="./img/icons/loud.png" alt="turn music loud">
+                    </div>
+                </div>
+                <div id="settingsKeysWindow" class="settings-option display-none">
+                    <h3>Change Keys:</h3>
+                    <table title="Click to change Key. Tap delete to unset.">
+                        <tr>
+                            <th class="text-align-center">Order</th>
+                            <th class="text-align-center">"Key 1"</th>
+                            <th class="text-align-center">"Key 2"</th>
+                            <th class="text-align-center">"Key 3"</th>
+                        </tr>
+                        <tr>
+                            <th>Move Right</th>
+                            <td id="rightKey1" onclick="changeKey(1);">"KeyD"</td>
+                            <td id="rightKey2" onclick="changeKey(2);">ArrowRight</td>
+                            <td id="rightKey3" onclick="changeKey(3);">unset</td>
+                        </tr>
+                        <tr>
+                            <th>Move Left</th>
+                            <td id="leftKey1" onclick="changeKey(4);">KeyA</td>
+                            <td id="leftKey2" onclick="changeKey(5);">ArrowLeft</td>
+                            <td id="leftKey3" onclick="changeKey(6);">unset</td>
+                        </tr>
+                        <tr>
+                            <th>Jump</th>
+                            <td id="jumpKey1" onclick="changeKey(7);">Space</td>
+                            <td id="jumpKey2" onclick="changeKey(8);">ArrowUp</td>
+                            <td id="jumpKey3" onclick="changeKey(9);">KeyW</td>
+                        </tr>
+                        <tr>
+                            <th>Throw</th>
+                            <td id="throwKey1" onclick="changeKey(10);">KeyF</td>
+                            <td id="throwKey2" onclick="changeKey(11);">unset</td>
+                            <td id="throwKey3" onclick="changeKey(12);">unset</td>
+                        </tr>
+                        <tr>
+                            <th>Pause</th>
+                            <td id="pauseKey1" onclick="changeKey(13);">KeyP</td>
+                            <td id="pauseKey2" onclick="changeKey(14);">Enter</td>
+                            <td id="pauseKey3" onclick="changeKey(15);">unset</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
         </div>
-        <section id="settingsBox" class="display-none">
-            <h2>Settings</h2>
-            <div class="settings-subpoints">
-                <button id="settingsSoundButton" onclick="showOtherSettingsWindow()" class="settingsSoundButton active-button">Sounds</button>
-                <button id="settingsKeysButton" onclick="showOtherSettingsWindow()" class="settingsKeysButton">Key assignment</button>
-            </div>
-            <div id="settingsSoundWindow" class="settings-option">
-                <h3>SFX - Sounds</h3>
-                <div>
-                    <img class="settings-icons" src="./img/icons/mute.png" alt="mute sfx sounds">
-                    <input onchange="iteraterThroughSounds('setSFXVolume(key, nextKey)')" type="range" min="1" max="100" step="1" value="100" id="sfxSoundInput">
-                    <img class="settings-icons" src="./img/icons/loud.png" alt="turn sfx sounds loud">
-                </div>
-                <h3>Music</h3>
-                <div>
-                    <img class="settings-icons" src="./img/icons/mute.png" alt="mute music">
-                    <input onchange="iteraterThroughSounds('setMusicVolume(key, nextKey)')" type="range" min="1" max="100" step="1" value="100" id="musicInput">
-                    <img class="settings-icons" src="./img/icons/loud.png" alt="turn music loud">
-                </div>
-            </div>
-            <div id="settingsKeysWindow" class="settings-option display-none">
-                <h3>Change Keys:</h3>
-                <table title="Click to change Key. Tap delete to unset.">
-                    <tr>
-                        <th>Move Right</td>
-                        <td id="rightKey1" onclick="changeKey(1);">"KeyD"</td>
-                        <td id="rightKey2" onclick="changeKey(2);">ArrowRight</td>
-                        <td id="rightKey3" onclick="changeKey(3);">unset</td>
-                    </tr>
-                    <tr>
-                        <th>Move Left</td>
-                        <td id="leftKey1" onclick="changeKey(4);">KeyA</td>
-                        <td id="leftKey2" onclick="changeKey(5);">ArrowLeft</td>
-                        <td id="leftKey3" onclick="changeKey(6);">unset</td>
-                    </tr>
-                    <tr>
-                        <th>Jump</td>
-                        <td id="jumpKey1" onclick="changeKey(7);">Space</td>
-                        <td id="jumpKey2" onclick="changeKey(8);">ArrowUp</td>
-                        <td id="jumpKey3" onclick="changeKey(9);">KeyW</td>
-                    </tr>
-                    <tr>
-                        <th>Throw</td>
-                        <td id="throwKey1" onclick="changeKey(10);">KeyF</td>
-                        <td id="throwKey2" onclick="changeKey(11);">unset</td>
-                        <td id="throwKey3" onclick="changeKey(12);">unset</td>
-                    </tr>
-                    <tr>
-                        <th>Buy Bottle</td>
-                        <td id="buyKey1" onclick="changeKey(13);">KeyB</td>
-                        <td id="buyKey2" onclick="changeKey(14);">unset</td>
-                        <td id="buyKey3" onclick="changeKey(15);">unset</td>
-                    </tr>
-                    <tr>
-                        <th>Pause</td>
-                        <td id="pauseKey1" onclick="changeKey(16);">KeyP</td>
-                        <td id="pauseKey2" onclick="changeKey(17);">Enter</td>
-                        <td id="pauseKey3" onclick="changeKey(18);">unset</td>
-                    </tr>
-                </table>
-            </div>
-        </section>
         <div id="loading-animation-overlay" class="loading-animation-overlay display-none">
             <div class="animation-container">
                 <div class="animation-baekSmall"></div>
@@ -134,9 +143,6 @@
     </div>
     <div id="portraitOverlay" class="overlay display-none">
         <p>Please turn your dvice...</p>
-    </div>
-    <div id="chooseKeyOverlay" class="overlay display-none">
-        <p>Choose key..</p>
     </div>
     <footer id="footer">
         <a href="imprint.html" target="_blank">Impressum</a> <span class="footerSeperator">|</span> <a href="privacy-policy.html" target="_blank">Datenschutz</a> <span class="footerSeperator">|</span> <a href="https://www.linkedin.com/in/nicolas-voges-1903762b8/" target="_blank">LinkedIn</a> <span class="footerSeperator">|</span> <a href="https://github.com/Nicolas-Voges/el-pollo-loco" target="_blank">GitHub</a>

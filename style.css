@@ -1,3 +1,14 @@
+:root {
+    --shadow-text: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    --color-background-shadow: rgba(0, 0, 0, 0.5);
+    --color-main: #f6b65f;
+    --color-main-half-alpha: rgba(254, 122, 7, 0.5);
+    --color-secondary: #A0220A;
+    --color-button: hsl(35, 89%, 55%);
+    --color-button-hover: hsl(35, 89%, 62%);
+    --color-button-active: #f6b65f;
+}
+
 @font-face {
     font-family: 'zabras';
     src: url('fonts/Zabars.ttf');
@@ -29,8 +40,12 @@ body {
 
 h1 {
     font-size: 80px;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    text-shadow: var(--shadow-text);
     margin-block-end: 0.07em;
+}
+
+.text-align-center {
+    text-align: center;
 }
 
 #gameContainer {
@@ -45,7 +60,7 @@ h1 {
     left: 0;
     height: 100%;
     width: 100%;
-    background-color: #A0220A;
+    background-color: var(--color-secondary);
     color: #fff;
     font-size: 64px;
     display: flex;
@@ -69,7 +84,7 @@ canvas {
 footer {
     width: 100%;
     padding: 20px;
-    background-color: #f6b65f;
+    background-color: var(--color-main);
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -85,7 +100,7 @@ footer>a {
 }
 
 footer>a:hover {
-    color: #A0220A;
+    color: var(--color-secondary);
 }
 
 .footerSeperator {
@@ -118,7 +133,7 @@ footer>a:hover {
 .icon {
     width: 30px;
     height: 30px;
-    background-color: rgba(254, 122, 7, 0.5);
+    background-color: var(--color-main-half-alpha);
     border-radius: 15px;
     background-position: center;
     background-size: contain;
@@ -128,7 +143,7 @@ footer>a:hover {
 .squareIcon {
     width: 30px;
     height: 30px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--color-background-shadow);
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
@@ -172,25 +187,27 @@ footer>a:hover {
 }
 
 #restartButton {
-    color: white;
+    color: var(--color-main);
     font-family: inherit;
     font-size: 64px;
     letter-spacing: 3px;
     align-self: start;
     padding: 10px;
+    text-decoration: underline;
 }
 
 #closeButton {
-    color: white;
+    color: var(--color-main);
     font-family: inherit;
     font-size: 64px;
     letter-spacing: 3px;
     align-self: end;
     padding: 10px;
+    text-decoration: underline;
 }
 
 #muteButton {
-    background-image: url('img/icons/mute.png');
+    background-image: url('img/icons/loud.png');
 }
 
 #settingsButton {
@@ -225,197 +242,6 @@ footer>a:hover {
     background-image: url('img/icons/jump.png');
 }
 
-.loading-animation-overlay {
-    position: absolute;
-    width: 720px;
-    height: 480px;
-    background-color: orange;
-    top: 0;
-    text-align: center;
-    font-size: 40px;
-}
-
-.animation-container {
-    position: absolute;
-    width: 340px;
-    height: 340px;
-    background-color: white;
-    border-radius: 20px;
-    margin: auto;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
-
-.animation-head {
-    background-color: #A0220A;
-    height: 260px;
-    width: 130px;
-    position: absolute;
-    top: 40px;
-    left: 40px;
-    border-radius: 130px 0 0 130px;
-    transform-origin: 130px;
-    animation: spin 5s forwards infinite;
-}
-
-@keyframes spin {
-    35% {
-        transform: rotate(0deg);
-    }
-
-    50% {
-        transform: rotate(180deg);
-    }
-
-    85% {
-        transform: rotate(180deg);
-    }
-
-    100% {
-        transform: rotate(0deg);
-    }
-}
-
-.animation-head:after {
-    position: absolute;
-    content: "";
-    height: 180px;
-    width: 90px;
-    background: linear-gradient(to bottom,
-            #f2f7f9 50%,
-            #deecf1 50%);
-    top: 40px;
-    left: 40px;
-    border-radius: 90px 0 0 90px;
-    animation: spin2 5s forwards infinite;
-    transform-origin: 90px;
-}
-
-@keyframes spin2 {
-    35% {
-        transform: rotate(0deg);
-        background: linear-gradient(to bottom,
-                #f2f7f9 50%,
-                #deecf1 50%);
-    }
-
-    50% {
-        transform: rotate(-360deg);
-        background: linear-gradient(to bottom,
-                #deecf1 50%,
-                #f2f7f9 50%);
-    }
-
-    85% {
-        transform: rotate(-360deg);
-        background: linear-gradient(to bottom,
-                #deecf1 50%,
-                #f2f7f9 50%);
-    }
-
-    100% {
-        transform: rotate(0deg);
-        background: linear-gradient(to bottom,
-                #f2f7f9 50%,
-                #deecf1 50%);
-    }
-}
-
-.animation-eye {
-    height: 45px;
-    width: 45px;
-    background-color: #714c21;
-    border-radius: 50%;
-    position: absolute;
-    top: 123px;
-    left: 123px;
-    animation: move 5s forwards infinite;
-}
-
-@keyframes move {
-    35% {
-        transform: translateX(0);
-    }
-
-    50% {
-        transform: translateX(47px);
-    }
-
-    85% {
-        transform: translateX(47px);
-    }
-
-    100% {
-        transform: translateX(0);
-    }
-}
-
-.animation-baekLarge {
-    background-color: #fdd159;
-    height: 90px;
-    width: 90px;
-    border-radius: 0 90px 0 0;
-    position: absolute;
-    top: 80px;
-    right: 80px;
-    animation: spin3 5s forwards infinite;
-    transform-origin: 0 90px;
-}
-
-@keyframes spin3 {
-    35% {
-        transform: rotate(0deg);
-    }
-
-    50% {
-        transform: rotate(-90deg);
-    }
-
-    85% {
-        transform: rotate(-90deg);
-    }
-
-    100% {
-        transform: rotate(0deg);
-    }
-}
-
-.animation-baekSmall {
-    background-color: #fcbd11;
-    height: 45px;
-    width: 45px;
-    position: absolute;
-    bottom: 125px;
-    right: 125px;
-    border-radius: 0 0 45px 0;
-    animation: spin4 5s forwards infinite;
-    transform-origin: 0 0;
-}
-
-@keyframes spin4 {
-    35% {
-        transform: rotate(0deg);
-    }
-
-    50% {
-        transform: rotate(90deg);
-    }
-
-    85% {
-        transform: rotate(90deg);
-    }
-
-    100% {
-        transform: rotate(0deg);
-    }
-}
-
-#loadingText {
-    margin-block-start: 0.5em;
-}
-
 #settingsBox {
     border: 2px solid black;
     position: absolute;
@@ -423,7 +249,7 @@ footer>a:hover {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 2;
-    background-color: #f6b65f;
+    background-color: var(--color-main);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -465,11 +291,11 @@ h3 {
     font-size: 24px;
     letter-spacing: 1px;
     cursor: pointer;
-    background-color: hsl(35, 89%, 55%);
+    background-color: var(--color-button);
 }
 
 .settings-subpoints>button:hover {
-    background-color: hsl(35, 89%, 62%) !important;
+    background-color: var(--color-button-hover) !important;
 }
 
 .settings-option {
@@ -487,7 +313,6 @@ h3 {
 
 #settingsSoundButton {
     border-top-right-radius: 10px;
-    /* outline: 1px #f6b65f; */
     border-left: unset;
 }
 
@@ -497,7 +322,7 @@ h3 {
 }
 
 .active-button {
-    background-color: #f6b65f !important;
+    background-color: var(--color-button-active) !important;
     transform: translateY(2px);
 }
 
@@ -534,23 +359,15 @@ overflow: hidden;
 
     canvas,
     #gameContainer,
-    #controlls,
-    .loading-animation-overlay {
+    #controlls {
         width: 100%;
         background-size: contain;
         height: 100vh;
     }
 
-    /* }
-
-@media only screen and (max-height: 720px) { */
     h1 {
         display: none;
     }
-
-    /* canvas, #gameContainer, #controlls {
-        background-size: contain;
-    }    */
 }
 
 @media only screen and (max-width: 500px),
@@ -574,77 +391,6 @@ overflow: hidden;
         font-size: 32px;
     }
 
-    .loading-animation-overlay {
-        font-size: 20px;
-    }
-
-    .animation-container {
-        width: 170px;
-        height: 170px;
-        border-radius: 20px;
-    }
-
-    .animation-head {
-        height: 130px;
-        width: 65px;
-        top: 20px;
-        left: 20px;
-        border-radius: 65px 0 0 65px;
-        transform-origin: 65px;
-    }
-
-    .animation-head:after {
-        height: 90px;
-        width: 45px;
-        top: 20px;
-        left: 20px;
-        border-radius: 90px 0 0 90px;
-        transform-origin: 45px;
-    }
-
-    .animation-eye {
-        height: 22.5px;
-        width: 22.5px;
-        border-radius: 50%;
-        top: 61.5px;
-        left: 61.5px;
-    }
-
-    @keyframes move {
-        35% {
-            transform: translateX(0);
-        }
-
-        50% {
-            transform: translateX(23.5px);
-        }
-
-        85% {
-            transform: translateX(23.5px);
-        }
-
-        100% {
-            transform: translateX(0);
-        }
-    }
-
-    .animation-baekLarge {
-        height: 45px;
-        width: 45px;
-        border-radius: 0 45px 0 0;
-        top: 40px;
-        right: 40px;
-        transform-origin: 0 45px;
-    }
-
-    .animation-baekSmall {
-        height: 22.5px;
-        width: 22.5px;
-        bottom: 62.5px;
-        right: 62.5px;
-        border-radius: 0 0 22.5px 0;
-    }
-
     th {
         font-size: 20px;
     }
@@ -652,6 +398,11 @@ overflow: hidden;
     td {
         font-size: 18px;
     }
+}
+
+.fullscreen {
+    height: 100% !important;
+    width: 100% !important;
 }
 
 .visibility-hidden {

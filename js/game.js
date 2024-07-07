@@ -6,8 +6,6 @@ let keybord = new Keyboard();
 let activeIntervals = [];
 let SFXvolume = 1;
 let musicVolume = 1;
-// let pauseIntervals = [];
-// let intervals = [];
 let comingEnemyId = 0;
 let bossStatusbarIsShown = false;
 let isPause = false;
@@ -19,6 +17,7 @@ let loadingComplete = false;
 let imageCache = {};
 let gameEnded = false;
 let gameEndedTime;
+let fullscreen = false;
 let intervalValues = {
     character: {
         moves: 1000 / 60,
@@ -55,6 +54,9 @@ let intervalValues = {
     }
 };
 
+/**
+ * This function toggels between settings option windows.
+ */
 function showOtherSettingsWindow() {
     document.getElementById('settingsSoundButton').classList.toggle('active-button');
     document.getElementById('settingsKeysButton').classList.toggle('active-button');
@@ -83,7 +85,7 @@ async function playSound(sound) {
 
 
 /**
- * This function
+ * This function checks if users divice is a mobil or desktop device.
  */
 function isMobile() {
     mobileDivice = navigator.maxTouchPoints > 0 && /Android|iPhone|HUAWEI|huawei|phone/i.test(navigator.userAgent);
@@ -103,6 +105,7 @@ function setForMobile() {
     setMobile(document.getElementById('controlls'));
     setMobile(document.getElementById('loading-animation-overlay'));
     document.getElementById('fullscreenButton').classList.add('display-none');
+    document.getElementById('settingsButtonBox').classList.add('display-none');
 }
 
 /**
@@ -117,8 +120,29 @@ function setMobile(element) {
 }
 
 
+function toggleFullscreen() {
+    if (fullscreen) {
+        endFullscreen();
+    } else {
+        setFullscreen();
+    }
+}
+
+function endFullscreen() {
+    fullscreen = false;
+    document.exitFullscreen();
+    document.getElementById('canvas').classList.remove('fullscreen');
+    document.getElementById('controlls').classList.remove('fullscreen');
+    document.getElementById('iconsBox').style.width = '80%';
+    document.activeElement.blur();
+}
+
 function setFullscreen() {
-    document.getElementById('canvas').requestFullscreen();
+    fullscreen = true;
+    document.getElementById('fullscreenBox').requestFullscreen();
+    document.getElementById('canvas').classList.add('fullscreen');
+    document.getElementById('controlls').classList.add('fullscreen');
+    document.getElementById('iconsBox').style.width = '100%';
     document.activeElement.blur();
 }
 
@@ -143,6 +167,7 @@ function init() {
     if (mobileDivice) {
         document.getElementById('footer').classList.add('display-none');
         document.getElementById('mobileControlls').classList.remove('visibility-hidden');
+        document.getElementById('mobileControlls').classList.remove('display-none');
     }
     canvas = document.getElementById('canvas');
     canvas.style.backgroundColor = 'black';
@@ -177,6 +202,7 @@ function closeGame() {
     document.getElementById('footer').classList.remove('display-none');
 }
 let keyToChange = 0;
+
 function changeKey(key) {
     document.removeEventListener('keydown', keyDown);
     document.addEventListener('keydown', takeKey);
@@ -240,26 +266,14 @@ function takeKey(e) {
             document.getElementById('throwKey3').innerHTML = output;
             break;
         case 13:
-            keybord.buyKeys[0] = output;
-            document.getElementById('buyKey1').innerHTML = output;
-            break;
-        case 14:
-            keybord.buyKeys[1] = output;
-            document.getElementById('buyKey2').innerHTML = output;
-            break;
-        case 15:
-            keybord.buyKeys[2] = output;
-            document.getElementById('buyKey3').innerHTML = output;
-            break;
-        case 16:
             keybord.pauseKeys[0] = output;
             document.getElementById('pauseKey1').innerHTML = output;
             break;
-        case 17:
+        case 14:
             keybord.pauseKeys[1] = output;
             document.getElementById('pauseKey2').innerHTML = output;
             break;
-        case 18:
+        case 15:
             keybord.pauseKeys[2] = output;
             document.getElementById('pauseKey3').innerHTML = output;
             break;
@@ -335,6 +349,11 @@ window.addEventListener('keyup', (e) => {
             case (world.keyboard.moveRightKeys[1]):
             case (world.keyboard.moveRightKeys[2]):
                 keybord.moveRightKeyPush = false;
+                break;
+            case (world.keyboard.throwKeys[0]):
+            case (world.keyboard.throwKeys[1]):
+            case (world.keyboard.throwKeys[2]):
+                keybord.throwKeyPush = false;
                 break;
             default:
                 break;
@@ -554,6 +573,8 @@ function showEndScreen(gameStatus) {
     ctx = document.getElementById('canvas').getContext('2d');
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     document.getElementById('canvas').style.backgroundSize = 'contain';
+    document.getElementById('endgameButtonBox').classList.remove('display-none');
+    document.getElementById('mobileControlls').classList.add('display-none');
     document.getElementById('restartButton').classList.remove('display-none');
     if (mobileDivice) {
         document.getElementById('closeButton').classList.remove('display-none');
@@ -604,6 +625,7 @@ function resetGlobalVariables() {
     keybord.moveRightKeyPush = false;
     keybord.throwKeyPush = false;
     keybord.pauseKeyPush = false;
+    soundCounter = 0
 }
 
 /**

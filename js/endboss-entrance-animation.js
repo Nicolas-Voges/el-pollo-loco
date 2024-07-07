@@ -34,8 +34,8 @@ function runEndbossAnimation() {
  * camera reached end point and calls the boss enterence function.
  */
 function cameraInAnimation() {
+    SOUNDS.character.WALKING.SOUND.pause();
     let camaraAnimate = setInterval(() => {
-        // console.log('boss animation cameraInAnimation');
         if (world.camera_x >= -4300) {
             world.camera_x -= 2;
         } else {
@@ -53,7 +53,6 @@ function cameraInAnimation() {
  */
 function bossEntrenceAnimation() {
     let bossEntrence = setInterval(() => {
-        // console.log('boss animation bossEntrenceAnimation');
         if (world.endboss.x > 4700) {
             world.endboss.x--;
         } else {
@@ -89,7 +88,6 @@ function bossAlertAnimation(cameraOut = false) {
 function runAlertAnimation(cameraOut) {
     playSound(SOUNDS.endboss.ALERT.SOUND);
     let alertAnimation = setInterval(() => {
-        // console.log('boss animation runAlertAnimation');
         if (world.endboss.currentImage < world.endboss.IMAGES_ALERT.length - 1 || animatinCount < 2) {
             countAndPlayAlertAnimation();
         } else {
@@ -136,18 +134,24 @@ function countAndPlayAlertAnimation() {
 function runMoveLeftAnimation() {
     world.endboss.animate();
     let movingLeft = setInterval(() => {
-        // console.log('boss animation runMoveLeftAnimation');
         if (world.endboss.x >= 4000) {
             world.endboss.moveLeft();
         } else {
-            clearInterval(movingLeft);
-            activeIntervals.splice(activeIntervals.indexOf(movingLeft), 1);
-            world.endboss.deleteIntervals('animations');
-            bossAttackAnimation(true);
+            stopMovingLeft(movingLeft);
         }
     }, 1000 / 60);
     activeIntervals.push(movingLeft);
     cameraOutAnimation();
+}
+
+/**
+ * This function stops moving left interval and deletes it. Also calls boss attack animation function.
+ */
+function stopMovingLeft(movingLeft) {
+    clearInterval(movingLeft);
+    activeIntervals.splice(activeIntervals.indexOf(movingLeft), 1);
+    world.endboss.deleteIntervals('animations');
+    bossAttackAnimation(true);
 }
 
 /**
@@ -200,7 +204,6 @@ function bossJump(end) {
     world.endboss.speedY = 22;
     world.endboss.currentImage = 0;
     let jump = setInterval(() => {
-        // console.log('boss animation bossJump');
         if (world.endboss.isAboveGround() || world.endboss.x >= characterPosition) {
             world.endboss.x -= 4;
         } else {
@@ -218,7 +221,6 @@ function bossJump(end) {
  */
 function playAttackAnimation() {
     let attack = setInterval(() => {
-        // console.log('boss animation playAttackAnimation');
         if (world.endboss.currentImage < world.endboss.IMAGES_ATTACK.length - 1) {
             world.endboss.playAnimation(world.endboss.IMAGES_ATTACK);
         } else {
@@ -241,16 +243,13 @@ function playAttackAnimation() {
 function earthquakeAnimation(end = false, attack = false) {
     setBeginEarthquake(attack);
     let earthquake = setInterval(() => {
-        // console.log('boss animation earthquakeAnimation');
         if (notReachedAmplitude() && moveUp) {
             moveCameraUp();
         } else if (notReachedAmplitude() && !moveUp) {
             moveCameraDown();
         }
         if (yMax <= 0) {
-            clearInterval(earthquake);
-            activeIntervals.splice(activeIntervals.indexOf(earthquake), 1);
-            endEarthquake(end, attack);
+            endEarthquake(end, attack, earthquake);
         }
     }, 0.1);
     activeIntervals.push(earthquake);
@@ -318,7 +317,9 @@ function moveCameraDown() {
  * @param {boolean} end and
  * @param {boolean} attack .
  */
-function endEarthquake(end, attack) {
+function endEarthquake(end, attack, earthquake) {
+    clearInterval(earthquake);
+    activeIntervals.splice(activeIntervals.indexOf(earthquake), 1);
     resetGlobalEarthquakeValues();
     if (!end && !attack) {
         resetDefaultEarthquakeValues();
@@ -376,7 +377,6 @@ function resetGlobalEarthquakeValues() {
 function cameraOutAnimation() {
     letCharacterSleep();
     let camaraAnimate = setInterval(() => {
-        // console.log('boss animation cameraOutAnimation');
         if (world.camera_x <= -3800) {
             world.camera_x += 4;
         } else {

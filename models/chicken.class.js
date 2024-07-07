@@ -32,7 +32,6 @@ class Chicken extends Enemy {
      */
     move() {
         let id = setInterval(() => {
-        // console.log('chicken move');
             if (!this.isDead()) {
                 this.moveLeft();
                 if (this.x + this.width <= 0) {
@@ -48,7 +47,6 @@ class Chicken extends Enemy {
      */
     animate() {
         let id = setInterval(() => {
-        // console.log('chicken animate');
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
             } else {

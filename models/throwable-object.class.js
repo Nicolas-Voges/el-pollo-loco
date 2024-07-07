@@ -33,9 +33,13 @@ class ThrowableObject extends MovableObject {
      * This function moves the bottle in an interval and registers it.
      */
     throw() {
+        let direction = world.character.otherDirection;
         let id = setInterval(() => {
-                // console.log('throwabel throw');
-            this.x += 10 + this.speed;
+            if (bossFightStarted && direction) {
+                this.x -= 10 - this.speed;
+            } else {
+                this.x += 10 + this.speed;
+            }
             if (this.isDead()) {
                 clearInterval(id);
                 activeIntervals.splice(activeIntervals.indexOf(id), 1);
@@ -50,7 +54,6 @@ class ThrowableObject extends MovableObject {
      */
     animate() {
         let id = setInterval(() => {
-                // console.log('throwabel animate');
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_SPLASH);
             } else {

@@ -2,6 +2,7 @@ let bossFightStarted = false;
 let bossFightDone = true;
 let attackJumpStarted = false;
 let bossAttackAnimationRuns = false;
+let soundCounter = 0;
 
 /**
  * This function checks whether the game is paused. If thats not the case this function animates boss.
@@ -30,7 +31,7 @@ function bossFight() {
 function bossAttackCooledDown() {
     return new Date().getTime() - world.lastAttack > 1000;
 }
-let soundCounter = 0;
+
 /**
  * This function sets booleans to start alert animation.
  */
@@ -139,7 +140,6 @@ function initAttack() {
 function bossJumpAttack() {
     let xPlayer = world.character.x;
     let jump = setInterval(() => {
-        // console.log('boss fight bossJumpAttack');
         if (!isPause) {
             checkJumpProgress(xPlayer, jump);
             if (!world.earthquakeStarted && world.endboss.speedY <= 0 && !world.endboss.isAboveGround() && earthquakeDone) {

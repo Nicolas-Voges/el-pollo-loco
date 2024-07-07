@@ -9,7 +9,6 @@ class DrawableObject {
     width = 100;
     height = 100;
     img;
-    // imageCache = {};
     currentImage = 0;
     otherDirection = false;
     offsetTop = 0;

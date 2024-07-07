@@ -261,6 +261,11 @@ class World {
                 this.collectItem(obj, i);
                 if (obj instanceof Coin) {
                     playSound(SOUNDS.coins.COLLECT.SOUND);
+                    if (this.character.coins === 5 && this.character.bottles <= 5) {
+                        this.character.bottles++;
+                        this.character.coins = 0;
+                        playSound(SOUNDS.bottle.COLLECT.SOUND);
+                    }
                 } else if (obj instanceof Bottle) {
                     playSound(SOUNDS.bottle.COLLECT.SOUND);
                 }
@@ -341,7 +346,7 @@ class World {
         let bottle;
         if (this.keyboard.moveRightKeyPush) {
             bottle = new ThrowableObject(this.character.x + (this.character.width / 3), this.character.y + (this.character.height / 2), this.character.speed);
-        } else if (this.keyboard.moveLeftKeyPushT) {
+        } else if (this.keyboard.moveLeftKeyPush) {
             bottle = new ThrowableObject(this.character.x + (this.character.width / 3), this.character.y + (this.character.height / 2), -this.character.speed);
         } else {
             bottle = new ThrowableObject(this.character.x + (this.character.width / 3), this.character.y + (this.character.height / 2), 0);

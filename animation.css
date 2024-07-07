@@ -1,0 +1,273 @@
+.loading-animation-overlay {
+    position: absolute;
+    width: 720px;
+    height: 480px;
+    background-color: var(--color-main);
+    top: 0;
+    text-align: center;
+    font-size: 40px;
+}
+
+.animation-container {
+    position: absolute;
+    width: 340px;
+    height: 340px;
+    background-color: white;
+    border-radius: 20px;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.animation-head {
+    background-color: var(--color-secondary);
+    height: 260px;
+    width: 130px;
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    border-radius: 130px 0 0 130px;
+    transform-origin: 130px;
+    animation: spin 5s forwards infinite;
+}
+
+@keyframes spin {
+    35% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(180deg);
+    }
+
+    85% {
+        transform: rotate(180deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+.animation-head:after {
+    position: absolute;
+    content: "";
+    height: 180px;
+    width: 90px;
+    background: linear-gradient(to bottom,
+            #f2f7f9 50%,
+            #deecf1 50%);
+    top: 40px;
+    left: 40px;
+    border-radius: 90px 0 0 90px;
+    animation: spin2 5s forwards infinite;
+    transform-origin: 90px;
+}
+
+@keyframes spin2 {
+    35% {
+        transform: rotate(0deg);
+        background: linear-gradient(to bottom,
+                #f2f7f9 50%,
+                #deecf1 50%);
+    }
+
+    50% {
+        transform: rotate(-360deg);
+        background: linear-gradient(to bottom,
+                #deecf1 50%,
+                #f2f7f9 50%);
+    }
+
+    85% {
+        transform: rotate(-360deg);
+        background: linear-gradient(to bottom,
+                #deecf1 50%,
+                #f2f7f9 50%);
+    }
+
+    100% {
+        transform: rotate(0deg);
+        background: linear-gradient(to bottom,
+                #f2f7f9 50%,
+                #deecf1 50%);
+    }
+}
+
+.animation-eye {
+    height: 45px;
+    width: 45px;
+    background-color: #714c21;
+    border-radius: 50%;
+    position: absolute;
+    top: 123px;
+    left: 123px;
+    animation: move 5s forwards infinite;
+}
+
+@keyframes move {
+    35% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(47px);
+    }
+
+    85% {
+        transform: translateX(47px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.animation-baekLarge {
+    background-color: #fdd159;
+    height: 90px;
+    width: 90px;
+    border-radius: 0 90px 0 0;
+    position: absolute;
+    top: 80px;
+    right: 80px;
+    animation: spin3 5s forwards infinite;
+    transform-origin: 0 90px;
+}
+
+@keyframes spin3 {
+    35% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(-90deg);
+    }
+
+    85% {
+        transform: rotate(-90deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+.animation-baekSmall {
+    background-color: #fcbd11;
+    height: 45px;
+    width: 45px;
+    position: absolute;
+    bottom: 125px;
+    right: 125px;
+    border-radius: 0 0 45px 0;
+    animation: spin4 5s forwards infinite;
+    transform-origin: 0 0;
+}
+
+@keyframes spin4 {
+    35% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(90deg);
+    }
+
+    85% {
+        transform: rotate(90deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+#loadingText {
+    margin-block-start: 0.5em;
+}
+
+@media only screen and (max-width: 720px) {
+    .loading-animation-overlay {
+        width: 100%;
+        background-size: contain;
+        height: 100vh;
+    }
+}
+
+@media only screen and (max-width: 500px),
+(max-height: 500px) {
+    .loading-animation-overlay {
+        font-size: 20px;
+    }
+
+    .animation-container {
+        width: 170px;
+        height: 170px;
+        border-radius: 20px;
+    }
+
+    .animation-head {
+        height: 130px;
+        width: 65px;
+        top: 20px;
+        left: 20px;
+        border-radius: 65px 0 0 65px;
+        transform-origin: 65px;
+    }
+
+    .animation-head:after {
+        height: 90px;
+        width: 45px;
+        top: 20px;
+        left: 20px;
+        border-radius: 90px 0 0 90px;
+        transform-origin: 45px;
+    }
+
+    .animation-eye {
+        height: 22.5px;
+        width: 22.5px;
+        border-radius: 50%;
+        top: 61.5px;
+        left: 61.5px;
+    }
+
+    @keyframes move {
+        35% {
+            transform: translateX(0);
+        }
+
+        50% {
+            transform: translateX(23.5px);
+        }
+
+        85% {
+            transform: translateX(23.5px);
+        }
+
+        100% {
+            transform: translateX(0);
+        }
+    }
+
+    .animation-baekLarge {
+        height: 45px;
+        width: 45px;
+        border-radius: 0 45px 0 0;
+        top: 40px;
+        right: 40px;
+        transform-origin: 0 45px;
+    }
+
+    .animation-baekSmall {
+        height: 22.5px;
+        width: 22.5px;
+        bottom: 62.5px;
+        right: 62.5px;
+        border-radius: 0 0 22.5px 0;
+    }
+
+}
