@@ -86,6 +86,13 @@ function takeKey(e) {
         default:
             break;
     }
+    resetKeydownEvntListener();
+}
+
+/**
+ * This function resets the key down event listener.
+ */
+function resetKeydownEvntListener() {
     document.removeEventListener('keydown', takeKey);
     document.addEventListener('keydown', keyDown);
     document.getElementById('chooseKeyOverlay').classList.add('display-none');
@@ -188,6 +195,11 @@ function addTouchEvents() {
     addTouchEvent(jumpButton, 'jumpKeyPush');
 }
 
+/**
+ * This function adds touch event listeners to the throw button.
+ * 
+ * @param {Object} throwButton 
+ */
 function addThrowTouchEvent(throwButton) {
     throwButton.addEventListener('touchstart', () => {
         if (world.bottleCooledDown() && start && !gameEnded && world.character.bottles > 0) {
@@ -199,6 +211,12 @@ function addThrowTouchEvent(throwButton) {
     });
 }
 
+/**
+ * This function adds touch event listeners to the handed over element.
+ * 
+ * @param {Object} element 
+ * @param {string} keyboardBoolean 
+ */
 function addTouchEvent(element, keyboardBoolean) {
     element.addEventListener('touchstart', () => {
         if (start && !gameEnded) {
