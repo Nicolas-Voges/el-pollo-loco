@@ -53,6 +53,7 @@ class ThrowableObject extends MovableObject {
      * @param {number} id 
      */
     endThrow(id) {
+        SOUNDS.throwableObject.ROTATE.SOUND.pause();
         clearInterval(id);
         activeIntervals.splice(activeIntervals.indexOf(id), 1);
         world.throwableObjects = [];

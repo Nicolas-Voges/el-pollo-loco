@@ -121,13 +121,13 @@ class World {
                 bottle.deleteIntervals('gravities');
                 bottle.deleteIntervals('moves');
                 bottle.energy = 0;
+                SOUNDS.throwableObject.ROTATE.SOUND.pause();
             }
         })
     }
 
     /**
-     * This function disables new collisions and checks kind of collision.
-     * Also hits enemy or character.
+     * This function disables new collisions and checks kind of collision. Also hits enemy or character.
      * 
      * @param {Object} enemy 
      */
@@ -282,6 +282,7 @@ class World {
                 playSound(SOUNDS.throwableObject.SPLASH.SOUND);
                 this.throwableObjects[i].deleteIntervals('gravities');
                 this.throwableObjects[i].deleteIntervals('moves');
+                SOUNDS.throwableObject.ROTATE.SOUND.pause();
             }
             if (this.throwableObjects[i].deathAnimationDone) {
                 this.throwableObjects[i].deleteAllIntervals();
@@ -305,6 +306,7 @@ class World {
         this.throwableObjects.push(bottle);
         this.lastBottleThrown = new Date().getTime();
         this.character.bottles--;
+        playSound(SOUNDS.throwableObject.ROTATE.SOUND);
     }
 
     /**
@@ -359,8 +361,7 @@ class World {
     }
 
     /**
-     * This function draws an object on the canvas and flips it if its property other direction is true.
-     * Also flips back after drawing fliped image.
+     * This function draws an object on the canvas and flips it if its property other direction is true. Also flips back after drawing fliped image.
      * 
      * @param {Object} object 
      */
