@@ -211,7 +211,6 @@ function moveToCharacter(xPlayer) {
 function bossFightAttackAnimation() {
     if (!bossAttackAnimationRuns) {
         let attack = setInterval(() => {
-            // console.log('boss fight bossFightAttackAnimation');
             if (!isPause) {
                 checkAttackAnimationProgress(attack);
             }
