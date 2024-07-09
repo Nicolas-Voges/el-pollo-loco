@@ -39,9 +39,6 @@ class World {
         this.run();
     }
 
-    /**
-     * This function sets the world to the charakter property.
-     */
     setWorld() {
         this.character.world = this;
     }
@@ -176,11 +173,6 @@ class World {
         }
     }
 
-    /**
-     * This function plays death sound of enemy, makes the character jamp again and set the enemy energy to 0.
-     * 
-     * @param {Object} enemy 
-     */
     killEnemy(enemy) {
         enemy.playEnemyHitSound();
         if (!enemy.isDead()) {
@@ -208,7 +200,7 @@ class World {
     }
 
     /**
-     * This function collects a coin. If user collects 58 Coins this function gets his coins and gives a bottle to the character.
+     * This function collects a coin. If user collects 5 Coins this function gets his coins and gives a bottle to the character.
      */
     collectCoin() {
         playSound(SOUNDS.coins.COLLECT.SOUND);
@@ -263,11 +255,6 @@ class World {
         this.deleteBottle();
     }
 
-    /**
-     * This function checks if throw bottle cooled down.
-     * 
-     * @returns {boolean} true if thats the case.
-     */
     bottleCooledDown() {
         return this.lastBottleThrown + this.firingRate < new Date().getTime();
     }
@@ -297,16 +284,24 @@ class World {
     throwBottle() {
         let bottle;
         if (this.keyboard.moveRightKeyPush) {
-            bottle = new ThrowableObject(this.character.x + (this.character.width / 3), this.character.y + (this.character.height / 2), this.character.speed);
+            bottle = new ThrowableObject(this.bottleSpawnX(), this.bottleSpawnY(), this.character.speed);
         } else if (this.keyboard.moveLeftKeyPush) {
-            bottle = new ThrowableObject(this.character.x + (this.character.width / 3), this.character.y + (this.character.height / 2), -this.character.speed);
+            bottle = new ThrowableObject(this.bottleSpawnX(), this.bottleSpawnY(), -this.character.speed);
         } else {
-            bottle = new ThrowableObject(this.character.x + (this.character.width / 3), this.character.y + (this.character.height / 2), 0);
+            bottle = new ThrowableObject(this.bottleSpawnX(), this.bottleSpawnY(), 0);
         }
         this.throwableObjects.push(bottle);
         this.lastBottleThrown = new Date().getTime();
         this.character.bottles--;
         playSound(SOUNDS.throwableObject.ROTATE.SOUND);
+    }
+
+    bottleSpawnX() {
+        return this.character.x + (this.character.width / 3);
+    }
+
+    bottleSpawnY() {
+        return  this.character.y + (this.character.height / 2);
     }
 
     /**

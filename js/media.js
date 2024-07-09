@@ -246,6 +246,8 @@ function toggleSettingsWindow() {
     document.querySelector('body').classList.toggle('overflow-hidden');
     if (!element.classList.contains('display-none') && start && !isPause && !gameEnded && !endbossAnimationRuns) {
         setPause();
+    } else if (element.classList.contains('display-none') && start && isPause && !gameEnded && !endbossAnimationRuns) {
+        setPlay();
     }
 }
 

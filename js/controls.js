@@ -19,7 +19,7 @@ function changeKey(key) {
  */
 function takeKey(e) {
     let output = e.code;
-    if (e.code === 'Delete' || 'Escape') {
+    if (e.code === 'Delete' || e.code === 'Escape') {
         output = 'unset';
     }
     switch (keyToChange) {

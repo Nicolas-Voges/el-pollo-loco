@@ -22,17 +22,6 @@ class StatusBarBottle extends StatusBar {
     }
 
     /**
-     * This function chooses the image by considering its persentage.
-     * 
-     * @param {number} percentage 
-     */
-    setPercentage(percentage) {
-        this.percentage = percentage;
-        let path = this.IMAGES[this.resolveImageIndex()];
-        this.img = imageCache[path];
-    }
-
-    /**
      * This function checks percentage and
      * 
      * @returns {number} .
