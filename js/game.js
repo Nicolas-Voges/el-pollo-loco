@@ -28,10 +28,7 @@ function init() {
     gameEnded = false;
     initLevel1();
     world = new World(canvas, keyboard);
-    if (!loadingComplete) {
-        setSounds();
-        checkReadyState();
-    }
+    setSounds();
 }
 
 /**
@@ -71,10 +68,10 @@ function startPauseGame() {
     if (!start) {
         checkForMobile();
         start = true;
-        document.getElementById('loading-animation-overlay').classList.remove('display-none');
+        // document.getElementById('loading-animation-overlay').classList.remove('display-none');
         document.getElementById('canvas').style.backgroundImage = 'unset';
         addTouchEvents();
-        loadImages();
+        // loadImages();
         init();
     } else if (!endbossAnimationRuns && !gameEnded) {
         pause();

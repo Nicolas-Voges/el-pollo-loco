@@ -5,6 +5,10 @@ let musicVolume = 1;
 let loadingComplete = false;
 let imageCache = {};
 let isCheckingPortrait = false;
+let pathThroughToggleFullscreen = false;
+
+loadImage('img/9_intro_outro_screens/game_over/you lost.png');
+loadImage('img/9_intro_outro_screens/win/win_2.png');
 
 /**
  * This function plays a sound if sound is fully loaded to play.
@@ -48,6 +52,14 @@ function loadImages() {
     loadImagesFromArray(IMAGES_PATHS.throwableObject.IMAGES_SPLASH);
     loadImagesFromArray(IMAGES_PATHS.endScreens.lose);
     loadImagesFromArray(IMAGES_PATHS.endScreens.win);
+}
+
+function loadImage(path) {
+    if (!imageCache[path]) {
+        let img = new Image();
+        img.src = path;
+        imageCache[path] = img;
+    }
 }
 
 /**
@@ -169,24 +181,39 @@ function checkImagesLoaded() {
         }
     });
 }
-
+let setedFullscreen = false;
+let endedFullscreen = false;
 /**
  * This function toggles fullscreen mode.
  */
 function toggleFullscreen() {
     if (fullscreen) {
+        endedFullscreen = true;
         endFullscreen();
     } else {
+        setedFullscreen = true;
         setFullscreen();
     }
 }
 
+document.addEventListener('fullscreenchange', () => {
+    if (setedFullscreen) {
+        setedFullscreen = false;
+    } else if (!endedFullscreen) {
+        endFullscreen(true);
+    } else {
+        endedFullscreen = false;
+    }
+});
+
 /**
  * This function ends full screen mode.
  */
-function endFullscreen() {
+function endFullscreen(alreadyEnded = false) {
     fullscreen = false;
-    document.exitFullscreen();
+    if (!alreadyEnded) {
+        document.exitFullscreen();
+    }
     document.getElementById('canvas').classList.remove('fullscreen');
     document.getElementById('controls').classList.remove('fullscreen');
     document.getElementById('iconsBox').style.width = '80%';
@@ -197,12 +224,13 @@ function endFullscreen() {
  * This function sets full screen mode.
  */
 function setFullscreen() {
-    fullscreen = true;
     document.getElementById('fullscreenBox').requestFullscreen();
     document.getElementById('canvas').classList.add('fullscreen');
     document.getElementById('controls').classList.add('fullscreen');
     document.getElementById('iconsBox').style.width = '100%';
     document.activeElement.blur();
+    setedFullscreen = true;
+    fullscreen = true;
 }
 
 /**

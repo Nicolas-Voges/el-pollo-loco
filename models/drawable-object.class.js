@@ -29,7 +29,7 @@ class DrawableObject {
     isAlert = false;
     alertStated = false;
     alertDone = false;
-    
+
     /**
      * This function registers an incoming interval id in objects intervals array and global active intervals Array.
      * 
@@ -138,7 +138,7 @@ class DrawableObject {
      * @param {string} path .
      */
     loadImage(path) {
-        if (loadingComplete) {
+        if (imageCache[path]) {
             this.img = imageCache[path];
         } else {
             this.img = new Image();
@@ -153,13 +153,13 @@ class DrawableObject {
      * @param {Array} arr .
      */
     loadImages(arr) {
-        if (!loadingComplete) {
-            arr.forEach((path) => {
+        arr.forEach((path) => {
+            if (!imageCache[path]) {
                 let img = new Image();
                 img.src = path;
                 imageCache[path] = img;
-            });
-        }
+            }
+        });
     }
 
     /**
