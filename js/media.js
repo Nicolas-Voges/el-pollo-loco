@@ -5,7 +5,8 @@ let musicVolume = 1;
 let loadingComplete = false;
 let imageCache = {};
 let isCheckingPortrait = false;
-let pathThroughToggleFullscreen = false;
+let setedFullscreen = false;
+let endedFullscreen = false;
 
 loadImage('img/9_intro_outro_screens/game_over/you lost.png');
 loadImage('img/9_intro_outro_screens/win/win_2.png');
@@ -181,8 +182,7 @@ function checkImagesLoaded() {
         }
     });
 }
-let setedFullscreen = false;
-let endedFullscreen = false;
+
 /**
  * This function toggles fullscreen mode.
  */
@@ -196,6 +196,9 @@ function toggleFullscreen() {
     }
 }
 
+/**
+ * This function catches the case user ended fullscreen with escape key.
+ */
 document.addEventListener('fullscreenchange', () => {
     if (setedFullscreen) {
         setedFullscreen = false;
