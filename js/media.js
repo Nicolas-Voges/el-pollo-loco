@@ -147,8 +147,8 @@ function checkReadyState() {
     let id = setInterval(() => {
         checkImagesLoaded();
         checkSoundsLoaded();
-        document.getElementById('loadPercentage').innerHTML = Math.floor((100 / 151) * loaded);
-        if (loaded === 151) {
+        document.getElementById('loadPercentage').innerHTML = Math.floor((100 / 150) * loaded);
+        if (loaded >= 150) {
             setLoaded(id);
         }
         loaded = 0;
