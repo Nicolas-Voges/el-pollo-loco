@@ -138,7 +138,7 @@ class DrawableObject {
      * @param {string} path .
      */
     loadImage(path) {
-        if (imageCache[path]) {
+        if (loadingComplete) {
             this.img = imageCache[path];
         } else {
             this.img = new Image();
@@ -153,13 +153,13 @@ class DrawableObject {
      * @param {Array} arr .
      */
     loadImages(arr) {
-        arr.forEach((path) => {
-            if (!imageCache[path]) {
+        if (!loadingComplete) {
+            arr.forEach((path) => {
                 let img = new Image();
                 img.src = path;
                 imageCache[path] = img;
-            }
-        });
+            });
+        }
     }
 
     /**

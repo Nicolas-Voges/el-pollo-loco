@@ -8,8 +8,8 @@ let isCheckingPortrait = false;
 let setedFullscreen = false;
 let endedFullscreen = false;
 
-loadImage('img/9_intro_outro_screens/game_over/you lost.png');
-loadImage('img/9_intro_outro_screens/win/win_2.png');
+// loadImage('img/9_intro_outro_screens/game_over/you lost.png');
+// loadImage('img/9_intro_outro_screens/win/win_2.png');
 
 /**
  * This function plays a sound if sound is fully loaded to play.
@@ -70,9 +70,11 @@ function loadImage(path) {
  */
 function loadImagesFromArray(arr) {
     arr.forEach((path) => {
-        let img = new Image();
-        img.src = path;
-        imageCache[path] = img;
+        if (!imageCache[path]) {
+            let img = new Image();
+            img.src = path;
+            imageCache[path] = img;
+        }
     });
 }
 

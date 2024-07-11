@@ -3,10 +3,7 @@ class Coin extends CollectableObject {
     offsetRight = 37;
     offsetBottom = 37;
     offsetLeft = 37;
-    IMAGES = [
-        'img/8_coin/coin_1.png',
-        'img/8_coin/coin_2.png'
-    ];
+    IMAGES = IMAGES_PATHS.coins.IMAGES;
 
     /**
      * This first called function calls the constructor function of collectable objects and hands over

@@ -5,11 +5,7 @@ class Bottle extends CollectableObject {
     offsetLeft = 22;
     width = 60;
     height = 60;
-    IMAGES = [
-        'img/6_salsa_bottle/1_salsa_bottle_on_ground.png',
-        'img/6_salsa_bottle/2_salsa_bottle_on_ground.png',
-        'img/6_salsa_bottle/salsa_bottle.png'
-    ];
+    IMAGES = IMAGES_PATHS.bottle.IMAGES;
 
     /**
      * This first called function calls the constructor function of CollectableObject class and hands over its given

@@ -1,14 +1,7 @@
 class StatusBarBoss extends StatusBar {
     x = 600;
     otherDirection = true;
-    IMAGES = [
-        'img/7_statusbars/2_statusbar_endboss/orange/orange0.png',
-        'img/7_statusbars/2_statusbar_endboss/orange/orange20.png',
-        'img/7_statusbars/2_statusbar_endboss/orange/orange40.png',
-        'img/7_statusbars/2_statusbar_endboss/orange/orange60.png',
-        'img/7_statusbars/2_statusbar_endboss/orange/orange80.png',
-        'img/7_statusbars/2_statusbar_endboss/orange/orange100.png'
-    ];
+    IMAGES = IMAGES_PATHS.statusbars.boss.IMAGES;
 
     /**
      * This first called function calls the constructor function and loads images.
