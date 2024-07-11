@@ -30,7 +30,7 @@
     left: 40px;
     border-radius: 130px 0 0 130px;
     transform-origin: 130px;
-    animation: spin 5s forwards infinite;
+    animation: spin 3s forwards infinite;
 }
 
 @keyframes spin {
@@ -62,7 +62,7 @@
     top: 40px;
     left: 40px;
     border-radius: 90px 0 0 90px;
-    animation: spin2 5s forwards infinite;
+    animation: spin2 3s forwards infinite;
     transform-origin: 90px;
 }
 
@@ -104,7 +104,7 @@
     position: absolute;
     top: 123px;
     left: 123px;
-    animation: move 5s forwards infinite;
+    animation: move 3s forwards infinite;
 }
 
 @keyframes move {
@@ -133,7 +133,7 @@
     position: absolute;
     top: 80px;
     right: 80px;
-    animation: spin3 5s forwards infinite;
+    animation: spin3 3s forwards infinite;
     transform-origin: 0 90px;
 }
 
@@ -163,7 +163,7 @@
     bottom: 125px;
     right: 125px;
     border-radius: 0 0 45px 0;
-    animation: spin4 5s forwards infinite;
+    animation: spin4 3s forwards infinite;
     transform-origin: 0 0;
 }
 
