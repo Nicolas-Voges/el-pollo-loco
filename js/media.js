@@ -318,10 +318,18 @@ function checkForPortraitView() {
                 document.getElementById('portraitOverlay').style.zIndex = '1';
                 document.getElementById('portraitOverlay').classList.remove('display-none');
             } else {
-                stopCheckingPortraitView(id, setedPause);
-                isCheckingPortrait = false;
+                endCheckingPortrait(id, setedPause);
             }
         }, 100);
+    }
+}
+
+function endCheckingPortrait(id, setedPause) {
+    stopCheckingPortraitView(id, setedPause);
+    isCheckingPortrait = false;
+    if (!start) {
+        document.getElementById('portraitOverlay').classList.add('display-none');
+        document.getElementById('footer').classList.remove('display-none');
     }
 }
 
@@ -369,7 +377,9 @@ async function setSounds() {
 
 /**
  * This function checks if user divice is mobile and turned in portrait view.
- * If thats the case the user gets a feedback to turn his device in landscape view.
+ * If thats the case the user gets a feedback to turn his device in landscape view and
+ * 
+ * @returns {boolean} true.
  */
 function checkForMobile() {
     if (mobileDivice) {
@@ -377,6 +387,8 @@ function checkForMobile() {
             document.getElementById('portraitOverlay').classList.remove('display-none');
             document.getElementById('footer').classList.add('display-none');
             checkForPortraitView();
+            return true;
         }
     }
+    return false;
 }

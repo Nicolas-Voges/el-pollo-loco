@@ -69,7 +69,9 @@ function closeGame() {
  */
 function startPauseGame() {
     if (!start) {
-        checkForMobile();
+        if (checkForMobile()) {
+            return;
+        }
         start = true;
         document.getElementById('loading-animation-overlay').classList.remove('display-none');
         document.getElementById('canvas').style.backgroundImage = 'unset';
@@ -81,11 +83,6 @@ function startPauseGame() {
     }
 }
 
-/**
- * This function checks if screen height is greater than screen width.
- * 
- * @returns {boolean} true if thats the case.
- */
 function isPortrait() {
     return screen.availHeight > screen.availWidth;
 }
