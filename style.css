@@ -260,6 +260,7 @@ footer>a:hover {
     max-height: 75%;
     width: 75%;
     overflow-y: auto;
+    max-width: 520px;
 }
 
 #settingsBox>h2 {
