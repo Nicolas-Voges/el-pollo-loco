@@ -164,14 +164,14 @@ window.addEventListener(`contextmenu`, (e) => {
  * This function adds touch evens for mobil.
  */
 function addTouchEvents() {
-    let throwButton = document.getElementById('throwButton');
-    let leftButton = document.getElementById('leftButton');
-    let rightButton = document.getElementById('rightButton');
-    let jumpButton = document.getElementById('jumpButton');
-    addThrowTouchEvent(throwButton);
-    addTouchEvent(leftButton, 'moveLeftKeyPush');
-    addTouchEvent(rightButton, 'moveRightKeyPush');
-    addTouchEvent(jumpButton, 'jumpKeyPush');
+    let throwButton = document.getElementById('throwButtonField');
+    let leftButton = document.getElementById('leftButtonField');
+    let rightButton = document.getElementById('rightButtonField');
+    let jumpButton = document.getElementById('jumpButtonField');
+    addThrowTouchEvents(throwButton);
+    addLeftTouchEvents(leftButton, 'moveLeftKeyPush');
+    addRightTouchEvents(rightButton, 'moveRightKeyPush');
+    addJumpTouchEvents(jumpButton, 'jumpKeyPush');
 }
 
 /**
@@ -179,13 +179,84 @@ function addTouchEvents() {
  * 
  * @param {Object} throwButton 
  */
-function addThrowTouchEvent(throwButton) {
+function addThrowTouchEvents(throwButton) {
     throwButton.addEventListener('touchstart', () => {
         if (world.bottleCooledDown() && start && !gameEnded && world.character.bottles > 0) {
             keyboard.throwKeyPush = true;
         }
     });
     throwButton.addEventListener('touchend', () => {
+        document.activeElement.blur();
+    });
+}
+let breakTouchEndLeft = false;
+
+/**
+ * This function adds touch event listeners to the handed over element.
+ * 
+ * @param {Object} element 
+ * @param {string} keyboardBoolean 
+ */
+function addLeftTouchEvents(element, keyboardBoolean) {
+    element.addEventListener('touchstart', () => {
+        if (start && !gameEnded) {
+            if (keyboard[`${keyboardBoolean}`] === true) {
+                breakTouchEndLeft = true;
+            }
+            keyboard[`${keyboardBoolean}`] = true;
+        }
+    });
+    addLeftTouchEndEvent(element, keyboardBoolean);
+}
+
+function addLeftTouchEndEvent(element, keyboardBoolean) {
+    element.addEventListener('touchend', () => {
+        let leaveTouch = new Date().getTime();
+        let id = setInterval(() => {
+            if (breakTouchEndLeft) {
+                clearInterval(id);
+                breakTouchEndLeft = false;
+            } else if (start && new Date().getTime() - leaveTouch > 50) {
+                keyboard[`${keyboardBoolean}`] = false;
+                clearInterval(id);
+            }
+        }, 5);
+        document.activeElement.blur();
+    });
+}
+
+let breakTouchEndRight = false;
+
+/**
+ * This function adds touch event listeners to the handed over element.
+ * 
+ * @param {Object} element 
+ * @param {string} keyboardBoolean 
+ */
+function addRightTouchEvents(element, keyboardBoolean) {
+    element.addEventListener('touchstart', () => {
+        if (start && !gameEnded) {
+            if (keyboard[`${keyboardBoolean}`] === true) {
+                breakTouchEndRight = true;
+            }
+            keyboard[`${keyboardBoolean}`] = true;
+        }
+    });
+    addRightTouchEndEvent(element, keyboardBoolean);
+}
+
+function addRightTouchEndEvent(element, keyboardBoolean) {
+    element.addEventListener('touchend', () => {
+        let leaveTouch = new Date().getTime();
+        let id = setInterval(() => {
+            if (breakTouchEndRight) {
+                clearInterval(id);
+                breakTouchEndRight = false;
+            } else if (start && new Date().getTime() - leaveTouch > 50) {
+                keyboard[`${keyboardBoolean}`] = false;
+                clearInterval(id);
+            }
+        }, 5);
         document.activeElement.blur();
     });
 }
@@ -196,16 +267,27 @@ function addThrowTouchEvent(throwButton) {
  * @param {Object} element 
  * @param {string} keyboardBoolean 
  */
-function addTouchEvent(element, keyboardBoolean) {
+function addJumpTouchEvents(element, keyboardBoolean) {
     element.addEventListener('touchstart', () => {
         if (start && !gameEnded) {
             keyboard[`${keyboardBoolean}`] = true;
         }
     });
+    addJumpTouchEndEvent(element, keyboardBoolean);
+}
+
+function addJumpTouchEndEvent(element, keyboardBoolean) {
     element.addEventListener('touchend', () => {
-        if (start && !gameEnded) {
-            keyboard[`${keyboardBoolean}`] = false;
-        }
+        let id = setInterval(() => {
+            if (start && !gameEnded && characterMovedJump()) {
+                keyboard[`${keyboardBoolean}`] = false;
+                clearInterval(id);
+            }
+        }, 5);
         document.activeElement.blur();
     });
+}
+
+function characterMovedJump() {
+    return !world.character.jumpCooledDown() || world.character.jumpCooledDown() && world.character.isAboveGround();
 }

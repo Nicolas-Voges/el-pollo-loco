@@ -356,6 +356,10 @@ td {
     overflow: hidden;
 }
 
+.button-touch-field {
+    padding-top: 100px;
+}
+
 @media only screen and (max-width: 720px) {
 
     canvas,
