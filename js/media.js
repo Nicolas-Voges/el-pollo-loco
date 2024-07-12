@@ -117,14 +117,14 @@ function setMusicVolume(key, nextKey) {
 }
 
 /**
- * This function iterates through SOUNDS JSON and evals
+ * This function iterates through SOUNDS JSON and calls
  * 
- * @param {string} func .
+ * @param {string} fn .
  */
-function iteraterThroughSounds(func) {
+function iteraterThroughSounds(fn) {
     Object.keys(SOUNDS).forEach((key) => {
         Object.keys(SOUNDS[`${key}`]).forEach((nextKey) => {
-            eval(func);
+            fn(key, nextKey);
         });
     });
 }
@@ -160,7 +160,7 @@ function checkReadyState() {
  * This function checks if sounds are loaded.
  */
 function checkSoundsLoaded() {
-    iteraterThroughSounds('addLoaded(key, nextKey);');
+    iteraterThroughSounds(addLoaded);
 }
 
 /**
@@ -302,8 +302,8 @@ function setMobile(element) {
  * This function sets sounds volume.
  */
 function setVolume() {
-    iteraterThroughSounds('setSFXVolume(key, nextKey)');
-    iteraterThroughSounds('setMusicVolume(key, nextKey)');
+    iteraterThroughSounds(setSFXVolume);
+    iteraterThroughSounds(setMusicVolume);
 }
 
 /**
