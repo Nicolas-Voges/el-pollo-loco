@@ -31,7 +31,7 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    height: 100vh;
+    height: 100dvh;
     font-family: 'zabras', 'Arial', 'Helvetica', 'sans-serif';
     letter-spacing: 10px;
     flex: 1;
@@ -367,7 +367,7 @@ td {
     #controls {
         width: 100%;
         background-size: contain;
-        height: 100vh;
+        height: 100dvh;
     }
 
     h1 {
