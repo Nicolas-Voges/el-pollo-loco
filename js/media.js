@@ -8,6 +8,9 @@ let isCheckingPortrait = false;
 let setedFullscreen = false;
 let endedFullscreen = false;
 
+window.addEventListener('orientationchange', checkForPortraitView);
+window.addEventListener('resize', checkForPortraitView);
+
 // loadImage('img/9_intro_outro_screens/game_over/you lost.png');
 // loadImage('img/9_intro_outro_screens/win/win_2.png');
 
@@ -294,7 +297,7 @@ function setForMobile() {
  */
 function setMobile(element) {
     element.style.width = '100%';
-    element.style.height = '100vh';
+    element.style.height = '100dvh';
     element.style.backgroundSize = 'contain';
 }
 
@@ -308,28 +311,27 @@ function setVolume() {
 
 /**
      * This function checks if user dvice is mobil and in portrait mode.
-     * If thats the case this function pauses the game and checks in an interval if uster turned his divice back.
+     * If thats the case this function pauses the game.
+     * This function is triggered by orientation change and resize events
      */
 function checkForPortraitView() {
-    if (mobileDivice && isPortrait() && !endbossAnimationRuns && !isCheckingPortrait) {
-        let setedPause = setValuesForPortrait();
-        let id = setInterval(() => {
-            if (isPortrait()) {
-                document.getElementById('portraitOverlay').style.zIndex = '1';
-                document.getElementById('portraitOverlay').classList.remove('display-none');
-            } else {
-                endCheckingPortrait(id, setedPause);
-            }
-        }, 100);
-    }
-}
+    if (!mobileDivice || endbossAnimationRuns) return;
 
-function endCheckingPortrait(id, setedPause) {
-    stopCheckingPortraitView(id, setedPause);
-    isCheckingPortrait = false;
-    if (!start) {
+    if (isPortrait()) {
+        document.getElementById('portraitOverlay').classList.remove('display-none');
+
+        if (!isCheckingPortrait) {
+            isCheckingPortrait = true;
+            if (start) setPause();
+        }
+    } else {
         document.getElementById('portraitOverlay').classList.add('display-none');
-        document.getElementById('footer').classList.remove('display-none');
+
+        if (isCheckingPortrait) {
+            isCheckingPortrait = false;
+            resetKeyboard();
+            if (start && isPause) setPlay();
+        }
     }
 }
 

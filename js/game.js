@@ -84,7 +84,7 @@ function startPauseGame() {
 }
 
 function isPortrait() {
-    return screen.availHeight > screen.availWidth;
+    return window.matchMedia("(orientation: portrait)").matches;
 }
 
 /**
