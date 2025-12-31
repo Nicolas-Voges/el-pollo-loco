@@ -28,10 +28,6 @@ function init() {
     gameEnded = false;
     initLevel1();
     world = new World(canvas, keyboard);
-    if (!loadingComplete) {
-        setSounds();
-        checkReadyState();
-    }
 }
 
 /**
@@ -69,9 +65,8 @@ function closeGame() {
  */
 function startPauseGame() {
     if (!start) {
-        if (checkForMobile()) {
-            return;
-        }
+        setSounds();
+        if (checkForMobile()) return;
         start = true;
         document.getElementById('loading-animation-overlay').classList.remove('display-none');
         document.getElementById('canvas').style.backgroundImage = 'unset';

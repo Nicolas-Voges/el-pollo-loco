@@ -1,4 +1,5 @@
-let loaded = 0;
+let totalAssets = 0;
+let loadedAssets = 0;
 let MUTE = 1;
 let SFXvolume = 1;
 let musicVolume = 1;
@@ -19,17 +20,11 @@ window.addEventListener('resize', checkForPortraitView);
  * 
  * @param {Object} sound 
  */
-async function playSound(sound) {
+function playSound(sound) {
     sound.pause();
-    try {
-        let isPlaying = sound.currentTime > 0 && !sound.paused && !sound.ended && sound.readyState > sound.HAVE_CURRENT_DATA;
-        if (!isPlaying) {
-            await sound.play();
-        } else {
-
-        }
-    } catch (error) {
-
+    const p = sound.play();
+    if (p !== undefined) {
+        p.catch(() => {});
     }
 }
 
@@ -59,11 +54,30 @@ function loadImages() {
 }
 
 function loadImage(path) {
-    if (!imageCache[path]) {
-        let img = new Image();
-        img.src = path;
-        imageCache[path] = img;
-    }
+    if (imageCache[path]) return;
+    totalAssets++;
+    let img = new Image();
+    img.onload = assetLoaded;
+    img.onerror = assetLoaded;
+    img.src = path;
+    imageCache[path] = img;
+}
+
+function assetLoaded() {
+    loadedAssets++;
+    updateLoader();
+}
+
+function updateLoader() {
+    if (totalAssets === 0) return;
+    const percent = Math.floor((loadedAssets / totalAssets) * 100);
+    document.getElementById('loadPercentage').innerText = percent;
+    if (loadedAssets === totalAssets) finishLoading();
+}
+
+function finishLoading() {
+    document.getElementById('loading-animation-overlay').classList.add('display-none');
+    loadingComplete = true;
 }
 
 /**
@@ -72,25 +86,7 @@ function loadImage(path) {
  * @param {Array} arr and stores images in JSON image cache.
  */
 function loadImagesFromArray(arr) {
-    arr.forEach((path) => {
-        if (!imageCache[path]) {
-            let img = new Image();
-            img.src = path;
-            imageCache[path] = img;
-        }
-    });
-}
-
-/**
- * This function checks if sound is loaded and increases loaded counter if thats the case.
- * 
- * @param {string} key 
- * @param {string} nextKey 
- */
-function addLoaded(key, nextKey) {
-    if (SOUNDS[`${key}`][`${nextKey}`].SOUND.readyState > SOUNDS[`${key}`][`${nextKey}`].SOUND.HAVE_CURRENT_DATA) {
-        loaded++;
-    }
+    arr.forEach((path) => loadImage(path));
 }
 
 /**
@@ -140,52 +136,6 @@ function iteraterThroughSounds(fn) {
  */
 function valueTypeIsArray(key) {
     return Array.isArray(key);
-}
-
-/**
- * This function checks if images and sounds are loaded.
- */
-function checkReadyState() {
-    setPause();
-    let id = setInterval(() => {
-        checkImagesLoaded();
-        checkSoundsLoaded();
-        document.getElementById('loadPercentage').innerHTML = Math.floor((100 / 150) * loaded);
-        if (loaded >= 150) {
-            setLoaded(id);
-        }
-        loaded = 0;
-    }, 25);
-    activeIntervals.push(id);
-}
-
-/**
- * This function checks if sounds are loaded.
- */
-function checkSoundsLoaded() {
-    iteraterThroughSounds(addLoaded);
-}
-
-/**
- * This function sets values for loading is complete.
- */
-function setLoaded(id) {
-    clearInterval(id);
-    activeIntervals.splice(activeIntervals.indexOf(id), 1);
-    document.getElementById('loading-animation-overlay').classList.add('display-none');
-    loadingComplete = true;
-    setPlay();
-}
-
-/**
- * This function checks if images are loaded.
- */
-function checkImagesLoaded() {
-    Object.keys(imageCache).forEach((img) => {
-        if (imageCache[`${img}`].complete) {
-            loaded++;
-        }
-    });
 }
 
 /**
@@ -352,27 +302,13 @@ function setValuesForPortrait() {
 }
 
 /**
-* This function stops checking for landscape mode.
-* 
-* @param {number} id 
-*/
-function stopCheckingPortraitView(id, setedPause) {
-    document.getElementById('portraitOverlay').style.zIndex = '-1';
-    clearInterval(id);
-    if (setedPause) {
-        resetKeyboard();
-        setPlay();
-    }
-}
-
-/**
  * This function sets sounds properties.
  */
-async function setSounds() {
+function setSounds() {
     setVolume();
-    await playSound(SOUNDS.world.AMBIENTE.SOUND);
+    playSound(SOUNDS.world.AMBIENTE.SOUND);
     SOUNDS.world.AMBIENTE.SOUND.loop = true;
-    await playSound(SOUNDS.world.MUSIC.SOUND);
+    playSound(SOUNDS.world.MUSIC.SOUND);
     SOUNDS.world.MUSIC.SOUND.loop = true;
     SOUNDS.character.LONG_IDLE.SOUND.loop = true;
 }

@@ -87,13 +87,13 @@
                     <h3>SFX - Sounds</h3>
                     <div>
                         <img class="settings-icons" src="./img/icons/mute.png" alt="mute sfx sounds">
-                        <input onchange="iteraterThroughSounds('setSFXVolume(key, nextKey)')" type="range" min="1" max="100" step="1" value="100" id="sfxSoundInput">
+                        <input onchange="iteraterThroughSounds(setSFXVolume)" type="range" min="1" max="100" step="1" value="100" id="sfxSoundInput">
                         <img class="settings-icons" src="./img/icons/loud.png" alt="turn sfx sounds loud">
                     </div>
                     <h3>Music</h3>
                     <div>
                         <img class="settings-icons" src="./img/icons/mute.png" alt="mute music">
-                        <input onchange="iteraterThroughSounds('setMusicVolume(key, nextKey)')" type="range" min="1" max="100" step="1" value="100" id="musicInput">
+                        <input onchange="iteraterThroughSounds(setMusicVolume)" type="range" min="1" max="100" step="1" value="100" id="musicInput">
                         <img class="settings-icons" src="./img/icons/loud.png" alt="turn music loud">
                     </div>
                 </div>
