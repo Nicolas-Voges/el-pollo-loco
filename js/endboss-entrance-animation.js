@@ -264,7 +264,9 @@ function setBeginEarthquake(attack) {
     if (attack) {
         earthquakeDone = false;
     }
-    window.navigator.vibrate([250]);
+    if (mobileDivice) {
+        window.navigator.vibrate([250]);
+    }
     playSound(sound_earthquake);
 }
 
