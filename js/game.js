@@ -147,7 +147,6 @@ function setBossPlay() {
  */
 function setPause() {
     isPause = true;
-    changeCloudPosition(0);
     document.getElementById('pauseButton').style.backgroundImage = `url('img/icons/play.png')`;
     setEnemiesPause();
     setCharacterPause();
@@ -314,14 +313,6 @@ function deleteAllIntervals() {
 }
 
 /**
- * This function adjusts background layer positions to create a 3D look.
- */
-function adjustBackgroundPosition() {
-    changeBackgroundPosition();
-    changeCloudPosition();
-}
-
-/**
  * This function checks if character is moving and did not reached end level screen, and
  * moves the background in the right direction.
  */
@@ -331,23 +322,6 @@ function changeBackgroundPosition() {
             bgr.moveLeft();
         } else if (world.character.isMovingRight && !endbossAnimationHasRun && world.character.x < 3696) {
             bgr.moveRight();
-        }
-    });
-}
-
-/**
- * This function checks if character is moving and did not reached end level screen, and
- * moves the cloud in the right direction.
- */
-function changeCloudPosition(factor = 1) {
-    world.level.cloudObjects.forEach((cloud) => {
-        if (world.character.isMovingLeft && !endbossAnimationHasRun && world.character.x < 3696) {
-            cloud.speed = 1 * factor;
-        } else if (world.character.isMovingRight && !endbossAnimationHasRun && world.character.x < 3696) {
-            cloud.speed = -1 * factor;
-        }
-        else {
-            cloud.speed = 0.03 * factor;
         }
     });
 }

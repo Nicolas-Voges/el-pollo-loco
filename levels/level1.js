@@ -63,8 +63,8 @@ function initLevel1() {
         new Endboss()
     ],
         cloudObjects = [
-            new Cloud(900),
-            new Cloud(1020),
+            new Cloud(600),
+            new Cloud(1100),
             new Cloud(2020),
             new Cloud(3333),
             new Cloud(4000),

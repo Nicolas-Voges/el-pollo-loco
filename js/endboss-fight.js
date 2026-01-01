@@ -12,7 +12,7 @@ function checkForEndbossFight() {
     if (endbossAnimationHasRun) {
         bossFight();
     } else {
-        adjustBackgroundPosition();
+        changeBackgroundPosition();
     }
 }
 

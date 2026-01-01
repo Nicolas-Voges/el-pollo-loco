@@ -14,21 +14,22 @@ class Cloud extends MovableObject {
         let path = Math.round(Math.random() * 1);
         super().loadImage(IMAGES_PATHS.backgrounds.clouds[`${path}`]);
         this.x = x + Math.random() * 500;
-        this.speed = 0.01 + Math.round(Math.random() * 1);
+        this.speed = 0.1 + Math.round(Math.random() * 1.9);
         this.speed /= 4;
         this.animate();
     }
 
     /**
-     * This function animates the chick in an interval and registers it.
+     * This function animates the cloud in an interval and registers it.
      */
     animate() {
         let id = setInterval(() => {
+            if (isPause) return;
             this.moveLeft();
             if (this.x + this.width <= -500) {
                 this.x = 5000;
             }
-        }, 1000 / 200);
+        }, 1000 / 30);
         this.registerInterval(id, 'moves');
     }
 }
