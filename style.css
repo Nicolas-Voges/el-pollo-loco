@@ -16,6 +16,7 @@
 
 * {
     box-sizing: border-box;
+    -webkit-touch-callout: none;
 }
 
 #loom-companion-mv3 {
@@ -36,6 +37,8 @@ body {
     letter-spacing: 10px;
     flex: 1;
     justify-content: space-between;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 h1 {

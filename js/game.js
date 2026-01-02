@@ -15,6 +15,8 @@ let gameEnded = false;
 let gameEndedTime;
 let fullscreen = false;
 
+document.addEventListener('contextmenu', event => event.preventDefault());
+
 /**
  * This function initializes the game by creating level and world and
  * gives the world canvas and keboard.
